@@ -63,6 +63,4 @@ class Column(Object):
     width: Optional[int] = None
 
     def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__qualname__}(id={self.id!r}, " f"title={self.title!r})"
-        )
+        return f"{self.__class__.__qualname__}(id={self.id!r}, title={self.title!r})"

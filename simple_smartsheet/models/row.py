@@ -1,10 +1,21 @@
-from typing import Optional, List, TYPE_CHECKING, Dict, Any, ClassVar, Type
+from typing import (
+    Optional,
+    List,
+    TYPE_CHECKING,
+    Dict,
+    Any,
+    ClassVar,
+    Type,
+    Sequence,
+    Tuple,
+)
 
 import attr
 from marshmallow import fields
 from datetime import datetime
 
 
+from simple_smartsheet.types import IndexKeysType
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.cell import Cell, CellSchema
 from simple_smartsheet.models.column import Column, ColumnSchema
@@ -86,9 +97,9 @@ class Row(Object):
     schema: ClassVar[Type[RowSchema]] = RowSchema
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__qualname__}(id={self.id!r}, " f"num={self.num!r})"
+        return f"{self.__class__.__qualname__}(id={self.id!r}, num={self.num!r})"
 
-    def update_index(self, sheet: "Sheet") -> None:
+    def update_index(self, sheet: "Sheet", index_keys: IndexKeysType) -> None:
         self.column_title_to_cell.clear()
         self.column_id_to_cell.clear()
 
@@ -102,14 +113,30 @@ class Row(Object):
             self.column_id_to_cell[column_id] = cell
             self.column_title_to_cell[column_title] = cell
 
+        for index_key, unique in index_keys.items():
+            index = sheet.indexes[index_key]
+            key = tuple(self.get_cell(column_title).value for column_title in index_key)
+            if unique:
+                index[key] = self
+            else:
+                container = index.setdefault(key, [])
+                container.append(self)
+
     def get_cell(
         self, column_title: Optional[str] = None, column_id: Optional[int] = None
-    ) -> Optional[Cell]:
+    ) -> Cell:
         if column_title is not None:
-            return self.column_title_to_cell.get(column_title)
+            return self.column_title_to_cell[column_title]
         elif column_id is not None:
-            return self.column_id_to_cell.get(column_id)
+            return self.column_id_to_cell[column_id]
         else:
             raise ValueError(
                 "Either column_title or column_id argument should be provided"
             )
+
+    def as_dict(self) -> Dict[str, Any]:
+        """Returns a dictionary of column title to cell value"""
+        return {
+            column_title: cell.value
+            for column_title, cell in self.column_title_to_cell.items()
+        }

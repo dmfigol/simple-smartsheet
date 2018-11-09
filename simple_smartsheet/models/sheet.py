@@ -1,6 +1,19 @@
 import logging
+from collections import defaultdict
 from datetime import datetime
-from typing import Optional, Dict, List, ClassVar, Type, Sequence
+from typing import (
+    Optional,
+    Dict,
+    List,
+    ClassVar,
+    Type,
+    Sequence,
+    Tuple,
+    Any,
+    DefaultDict,
+    Union,
+    cast,
+)
 
 import attr
 from marshmallow import fields
@@ -10,6 +23,7 @@ from simple_smartsheet.models.base import Schema, CoreSchema, Object, CoreObject
 from simple_smartsheet.models.column import Column, ColumnSchema
 from simple_smartsheet.models.row import Row, RowSchema
 from simple_smartsheet.models.extra import Result
+from simple_smartsheet.types import IndexKeysType, IndexesType
 
 
 logger = logging.getLogger(__name__)
@@ -97,6 +111,10 @@ class Sheet(CoreObject):
     column_title_to_column: Dict[str, Column] = attr.Factory(dict)
     column_id_to_column: Dict[int, Column] = attr.Factory(dict)
 
+    index_keys: IndexKeysType = attr.Factory(list)
+    index_key_to_unique: Dict[Tuple[str, ...], bool] = attr.Factory(dict)
+    indexes: IndexesType = attr.Factory(lambda: defaultdict(dict))
+
     schema: ClassVar[Type[SheetSchema]] = SheetSchema
 
     def __attrs_post_init__(self) -> None:
@@ -104,8 +122,13 @@ class Sheet(CoreObject):
 
     def update_index(self) -> None:
         """Updates columns and row indices for quick lookup"""
+        for index_key_dict in self.index_keys:
+            columns = index_key_dict["columns"]
+            unique = index_key_dict["unique"]
+            self.index_key_to_unique[tuple(sorted(columns))] = unique
+
         self.update_column_index()
-        self.update_row_index()
+        self.update_row_index(self.index_key_to_unique)
 
     def update_column_index(self) -> None:
         """Updates columns index for quick lookup by title and ID"""
@@ -127,7 +150,7 @@ class Sheet(CoreObject):
                 )
             self.column_title_to_column[column_title] = column
 
-    def update_row_index(self) -> None:
+    def update_row_index(self, index_keys: IndexKeysType) -> None:
         """Updates row index for quick lookup by row number and ID"""
         self.row_num_to_row.clear()
         self.row_id_to_row.clear()
@@ -135,10 +158,13 @@ class Sheet(CoreObject):
         for row in self.rows:
             self.row_num_to_row[row.num] = row
             self.row_id_to_row[row.id] = row
-            row.update_index(self)
+            row.update_index(self, index_keys)
 
     def get_row(
-        self, row_num: Optional[int] = None, row_id: Optional[int] = None
+        self,
+        row_num: Optional[int] = None,
+        row_id: Optional[int] = None,
+        filter: Optional[Dict[str, Any]] = None,
     ) -> Optional[Row]:
         """Returns Row object by row number or ID
 
@@ -147,6 +173,8 @@ class Sheet(CoreObject):
         Args:
             row_num: row number
             row_id: row id
+            filter: a dictionary or ordered dictionary with column title to value
+        mappings in the same order as index was built. Index must be unique.
 
         Returns:
             Row object
@@ -155,8 +183,46 @@ class Sheet(CoreObject):
             return self.row_num_to_row.get(row_num)
         elif row_id is not None:
             return self.row_id_to_row.get(row_id)
+        elif filter is not None:
+            index_key, query = zip(*sorted(filter.items()))
+            unique = self.index_key_to_unique.get(index_key)
+            if unique is None:
+                raise ValueError("Index %s was not built", index_key)
+            elif not unique:
+                raise ValueError(
+                    "Index %s is non-unique and lookup will potentially "
+                    "return multiple rows, use get_rows method instead",
+                    index_key,
+                )
+            index = cast(Dict[Tuple, Row], self.indexes[index_key])
+            return index[query]
         else:
             raise ValueError("Either row_num or row_id argument should be provided")
+
+    def get_rows(self, filter: Dict[str, Any]) -> [List[Row]]:
+        """Returns Row objects by index query
+
+        Args:
+            filter: a dictionary or ordered dictionary with column title to value
+        mappings in the same order as index was built. Index must be non-unique.
+
+        Returns:
+            Row object
+        """
+        index_key, query = zip(*sorted(filter.items()))
+        unique = self.index_key_to_unique.get(index_key)
+        if unique is None:
+            raise ValueError("Index %s was not built", index_key)
+        elif unique:
+            index = cast(Dict[Tuple, Row], self.indexes[index_key])
+            result = index.get(query)
+            if result is not None:
+                return [result]
+            else:
+                return []
+        else:
+            index = cast(Dict[Tuple, List[Row]], self.indexes[index_key])
+            return index.get(query, [])
 
     def get_column(
         self, column_title: Optional[str] = None, column_id: Optional[int] = None

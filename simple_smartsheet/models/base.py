@@ -24,6 +24,7 @@ from cattr.converters import Converter
 
 from simple_smartsheet import utils
 from simple_smartsheet import config
+from simple_smartsheet.types import IndexesType, IndexKeysType
 
 if TYPE_CHECKING:
     from simple_smartsheet.smartsheet import Smartsheet  # noqa: F401
@@ -34,6 +35,8 @@ logger = logging.getLogger(__name__)
 
 converter = Converter()
 converter.register_structure_hook(datetime, lambda ts, _: ts)
+converter.register_structure_hook(IndexKeysType, lambda x, _: x)
+converter.register_structure_hook(IndexesType, lambda x, _: x)
 converter.register_structure_hook(Union[float, str, datetime, None], lambda ts, _: ts)
 
 
@@ -63,9 +66,12 @@ class Object:
         data: Dict[str, Any],
         only: Optional[Sequence[str]] = None,
         exclude: Sequence[str] = (),
+        **kwargs: Any,
     ) -> T:
         schema = cls.schema(only=only, exclude=exclude)
-        obj = converter.structure(schema.load(data), cls)
+        normalized_data = schema.load(data)
+        normalized_data.update(kwargs)
+        obj = converter.structure(normalized_data, cls)
         return obj
 
     def dump(
@@ -150,7 +156,9 @@ class CRUD(Generic[TS]):
     def name_to_obj(self) -> Dict[str, TS]:
         return {obj.name: obj for obj in self.list()}
 
-    def get(self, name: Optional[str] = None, id: Optional[int] = None) -> TS:
+    def get(
+        self, name: Optional[str] = None, id: Optional[int] = None, **kwargs: Any
+    ) -> TS:
         """Fetches a CoreObject by name or id.
 
         Args:
@@ -171,7 +179,7 @@ class CRUD(Generic[TS]):
                 str(obj_data),
             )
             obj = self.factory.load(
-                obj_data, self.get_include_fields, self.get_exclude_fields
+                obj_data, self.get_include_fields, self.get_exclude_fields, **kwargs
             )
             if not obj.id:
                 obj.id = id
@@ -179,7 +187,7 @@ class CRUD(Generic[TS]):
             return obj
         else:
             id_ = self.name_to_obj[name].id
-            return self.get(id=id_)
+            return self.get(id=id_, **kwargs)
 
     def list(self) -> List[TS]:
         """Fetches a list of CoreObject objects.
