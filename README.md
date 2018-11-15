@@ -12,11 +12,13 @@ As of now, you can only interact with Sheets and nested objects (rows, columns, 
 
 ### Usage
 ```python
-from simple_smartsheet import Smartsheet
-from simple_smartsheet.models import Sheet, Column, Row, Cell
+from datetime import date
 from pprint import pprint
 
-TOKEN = 'my-smartsheet-token'
+from simple_smartsheet import Smartsheet
+from simple_smartsheet.models import Sheet, Column, Row, Cell
+
+TOKEN = "my-secret-token"
 smartsheet = Smartsheet(TOKEN)
 
 # creating new Sheet
@@ -25,6 +27,7 @@ new_sheet = Sheet(
     columns=[
         Column(primary=True, title="Full Name", type="TEXT_NUMBER"),
         Column(title="Number of read books", type="TEXT_NUMBER"),
+        Column(title="Birth date", type="DATE"),
     ],
 )
 
@@ -73,6 +76,7 @@ sheet.add_rows(
             cells=[
                 sheet.make_cell("Full Name", "Charlie Brown"),
                 sheet.make_cell("Number of read books", 1),
+                sheet.make_cell("Birth date", date(1990, 1, 1)),
             ],
         ),
     ]

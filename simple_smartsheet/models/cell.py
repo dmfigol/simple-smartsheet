@@ -1,11 +1,22 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional, Union, ClassVar, Type, Any, List
 
 import attr
 from marshmallow import fields
+from marshmallow import utils
 
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.extra import Hyperlink, HyperlinkSchema
+
+
+class CellValueField(fields.Field):
+    def _serialize(self, value, attr, obj, **kwargs):
+        if isinstance(value, datetime):
+            return utils.isoformat(value)
+        elif isinstance(value, date):
+            return utils.to_iso_date(value)
+        else:
+            return super()._serialize(value, attr, obj, **kwargs)
 
 
 class CellSchema(Schema):
@@ -24,7 +35,7 @@ class CellSchema(Schema):
     object_value = fields.Field(data_key="objectValue")  # TODO: ObjectValue object
     override_validation = fields.Bool(data_key="overrideValidation")
     strict = fields.Bool()
-    value = fields.Field()
+    value = CellValueField()
 
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)

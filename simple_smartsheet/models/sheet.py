@@ -16,7 +16,7 @@ from typing import (
 )
 
 import attr
-from marshmallow import fields
+from marshmallow import fields, post_load
 
 
 from simple_smartsheet.models.base import Schema, CoreSchema, Object, CoreObject, CRUD
@@ -425,7 +425,9 @@ class Sheet(CoreObject):
         cell = Cell(column_id=column.id, value=field_value)
         return cell
 
-    def make_cells(self, fields: Dict[str, Union[float, str, datetime, None]]) -> List[Cell]:
+    def make_cells(
+        self, fields: Dict[str, Union[float, str, datetime, None]]
+    ) -> List[Cell]:
         """Create a list of Cell objects from dictionary
 
         Args:

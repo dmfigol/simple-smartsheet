@@ -1,4 +1,6 @@
 ## Changelog
+#### 0.1.5 (2018-11-15)
+* Add support for date fields
 #### 0.1.4 (2018-11-15)
 * Add `make_cell` and `make_cells` methods for Sheet object
 * Add `as_list` method for Sheet object

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from pprint import pprint
 
 from simple_smartsheet import Smartsheet
@@ -14,7 +14,7 @@ new_sheet = Sheet(
     columns=[
         Column(primary=True, title="Full Name", type="TEXT_NUMBER"),
         Column(title="Number of read books", type="TEXT_NUMBER"),
-        # Column(title="Birth date", type="DATE"),
+        Column(title="Birth date", type="DATE"),
     ],
 )
 
@@ -63,7 +63,7 @@ sheet.add_rows(
             cells=[
                 sheet.make_cell("Full Name", "Charlie Brown"),
                 sheet.make_cell("Number of read books", 1),
-                # sheet.make_cell("Birth date", datetime(1990, 1, 1)),
+                sheet.make_cell("Birth date", date(1990, 1, 1)),
             ],
         ),
     ]
@@ -110,6 +110,6 @@ print("\nSheet after deleting rows:")
 pprint(sheet.as_list())
 
 # deleting Sheet
-sheet = smartsheet.sheets.delete('My New Sheet')
+# sheet = smartsheet.sheets.delete('My New Sheet')
 sheets = smartsheet.sheets.list()
 pprint(sheets)

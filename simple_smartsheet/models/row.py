@@ -6,12 +6,11 @@ from typing import (
     Any,
     ClassVar,
     Type,
-    Sequence,
-    Tuple,
 )
 
 import attr
 from marshmallow import fields
+from marshmallow import utils
 from datetime import datetime
 
 
@@ -107,9 +106,19 @@ class Row(Object):
             column_id = cell.column_id
             if column_id is None:
                 continue
-            column_title = sheet.column_id_to_column[column_id].title
+            column = sheet.get_column(column_id=column_id)
+            column_title = column.title
             if column_title is None:
                 continue
+
+            # deserealize datetime objects from string
+            column_type = column.type
+            if cell.value is not None:
+                if column_type == "DATE":
+                    cell.value = utils.from_iso_date(cell.value)
+                elif column_type in ("DATETIME", "ABSTRACT_DATETIME"):
+                    cell.value = utils.from_iso_datetime(cell.value)
+
             self.column_id_to_cell[column_id] = cell
             self.column_title_to_cell[column_title] = cell
 
