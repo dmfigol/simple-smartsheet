@@ -22,6 +22,7 @@ from marshmallow import fields
 from simple_smartsheet.models.base import Schema, CoreSchema, Object, CoreObject, CRUD
 from simple_smartsheet.models.column import Column, ColumnSchema
 from simple_smartsheet.models.row import Row, RowSchema
+from simple_smartsheet.models.cell import Cell
 from simple_smartsheet.models.extra import Result
 from simple_smartsheet.types import IndexKeysType, IndexesType
 
@@ -403,6 +404,44 @@ class Sheet(CoreObject):
             Result object
         """
         return self.delete_rows([row_id])
+
+    def make_cell(
+        self, column_title: str, field_value: Union[float, str, datetime, None]
+    ) -> Cell:
+        """Creates a Cell object for an existing column
+
+        Args:
+            column_title: title of an existing column
+            field_value: value of the cell
+
+        Returns:
+            Cell object
+        """
+        column = self.get_column(column_title)
+        if column is None:
+            raise ValueError(
+                "A column with the title %s does not exist in this sheet", column_title
+            )
+        cell = Cell(column_id=column.id, value=field_value)
+        return cell
+
+    def make_cells(self, fields: Dict[str, Union[float, str, datetime, None]]) -> List[Cell]:
+        """Create a list of Cell objects from dictionary
+
+        Args:
+            fields: dictionary where key is a column title and value is a cell value
+
+        Returns:
+            list of Cell objects
+        """
+        result: List[Cell] = []
+        for column_title, field_value in fields.items():
+            result.append(self.make_cell(column_title, field_value))
+        return result
+
+    def as_list(self) -> List[Dict[str, Union[float, str, datetime, None]]]:
+        """Returns a list of dictionaries with column titles and cell values"""
+        return [row.as_dict() for row in self.rows]
 
 
 class SheetsCRUD(CRUD[Sheet]):

@@ -25,7 +25,7 @@ pprint(sheet.indexes)
 #                                   ('bob.lee@acme.com',): Row(id=5029390859954052, num=2),
 #                                   ('charlie.brown@globex.com',): Row(id=2777591046268804, num=3)}})
 
-pprint([row.as_dict() for row in sheet.rows])
+pprint(sheet.as_list())
 # >
 # [{'Company Name': 'ACME',
 #   'Email Address': 'alice.smith@acme.com',

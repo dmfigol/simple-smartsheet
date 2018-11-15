@@ -1,10 +1,13 @@
 ## Changelog
+#### 0.1.4 (2018-11-15)
+* Add `make_cell` and `make_cells` methods for Sheet object
+* Add `as_list` method for Sheet object
 #### 0.1.3 (2018-11-12)
-* Adjusted marshmallow Schema to handle column options and tags #1
+* Add marshmallow Schema to handle column options and tags #1
 #### 0.1.2 (2018-11-09)
-* Added `as_dict` method to Row object
-* Added custom index support and querying based on it
+* Add `as_dict` method for Row object
+* Add custom index support and querying based on it
 #### 0.1.1 (2018-11-07)
-* Changed metadata for the package on PyPi
+* Change metadata for the package on PyPi
 #### 0.1.0 (2018-11-07)
 * First release

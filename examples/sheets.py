@@ -1,6 +1,8 @@
+from datetime import datetime
+from pprint import pprint
+
 from simple_smartsheet import Smartsheet
 from simple_smartsheet.models import Sheet, Column, Row, Cell
-from pprint import pprint
 from decouple import config
 
 TOKEN = config("SMARTSHEET_API_TOKEN")
@@ -12,6 +14,7 @@ new_sheet = Sheet(
     columns=[
         Column(primary=True, title="Full Name", type="TEXT_NUMBER"),
         Column(title="Number of read books", type="TEXT_NUMBER"),
+        # Column(title="Birth date", type="DATE"),
     ],
 )
 
@@ -39,7 +42,7 @@ pprint(full_name_column.__dict__)
 num_books_column = sheet.get_column("Number of read books")
 pprint(num_books_column.__dict__)
 
-# adding rows:
+# adding rows (cells created using different ways):
 sheet.add_rows(
     [
         Row(
@@ -51,16 +54,16 @@ sheet.add_rows(
         ),
         Row(
             to_top=True,
-            cells=[
-                Cell(column_id=full_name_column.id, value="Bob Lee"),
-                Cell(column_id=num_books_column.id, value=2),
-            ],
+            cells=sheet.make_cells(
+                {"Full Name": "Bob Lee", "Number of read books": 2}
+            )
         ),
         Row(
             to_top=True,
             cells=[
-                Cell(column_id=full_name_column.id, value="Charlie Brown"),
-                Cell(column_id=num_books_column.id, value=1),
+                sheet.make_cell("Full Name", "Charlie Brown"),
+                sheet.make_cell("Number of read books", 1),
+                # sheet.make_cell("Birth date", datetime(1990, 1, 1)),
             ],
         ),
     ]
@@ -68,8 +71,11 @@ sheet.add_rows(
 
 # getting an updated sheet
 sheet = smartsheet.sheets.get("My New Sheet")
-print("Sheet after adding rows:")
+print("\nSheet after adding rows:")
+# all sheet attributes
 pprint(sheet.__dict__)
+# or just a list of dictionaries containing column titles and values
+pprint(sheet.as_list())
 
 # getting a specific cell and updating it:
 row_id_to_delete = None
@@ -92,18 +98,18 @@ sheet.update_rows(rows_to_update)
 
 # getting an updated sheet
 sheet = smartsheet.sheets.get("My New Sheet")
-print("Sheet after updating rows:")
-pprint(sheet.__dict__)
+print("\nSheet after updating rows:")
+pprint(sheet.as_list())
 
 # deleting row by id
 sheet.delete_row(row_id_to_delete)
 
 # getting an updated sheet
 sheet = smartsheet.sheets.get("My New Sheet")
-print("Sheet after deleting rows:")
-pprint(sheet.__dict__)
+print("\nSheet after deleting rows:")
+pprint(sheet.as_list())
 
 # deleting Sheet
-# sheet = smartsheet.sheets.delete('My New Sheet')
+sheet = smartsheet.sheets.delete('My New Sheet')
 sheets = smartsheet.sheets.list()
 pprint(sheets)

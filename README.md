@@ -52,7 +52,7 @@ pprint(full_name_column.__dict__)
 num_books_column = sheet.get_column("Number of read books")
 pprint(num_books_column.__dict__)
 
-# adding rows:
+# adding rows (cells created using different ways):
 sheet.add_rows(
     [
         Row(
@@ -64,16 +64,15 @@ sheet.add_rows(
         ),
         Row(
             to_top=True,
-            cells=[
-                Cell(column_id=full_name_column.id, value="Bob Lee"),
-                Cell(column_id=num_books_column.id, value=2),
-            ],
+            cells=sheet.make_cells(
+                {"Full Name": "Bob Lee", "Number of read books": 2}
+            )
         ),
         Row(
             to_top=True,
             cells=[
-                Cell(column_id=full_name_column.id, value="Charlie Brown"),
-                Cell(column_id=num_books_column.id, value=1),
+                sheet.make_cell("Full Name", "Charlie Brown"),
+                sheet.make_cell("Number of read books", 1),
             ],
         ),
     ]
@@ -81,8 +80,11 @@ sheet.add_rows(
 
 # getting an updated sheet
 sheet = smartsheet.sheets.get("My New Sheet")
-print("Sheet after adding rows:")
+print("\nSheet after adding rows:")
+# all sheet attributes
 pprint(sheet.__dict__)
+# or just a list of dictionaries containing column titles and values
+pprint(sheet.as_list())
 
 # getting a specific cell and updating it:
 row_id_to_delete = None
@@ -105,16 +107,16 @@ sheet.update_rows(rows_to_update)
 
 # getting an updated sheet
 sheet = smartsheet.sheets.get("My New Sheet")
-print("Sheet after updating rows:")
-pprint(sheet.__dict__)
+print("\nSheet after updating rows:")
+pprint(sheet.as_list())
 
 # deleting row by id
 sheet.delete_row(row_id_to_delete)
 
 # getting an updated sheet
 sheet = smartsheet.sheets.get("My New Sheet")
-print("Sheet after deleting rows:")
-pprint(sheet.__dict__)
+print("\nSheet after deleting rows:")
+pprint(sheet.as_list())
 
 # deleting Sheet
 # sheet = smartsheet.sheets.delete('My New Sheet')
@@ -157,6 +159,9 @@ Methods:
   * `def update_row(row: Row)`: updates a single row
   * `def delete_rows(row_ids: Sequence[int])`: delete several rows with provided ids
   * `def delete_row(row_id: int)`: delete a single row with a provided id
+  * `def make_cell(column_title: str, field_value: Union[float, str, datetime, None])`: creates a Cell object with provided column title and an associated value
+  * `def make_cells(fields: Dict[str, Union[float, str, datetime, None]])`: creates a list of Cell objects from an input dictionary where column title is key associated with the field value
+  * `def as_list()`: returns a list of dictionaries where column title is key associated with the field value
   
 #### Class `simple_smartsheet.models.Row`
 Attributes (converted from camelCase to snake_case):
