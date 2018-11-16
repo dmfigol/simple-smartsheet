@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union
 
 import requests
 
@@ -85,7 +85,7 @@ class Smartsheet:
             else:
                 return response_json
 
-    def post(self, endpoint: str, data: Optional[JSONType] = None) -> Optional[Result]:
+    def post(self, endpoint: str, data: Optional[JSONType] = None, result_obj: bool = True) -> Union[Result, Dict[str, Any], None]:
         """Performs HTTP POST on the endpoint
 
         Args:
@@ -107,7 +107,11 @@ class Smartsheet:
                 response.status_code, error.error_code, error.message
             )
         elif response.status_code != 204:
-            return Result.load(response.json())
+            json_response = response.json()
+            if result_obj:
+                return Result.load(json_response)
+            else:
+                return json_response
         else:
             return None
 

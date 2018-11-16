@@ -69,8 +69,11 @@ sheet.add_rows(
     ]
 )
 
-# getting an updated sheet
-sheet = smartsheet.sheets.get("My New Sheet")
+# sort rows now by column "Full Name" descending / returns updated sheet
+sheet = sheet.sort_rows([{"column_title": "Full Name", "descending": True}])
+
+# or getting an updated sheet again
+# sheet = smartsheet.sheets.get("My New Sheet")
 print("\nSheet after adding rows:")
 # all sheet attributes
 pprint(sheet.__dict__)
@@ -110,6 +113,6 @@ print("\nSheet after deleting rows:")
 pprint(sheet.as_list())
 
 # deleting Sheet
-# sheet = smartsheet.sheets.delete('My New Sheet')
+sheet = smartsheet.sheets.delete('My New Sheet')
 sheets = smartsheet.sheets.list()
 pprint(sheets)

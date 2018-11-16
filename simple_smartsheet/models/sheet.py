@@ -405,6 +405,50 @@ class Sheet(CoreObject):
         """
         return self.delete_rows([row_id])
 
+    def sort_rows(self, order: List[Dict[str, Any]]) -> "Sheet":
+        """Sorts rows in the sheet with the specified order
+
+
+        Args:
+            order: List of dictionaries containing column_title or column_id and
+                (optional) descending bool (default is ascending). Example:
+                [
+                    {"column_title": "Birth date", "descending": True},
+                    {"column_title": "Full Name"}
+                ]
+
+        Returns:
+            Sheet object
+        """
+        # TODO: add validation schema for sorting order
+        normalized_order = []
+        for item in order:
+            normalized_item = {}
+            if 'column_id' in item:
+                normalized_item["columnId"] = item["column_id"]
+            elif 'column_title' in item:
+                column_title = item["column_title"]
+                column = self.get_column(column_title)
+                normalized_item["columnId"] = column.id
+            else:
+                raise ValueError("Sorting key must have either column_id or column_title")
+
+            descending = item.get('descending', True)
+            if descending:
+                normalized_item["direction"] = 'DESCENDING'
+            else:
+                normalized_item["direction"] = 'ASCENDING'
+            normalized_order.append(normalized_item)
+
+        data = {
+            "sortCriteria": normalized_order
+        }
+        endpoint = f"/sheets/{self.id}/sort"
+        response = self.api.post(endpoint, data, result_obj=False)
+        sheet = self.load(response)
+        sheet.api = self.api
+        return sheet
+
     def make_cell(
         self, column_title: str, field_value: Union[float, str, datetime, None]
     ) -> Cell:

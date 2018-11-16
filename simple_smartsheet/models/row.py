@@ -1,12 +1,4 @@
-from typing import (
-    Optional,
-    List,
-    TYPE_CHECKING,
-    Dict,
-    Any,
-    ClassVar,
-    Type,
-)
+from typing import Optional, List, TYPE_CHECKING, Dict, Any, ClassVar, Type
 
 import attr
 from marshmallow import fields

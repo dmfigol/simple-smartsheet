@@ -82,8 +82,11 @@ sheet.add_rows(
     ]
 )
 
-# getting an updated sheet
-sheet = smartsheet.sheets.get("My New Sheet")
+# sort rows now by column "Full Name" descending / returns updated sheet
+sheet = sheet.sort_rows([{"column_title": "Full Name", "descending": True}])
+
+# or getting an updated sheet again
+# sheet = smartsheet.sheets.get("My New Sheet")
 print("\nSheet after adding rows:")
 # all sheet attributes
 pprint(sheet.__dict__)
@@ -163,6 +166,13 @@ Methods:
   * `def update_row(row: Row)`: updates a single row
   * `def delete_rows(row_ids: Sequence[int])`: delete several rows with provided ids
   * `def delete_row(row_id: int)`: delete a single row with a provided id
+  * `def sort_rows(order: List[Dict[str, Any]])`: sorts sheet rows with the specified order. An argument example:  
+```
+[
+    {"column_title": "Birth date", "descending": True},
+    {"column_title": "Full Name"}
+]
+```
   * `def make_cell(column_title: str, field_value: Union[float, str, datetime, None])`: creates a Cell object with provided column title and an associated value
   * `def make_cells(fields: Dict[str, Union[float, str, datetime, None]])`: creates a list of Cell objects from an input dictionary where column title is key associated with the field value
   * `def as_list()`: returns a list of dictionaries where column title is key associated with the field value

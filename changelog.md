@@ -1,4 +1,6 @@
 ## Changelog
+#### 0.1.6 (2018-11-16)
+* Add `sort_rows` method for Sheet object
 #### 0.1.5 (2018-11-15)
 * Add support for date fields
 #### 0.1.4 (2018-11-15)
