@@ -433,7 +433,7 @@ class Sheet(CoreObject):
             else:
                 raise ValueError("Sorting key must have either column_id or column_title")
 
-            descending = item.get('descending', True)
+            descending = item.get('descending', False)
             if descending:
                 normalized_item["direction"] = 'DESCENDING'
             else:
