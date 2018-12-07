@@ -25,7 +25,9 @@ class ColumnSchema(Schema):
     auto_number_format = fields.Nested(
         AutoNumberFormatSchema, data_key="autoNumberFormat"
     )
-    contact_options = fields.Nested(ContactOptionSchema, data_key="contactOptions")
+    contact_options = fields.Nested(
+        ContactOptionSchema, data_key="contactOptions", many=True
+    )
     format = fields.Str()
     hidden = fields.Bool()
     index = fields.Int()
@@ -47,7 +49,7 @@ class Column(Object):
     system_column_type: Optional[str] = None
     type: Optional[str] = None
     auto_number_format: Optional[AutoNumberFormat] = None
-    contact_options: Optional[ContactOption] = None
+    contact_options: Optional[List[ContactOption]] = None
     format: Optional[str] = None
     hidden: Optional[bool] = None
     index: Optional[int] = None

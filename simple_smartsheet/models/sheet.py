@@ -331,7 +331,6 @@ class Sheet(CoreObject):
         include_fields = (
             "id",
             "parent_id",
-            "sibling_id",
             "above",
             "indent",
             "outdent",
@@ -424,25 +423,25 @@ class Sheet(CoreObject):
         normalized_order = []
         for item in order:
             normalized_item = {}
-            if 'column_id' in item:
+            if "column_id" in item:
                 normalized_item["columnId"] = item["column_id"]
-            elif 'column_title' in item:
+            elif "column_title" in item:
                 column_title = item["column_title"]
                 column = self.get_column(column_title)
                 normalized_item["columnId"] = column.id
             else:
-                raise ValueError("Sorting key must have either column_id or column_title")
+                raise ValueError(
+                    "Sorting key must have either column_id or column_title"
+                )
 
-            descending = item.get('descending', False)
+            descending = item.get("descending", False)
             if descending:
-                normalized_item["direction"] = 'DESCENDING'
+                normalized_item["direction"] = "DESCENDING"
             else:
-                normalized_item["direction"] = 'ASCENDING'
+                normalized_item["direction"] = "ASCENDING"
             normalized_order.append(normalized_item)
 
-        data = {
-            "sortCriteria": normalized_order
-        }
+        data = {"sortCriteria": normalized_order}
         endpoint = f"/sheets/{self.id}/sort"
         response = self.api.post(endpoint, data, result_obj=False)
         sheet = self.load(response)
