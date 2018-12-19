@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 JSONType = Union[Dict[str, Any], List[Dict[str, Any]]]
 
-IndexKeysType = List[
-    TypedDict("IndexKeysType", {"columns": Tuple[str, ...], "unique": bool})
-]
+IndexKeysType = TypedDict("IndexKeysType", {"columns": Tuple[str, ...], "unique": bool})
+IndexesKeysType = List[IndexKeysType]
 IndexesType = DefaultDict[Tuple[str, ...], Dict[Tuple, Union["Row", List["Row"]]]]

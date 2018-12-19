@@ -85,7 +85,9 @@ class Smartsheet:
             else:
                 return response_json
 
-    def post(self, endpoint: str, data: Optional[JSONType] = None, result_obj: bool = True) -> Union[Result, Dict[str, Any], None]:
+    def post(
+        self, endpoint: str, data: Optional[JSONType] = None, result_obj: bool = True
+    ) -> Union[Result, Dict[str, Any], None]:
         """Performs HTTP POST on the endpoint
 
         Args:

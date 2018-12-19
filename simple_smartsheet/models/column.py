@@ -15,7 +15,7 @@ class ContactOptionSchema(Schema):
 @attr.s(auto_attribs=True, kw_only=True)
 class ContactOption(Object):
     email: str
-    name: str
+    name: Optional[str] = None
 
 
 class ColumnSchema(Schema):

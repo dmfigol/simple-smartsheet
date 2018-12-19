@@ -24,7 +24,7 @@ from simple_smartsheet.models.column import Column, ColumnSchema
 from simple_smartsheet.models.row import Row, RowSchema
 from simple_smartsheet.models.cell import Cell
 from simple_smartsheet.models.extra import Result
-from simple_smartsheet.types import IndexKeysType, IndexesType
+from simple_smartsheet.types import IndexesKeysType, IndexesType
 
 
 logger = logging.getLogger(__name__)
@@ -112,7 +112,7 @@ class Sheet(CoreObject):
     column_title_to_column: Dict[str, Column] = attr.Factory(dict)
     column_id_to_column: Dict[int, Column] = attr.Factory(dict)
 
-    index_keys: IndexKeysType = attr.Factory(list)
+    index_keys: IndexesKeysType = attr.Factory(list)
     index_key_to_unique: Dict[Tuple[str, ...], bool] = attr.Factory(dict)
     indexes: IndexesType = attr.Factory(lambda: defaultdict(dict))
 
@@ -151,7 +151,7 @@ class Sheet(CoreObject):
                 )
             self.column_title_to_column[column_title] = column
 
-    def update_row_index(self, index_keys: IndexKeysType) -> None:
+    def update_row_index(self, index_keys: IndexesKeysType) -> None:
         """Updates row index for quick lookup by row number and ID"""
         self.row_num_to_row.clear()
         self.row_id_to_row.clear()

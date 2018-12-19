@@ -6,7 +6,7 @@ from marshmallow import utils
 from datetime import datetime
 
 
-from simple_smartsheet.types import IndexKeysType
+from simple_smartsheet.types import IndexesKeysType
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.cell import Cell, CellSchema
 from simple_smartsheet.models.column import Column, ColumnSchema
@@ -90,7 +90,7 @@ class Row(Object):
     def __repr__(self) -> str:
         return f"{self.__class__.__qualname__}(id={self.id!r}, num={self.num!r})"
 
-    def update_index(self, sheet: "Sheet", index_keys: IndexKeysType) -> None:
+    def update_index(self, sheet: "Sheet", index_keys: IndexesKeysType) -> None:
         self.column_title_to_cell.clear()
         self.column_id_to_cell.clear()
 

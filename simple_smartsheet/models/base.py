@@ -24,7 +24,7 @@ from cattr.converters import Converter
 
 from simple_smartsheet import utils
 from simple_smartsheet import config
-from simple_smartsheet.types import IndexesType, IndexKeysType
+from simple_smartsheet.types import IndexesType, IndexesKeysType
 
 if TYPE_CHECKING:
     from simple_smartsheet.smartsheet import Smartsheet  # noqa: F401
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 converter = Converter()
 converter.register_structure_hook(datetime, lambda ts, _: ts)
-converter.register_structure_hook(IndexKeysType, lambda x, _: x)
+converter.register_structure_hook(IndexesKeysType, lambda x, _: x)
 converter.register_structure_hook(IndexesType, lambda x, _: x)
 converter.register_structure_hook(Union[float, str, datetime, None], lambda ts, _: ts)
 
