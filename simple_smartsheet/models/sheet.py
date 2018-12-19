@@ -10,13 +10,12 @@ from typing import (
     Sequence,
     Tuple,
     Any,
-    DefaultDict,
     Union,
     cast,
 )
 
 import attr
-from marshmallow import fields, post_load
+from marshmallow import fields
 
 
 from simple_smartsheet.models.base import Schema, CoreSchema, Object, CoreObject, CRUD
@@ -39,6 +38,17 @@ class UserSettingsSchema(Schema):
 class UserSettings(Object):
     critical_path_enabled: bool
     display_summary_tasks: bool
+
+
+class WorkspaceSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+
+
+@attr.s(auto_attribs=True, repr=False, kw_only=True)
+class Workspace(Object):
+    id: int
+    name: str
 
 
 class SheetSchema(CoreSchema):
@@ -70,6 +80,7 @@ class SheetSchema(CoreSchema):
 
     columns = fields.Nested(ColumnSchema, many=True)
     rows = fields.Nested(RowSchema, many=True)
+    workspace = fields.Nested(WorkspaceSchema)
 
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
@@ -106,6 +117,7 @@ class Sheet(CoreObject):
 
     columns: List[Column] = attr.Factory(list)
     rows: List[Row] = attr.Factory(list)
+    workspace: Optional[Workspace] = None
 
     row_num_to_row: Dict[int, Row] = attr.Factory(dict)
     row_id_to_row: Dict[int, Row] = attr.Factory(dict)
