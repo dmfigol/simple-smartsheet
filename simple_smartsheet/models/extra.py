@@ -15,10 +15,10 @@ class AutoNumberFormatSchema(Schema):
 
 @attr.s(auto_attribs=True, kw_only=True)
 class AutoNumberFormat(Object):
-    fill: str
-    prefix: str
-    starting_num: int
-    suffix: str
+    fill: Optional[str] = None
+    prefix: Optional[str] = None
+    starting_num: Optional[int] = None
+    suffix: Optional[str] = None
 
 
 class ErrorSchema(Schema):
