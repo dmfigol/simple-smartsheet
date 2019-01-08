@@ -1,6 +1,7 @@
 from typing import Optional, List, TYPE_CHECKING, Dict, Any, ClassVar, Type
 
 import attr
+import logging
 from marshmallow import fields
 from marshmallow import utils
 from datetime import datetime
@@ -13,6 +14,8 @@ from simple_smartsheet.models.column import Column, ColumnSchema
 
 if TYPE_CHECKING:
     from simple_smartsheet.models.sheet import Sheet
+
+logger = logging.getLogger(__name__)
 
 
 class RowSchema(Schema):
@@ -103,13 +106,31 @@ class Row(Object):
             if column_title is None:
                 continue
 
-            # deserealize datetime objects from string
+            # deserealize date and datetime objects from string
             column_type = column.type
-            if cell.value is not None:
+            value = cell.value
+
+            if value and isinstance(value, str):
                 if column_type == "DATE":
-                    cell.value = utils.from_iso_date(cell.value)
+                    try:
+                        cell.value = utils.from_iso_date(value)
+                    except ValueError:
+                        logger.info(
+                            "Row #%d, value %r in column %r isn't a valid date",
+                            self.num,
+                            value,
+                            column_title,
+                        )
                 elif column_type in ("DATETIME", "ABSTRACT_DATETIME"):
-                    cell.value = utils.from_iso_datetime(cell.value)
+                    try:
+                        cell.value = utils.from_iso_datetime(value)
+                    except ValueError:
+                        logger.info(
+                            "Row #%d, value %r in column %r isn't a valid datetime ",
+                            self.num,
+                            value,
+                            column_title,
+                        )
 
             self.column_id_to_cell[column_id] = cell
             self.column_title_to_cell[column_title] = cell
