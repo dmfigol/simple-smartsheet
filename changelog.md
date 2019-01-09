@@ -1,6 +1,14 @@
 ## Changelog
+#### 0.1.10 (2019-01-09)
+* Change models.extra.AutoNumberFormat to support absent arguments [#7](https://github.com/dmfigol/simple-smartsheet/issues/7)
+* Handle invalid values in dates and datetimes columns [#9](https://github.com/dmfigol/simple-smartsheet/issues/9)
+#### 0.1.9 (2018-12-19)
+* Add workspace to SheetSchema [#6](https://github.com/dmfigol/simple-smartsheet/issues/6)
+* Handle missing "name" in contact options [#5](https://github.com/dmfigol/simple-smartsheet/issues/5)
+#### 0.1.8 (2018-12-08)
+* Fix contactOptions in ColumnSchema [#4](https://github.com/dmfigol/simple-smartsheet/issues/4)
 #### 0.1.7 (2018-11-16)
-* Change default sorting order to ascending #3
+* Change default sorting order to ascending [#3](https://github.com/dmfigol/simple-smartsheet/issues/3)
 #### 0.1.6 (2018-11-16)
 * Add `sort_rows` method for Sheet object
 #### 0.1.5 (2018-11-15)
