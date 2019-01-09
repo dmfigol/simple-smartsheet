@@ -195,10 +195,6 @@ class CRUD(Generic[TS]):
         Note: API usually returns an incomplete view of objects.
         For example: /sheets will return a list of sheets without columns or rows
 
-        Args:
-            name: name of the object
-            id: id of the object
-
         Returns:
             CoreObject
         """
