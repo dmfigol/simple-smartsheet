@@ -32,7 +32,6 @@ marshmallow = "^3.0.0rc1"
 requests = "*"
 attrs = "*"
 cattrs = "*"
-python-decouple = "*"
 mypy-extensions = "*"
 
 [tool.poetry.dev-dependencies]
@@ -43,3 +42,4 @@ isort = "^4.3"
 ipython = "^7.2"
 ipdb = "^0.11.0"
 pytest = "^4.0"
+python-decouple = "^3.1"

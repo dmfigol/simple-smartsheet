@@ -1,9 +1,3 @@
-from pathlib import Path
+from .utils import is_debug
 
-from decouple import AutoConfig
-
-
-current_dir = Path()
-config = AutoConfig(current_dir)
-
-DEBUG = config("SIMPLE_SMARTSHEET_DEBUG", default=False, cast=bool)
+DEBUG = is_debug()

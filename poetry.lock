@@ -345,7 +345,7 @@ setuptools = "*"
 six = ">=1.10.0"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Strict separation of settings from code."
 name = "python-decouple"
 optional = false
@@ -420,7 +420,7 @@ python-versions = "*"
 version = "0.1.7"
 
 [metadata]
-content-hash = "61b836f7ae53eb2a63af87e43bc1641700f5f7dbeb20943790a8e881d700e661"
+content-hash = "24cc41cbd11038bfee9b8072e2c953b2f33cfd26734dcd0cfa4ff940e077ed3f"
 python-versions = ">=3.6"
 
 [metadata.hashes]

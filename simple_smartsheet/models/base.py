@@ -22,8 +22,8 @@ import attr
 import marshmallow
 from cattr.converters import Converter
 
-from simple_smartsheet import utils
 from simple_smartsheet import config
+from simple_smartsheet import utils
 from simple_smartsheet.types import IndexesType, IndexesKeysType
 
 if TYPE_CHECKING:
