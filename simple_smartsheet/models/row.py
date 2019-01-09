@@ -1,13 +1,10 @@
-from typing import Optional, List, TYPE_CHECKING, Dict, Any, ClassVar, Type
+import logging
+from datetime import datetime
+from typing import Optional, List, TYPE_CHECKING, Dict, Tuple, Any, ClassVar, Type
 
 import attr
-import logging
 from marshmallow import fields
-from marshmallow import utils
-from datetime import datetime
 
-
-from simple_smartsheet.types import IndexesKeysType
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.cell import Cell, CellSchema
 from simple_smartsheet.models.column import Column, ColumnSchema
@@ -93,7 +90,12 @@ class Row(Object):
     def __repr__(self) -> str:
         return f"{self.__class__.__qualname__}(id={self.id!r}, num={self.num!r})"
 
-    def update_index(self, sheet: "Sheet", index_keys: IndexesKeysType) -> None:
+    def update_index(
+        self,
+        sheet: "Sheet",
+        index_key_to_unique: Dict[Tuple[str, ...], bool],
+        deserealize_cell_values: bool = False,
+    ) -> None:
         self.column_title_to_cell.clear()
         self.column_id_to_cell.clear()
 
@@ -103,39 +105,15 @@ class Row(Object):
                 continue
             column = sheet.get_column(column_id=column_id)
             column_title = column.title
-            if column_title is None:
-                continue
-
-            # deserealize date and datetime objects from string
-            column_type = column.type
-            value = cell.value
-
-            if value and isinstance(value, str):
-                if column_type == "DATE":
-                    try:
-                        cell.value = utils.from_iso_date(value)
-                    except ValueError:
-                        logger.info(
-                            "Row #%d, value %r in column %r isn't a valid date",
-                            self.num,
-                            value,
-                            column_title,
-                        )
-                elif column_type in ("DATETIME", "ABSTRACT_DATETIME"):
-                    try:
-                        cell.value = utils.from_iso_datetime(value)
-                    except ValueError:
-                        logger.info(
-                            "Row #%d, value %r in column %r isn't a valid datetime ",
-                            self.num,
-                            value,
-                            column_title,
-                        )
 
             self.column_id_to_cell[column_id] = cell
-            self.column_title_to_cell[column_title] = cell
+            if column_title is not None:
+                self.column_title_to_cell[column_title] = cell
 
-        for index_key, unique in index_keys.items():
+            if deserealize_cell_values:
+                cell.deserealize_value(self, column)
+
+        for index_key, unique in index_key_to_unique.items():
             index = sheet.indexes[index_key]
             key = tuple(self.get_cell(column_title).value for column_title in index_key)
             if unique:

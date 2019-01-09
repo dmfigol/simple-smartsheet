@@ -23,7 +23,7 @@ from simple_smartsheet.models.column import Column, ColumnSchema
 from simple_smartsheet.models.row import Row, RowSchema
 from simple_smartsheet.models.cell import Cell
 from simple_smartsheet.models.extra import Result
-from simple_smartsheet.types import IndexesKeysType, IndexesType
+from simple_smartsheet.types import IndexKeysDict, IndexesType
 
 
 logger = logging.getLogger(__name__)
@@ -124,16 +124,16 @@ class Sheet(CoreObject):
     column_title_to_column: Dict[str, Column] = attr.Factory(dict)
     column_id_to_column: Dict[int, Column] = attr.Factory(dict)
 
-    index_keys: IndexesKeysType = attr.Factory(list)
+    index_keys: List[IndexKeysDict] = attr.Factory(list)
     index_key_to_unique: Dict[Tuple[str, ...], bool] = attr.Factory(dict)
     indexes: IndexesType = attr.Factory(lambda: defaultdict(dict))
 
     schema: ClassVar[Type[SheetSchema]] = SheetSchema
 
     def __attrs_post_init__(self) -> None:
-        self.update_index()
+        self.update_index(deserealize_cell_values=True)
 
-    def update_index(self) -> None:
+    def update_index(self, deserealize_cell_values: bool = False) -> None:
         """Updates columns and row indices for quick lookup"""
         for index_key_dict in self.index_keys:
             columns = index_key_dict["columns"]
@@ -141,7 +141,7 @@ class Sheet(CoreObject):
             self.index_key_to_unique[tuple(sorted(columns))] = unique
 
         self.update_column_index()
-        self.update_row_index(self.index_key_to_unique)
+        self.update_row_index(self.index_key_to_unique, deserealize_cell_values)
 
     def update_column_index(self) -> None:
         """Updates columns index for quick lookup by title and ID"""
@@ -158,12 +158,16 @@ class Sheet(CoreObject):
                 continue
             if column_title in self.column_title_to_column:
                 logger.info(
-                    "Column with the title %s is already present in the index"
-                    % column_title
+                    "Column with the title %s is already present in the index",
+                    column_title,
                 )
             self.column_title_to_column[column_title] = column
 
-    def update_row_index(self, index_keys: IndexesKeysType) -> None:
+    def update_row_index(
+        self,
+        index_keys: Dict[Tuple[str, ...], bool],
+        deserealize_cell_values: bool = False,
+    ) -> None:
         """Updates row index for quick lookup by row number and ID"""
         self.row_num_to_row.clear()
         self.row_id_to_row.clear()
@@ -171,7 +175,7 @@ class Sheet(CoreObject):
         for row in self.rows:
             self.row_num_to_row[row.num] = row
             self.row_id_to_row[row.id] = row
-            row.update_index(self, index_keys)
+            row.update_index(self, index_keys, deserealize_cell_values)
 
     def get_row(
         self,
@@ -186,7 +190,7 @@ class Sheet(CoreObject):
         Args:
             row_num: row number
             row_id: row id
-            filter: a dictionary or ordered dictionary with column title to value
+            filter: a dictionary with column title to value
         mappings in the same order as index was built. Index must be unique.
 
         Returns:
