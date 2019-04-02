@@ -2,10 +2,10 @@ from typing import Optional, Dict, Any, Union
 
 import requests
 
-from simple_smartsheet.constants import API_ROOT
+from simple_smartsheet import constants
+from simple_smartsheet import exceptions
 from simple_smartsheet.models.sheet import SheetsCRUD
-from simple_smartsheet.models.extra import Error, Result
-from simple_smartsheet.exceptions import SmartsheetHTTPError
+from simple_smartsheet.models.extra import Result
 from simple_smartsheet.types import JSONType
 
 
@@ -47,7 +47,7 @@ class Smartsheet:
         For example:
             get_endpoint_url('/sheets') -> 'https://api.smartsheet.com/2.0/sheets'
         """
-        return API_ROOT + endpoint
+        return constants.API_ROOT + endpoint
 
     def get(
         self,
@@ -67,23 +67,22 @@ class Smartsheet:
             JSON data from the response, under the specific key.
         """
         url = self.get_endpoint_url(endpoint)
-
         response = self.session.get(url, params=params)
-        if response.status_code >= 400:
-            error = Error.load(response.json())
-            raise SmartsheetHTTPError(
-                response.status_code, error.error_code, error.message
-            )
-        else:
-            response_json = response.json()
-            if path:
-                if path in response_json:
-                    return response_json[path]
-                raise AttributeError(
-                    f"Response from GET {url} does not contain key {path!r}"
-                )
+        if response.ok:
+            if response.text:
+                response_json = response.json()
+                if path:
+                    if path in response_json:
+                        return response_json[path]
+                    raise AttributeError(
+                        f"Response from GET {url} does not contain key {path!r}"
+                    )
+                else:
+                    return response_json
             else:
-                return response_json
+                return {}
+        else:
+            raise exceptions.SmartsheetHTTPError.from_response(response)
 
     def post(
         self, endpoint: str, data: Optional[JSONType] = None, result_obj: bool = True
@@ -93,6 +92,7 @@ class Smartsheet:
         Args:
             endpoint: relative API endpoint, for example '/sheets'
             data: dictionary or list with data that is going to be sent as JSON
+            result_obj: whether to convert received JSON response to Result object
 
         Returns:
             Result object
@@ -103,19 +103,18 @@ class Smartsheet:
             response = self.session.post(url, json=data)
         else:
             response = self.session.post(url)
-        if response.status_code >= 400:
-            error = Error.load(response.json())
-            raise SmartsheetHTTPError(
-                response.status_code, error.error_code, error.message
-            )
-        elif response.status_code != 204:
-            json_response = response.json()
-            if result_obj:
-                return Result.load(json_response)
+        if response.ok:
+            if response.text:
+                json_response = response.json()
+                if result_obj:
+                    result = Result.load(json_response)
+                    return result
+                else:
+                    return json_response
             else:
-                return json_response
+                return None
         else:
-            return None
+            raise exceptions.SmartsheetHTTPError.from_response(response)
 
     def put(self, endpoint: str, data: JSONType) -> Optional[Result]:
         """Performs HTTP PUT on the endpoint
@@ -130,13 +129,11 @@ class Smartsheet:
         url = self.get_endpoint_url(endpoint)
 
         response = self.session.put(url, json=data)
-        if response.status_code >= 400:
-            error = Error.load(response.json())
-            raise SmartsheetHTTPError(
-                response.status_code, error.error_code, error.message
-            )
+        if response.ok:
+            result = Result.load(response.json())
+            return result
         else:
-            return Result.load(response.json())
+            raise exceptions.SmartsheetHTTPError.from_response(response)
 
     def delete(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Result:
         """Performs HTTP DELETE on the endpoint
@@ -151,10 +148,8 @@ class Smartsheet:
         url = self.get_endpoint_url(endpoint)
 
         response = self.session.delete(url, params=params)
-        if response.status_code >= 400:
-            error = Error.load(response.json())
-            raise SmartsheetHTTPError(
-                response.status_code, error.error_code, error.message
-            )
+        if response.ok:
+            result = Result.load(response.json())
+            return result
         else:
-            return Result.load(response.json())
+            raise exceptions.SmartsheetHTTPError.from_response(response)

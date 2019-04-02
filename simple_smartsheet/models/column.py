@@ -3,6 +3,7 @@ from typing import Optional, List
 import attr
 from marshmallow import fields
 
+from simple_smartsheet import utils
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.extra import AutoNumberFormatSchema, AutoNumberFormat
 
@@ -65,4 +66,4 @@ class Column(Object):
     width: Optional[int] = None
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__qualname__}(id={self.id!r}, title={self.title!r})"
+        return utils.create_repr(self, ["id", "title"])

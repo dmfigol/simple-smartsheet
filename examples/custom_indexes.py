@@ -1,8 +1,10 @@
-from simple_smartsheet import Smartsheet
-from pprint import pprint
-from decouple import config
+import os
 
-TOKEN = config("SMARTSHEET_API_TOKEN")
+from simple_smartsheet import Smartsheet
+
+from pprint import pprint
+
+TOKEN = os.getenv("SMARTSHEET_API_TOKEN")
 smartsheet = Smartsheet(TOKEN)
 
 INDEX_KEYS = [

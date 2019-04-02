@@ -64,9 +64,7 @@ sheet.add_rows(
         ),
         Row(
             to_top=True,
-            cells=sheet.make_cells(
-                {"Full Name": "Bob Lee", "Number of read books": 2}
-            )
+            cells=sheet.make_cells({"Full Name": "Bob Lee", "Number of read books": 2}),
         ),
         Row(
             to_top=True,
@@ -123,6 +121,6 @@ print("\nSheet after deleting rows:")
 pprint(sheet.as_list())
 
 # deleting Sheet
-sheet = smartsheet.sheets.delete('My New Sheet')
+sheet = smartsheet.sheets.delete("My New Sheet")
 sheets = smartsheet.sheets.list()
 pprint(sheets)

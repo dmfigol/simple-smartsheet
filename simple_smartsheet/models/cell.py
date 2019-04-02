@@ -3,22 +3,24 @@ from datetime import datetime, date
 from typing import Optional, Union, ClassVar, Type, Any, List
 
 import attr
+import marshmallow.utils
 from marshmallow import fields
-from marshmallow import utils
 
 from simple_smartsheet import models
+from simple_smartsheet import utils
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.extra import Hyperlink, HyperlinkSchema
 
 logger = logging.getLogger(__name__)
 
 
+# noinspection PyShadowingNames
 class CellValueField(fields.Field):
     def _serialize(self, value, attr, obj, **kwargs):
         if isinstance(value, datetime):
-            return utils.isoformat(value)
+            return marshmallow.utils.isoformat(value)
         elif isinstance(value, date):
-            return utils.to_iso_date(value)
+            return marshmallow.utils.to_iso_date(value)
         else:
             return super()._serialize(value, attr, obj, **kwargs)
 
@@ -62,17 +64,14 @@ class Cell(Object):
     schema: ClassVar[Type[CellSchema]] = CellSchema
 
     def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__qualname__}(column_id={self.column_id!r}, "
-            f"value={self.value!r})"
-        )
+        return utils.create_repr(self, ["column_id", "value"])
 
     def deserealize_value(self, row: "models.Row", column: "models.Column") -> None:
         column_type = column.type
         if self.value and isinstance(self.value, str):
             if column_type == "DATE":
                 try:
-                    self.value = utils.from_iso_date(self.value)
+                    self.value = marshmallow.utils.from_iso_date(self.value)
                 except ValueError:
                     logger.info(
                         "Row #%d, value %r in column %r isn't a valid date",
@@ -82,7 +81,7 @@ class Cell(Object):
                     )
             elif column_type in ("DATETIME", "ABSTRACT_DATETIME"):
                 try:
-                    self.value = utils.from_iso_datetime(self.value)
+                    self.value = marshmallow.utils.from_iso_datetime(self.value)
                 except ValueError:
                     logger.info(
                         "Row #%d, value %r in column %r isn't a valid datetime ",

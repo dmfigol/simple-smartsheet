@@ -1,10 +1,11 @@
 import logging
 from datetime import datetime
-from typing import Optional, List, TYPE_CHECKING, Dict, Tuple, Any, ClassVar, Type
+from typing import Optional, List, TYPE_CHECKING, Dict, Tuple, Any, ClassVar, Type, cast
 
 import attr
 from marshmallow import fields
 
+from simple_smartsheet import utils
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.cell import Cell, CellSchema
 from simple_smartsheet.models.column import Column, ColumnSchema
@@ -88,7 +89,7 @@ class Row(Object):
     schema: ClassVar[Type[RowSchema]] = RowSchema
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__qualname__}(id={self.id!r}, num={self.num!r})"
+        return utils.create_repr(self, ["id", "num"])
 
     def update_index(
         self,
@@ -119,7 +120,7 @@ class Row(Object):
             if unique:
                 index[key] = self
             else:
-                container = index.setdefault(key, [])
+                container = cast(List["Row"], index.setdefault(key, []))
                 container.append(self)
 
     def get_cell(
