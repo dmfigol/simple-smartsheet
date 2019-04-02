@@ -1,16 +1,26 @@
+import os
 from datetime import date
 from pprint import pprint
 
 from simple_smartsheet import Smartsheet
 from simple_smartsheet.models import Sheet, Column, Row, Cell
-from decouple import config
 
-TOKEN = config("SMARTSHEET_API_TOKEN")
+TOKEN = os.getenv("SMARTSHEET_API_TOKEN")
 smartsheet = Smartsheet(TOKEN)
+
+# getting a simplified view of sheets
+sheets = smartsheet.sheets.list()
+pprint(sheets)
+
+sheet_name = "My New Sheet"
+# Delete the test sheet if already exists
+for sheet in sheets:
+    if sheet.name == sheet_name:
+        smartsheet.sheets.delete(sheet_name)
 
 # creating new Sheet
 new_sheet = Sheet(
-    name="My New Sheet",
+    name=sheet_name,
     columns=[
         Column(primary=True, title="Full Name", type="TEXT_NUMBER"),
         Column(title="Number of read books", type="TEXT_NUMBER"),
