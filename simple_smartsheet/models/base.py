@@ -20,9 +20,11 @@ from typing import (
 
 import attr
 import marshmallow
+from marshmallow import fields
 from cattr.converters import Converter
 
 from simple_smartsheet import config
+from simple_smartsheet import exceptions
 from simple_smartsheet import utils
 from simple_smartsheet.types import IndexesType, IndexesKeysType
 
@@ -50,7 +52,8 @@ class Schema(marshmallow.Schema):
 
 
 class CoreSchema(Schema):
-    pass
+    id = fields.Int()
+    name = fields.Str()
 
 
 T = TypeVar("T", bound="Object")
@@ -82,13 +85,14 @@ class Object:
 
     def __repr__(self) -> str:
         if hasattr(self, "id") and hasattr(self, "name"):
-            return f"{self.__class__.__qualname__}(name={self.name!r}, id={self.id!r})"
+            attrs = ["name", "id"]
         elif hasattr(self, "id"):
-            return f"{self.__class__.__qualname__}(id={self.id!r})"
+            attrs = ["id"]
         elif hasattr(self, "name"):
-            return f"{self.__class__.__qualname__}(name={self.name!r})"
+            attrs = ["name"]
         else:
             return super().__repr__()
+        return utils.create_repr(self, attrs)
 
     def copy(self: T, deep: bool = True) -> T:
         if deep:
@@ -99,13 +103,25 @@ class Object:
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
 class CoreObject(Object):
+    name: str
+    id: Optional[int] = None
+
     schema: ClassVar[Type[CoreSchema]] = CoreSchema
     api: Optional["Smartsheet"] = attr.ib(default=None, init=False)
+
+    @property
+    def _id(self) -> Optional[int]:
+        return getattr(self, "id")
+
+    @property
+    def _name(self) -> str:
+        return getattr(self, "name")
 
 
 TS = TypeVar("TS", bound=CoreObject)
 
 
+# noinspection PyShadowingBuiltins
 class CRUD(Generic[TS]):
     base_url = ""
     _get_url: Optional[str] = None
@@ -148,13 +164,15 @@ class CRUD(Generic[TS]):
     def delete_url(self) -> str:
         return self._delete_url or self.base_url + "/{id}"
 
-    @property
-    def id_to_obj(self) -> Dict[str, TS]:
-        return {obj.id: obj for obj in self.list()}
-
-    @property
-    def name_to_obj(self) -> Dict[str, TS]:
-        return {obj.name: obj for obj in self.list()}
+    def get_id(self, name: str) -> int:
+        for obj in self.list():
+            print(f"name: {obj._name}, id: {obj._id}")
+            if obj._name == name:
+                return obj._id
+        raise exceptions.SmartsheetObjectNotFound(
+            f"{self.factory.__qualname__} object with the name {name!r} "
+            f"has not been found"
+        )
 
     def get(
         self, name: Optional[str] = None, id: Optional[int] = None, **kwargs: Any
@@ -186,7 +204,7 @@ class CRUD(Generic[TS]):
             obj.api = self.api
             return obj
         else:
-            id_ = self.name_to_obj[name].id
+            id_ = self.get_id(name)
             return self.get(id=id_, **kwargs)
 
     def list(self) -> List[TS]:
@@ -266,7 +284,7 @@ class CRUD(Generic[TS]):
             endpoint = self.delete_url.format(id=id)
             return self.api.delete(endpoint)
         else:
-            id_ = self.name_to_obj[name].id
+            id_ = self.get_id(name)
             return self.delete(id=id_)
 
     def __iter__(self) -> Iterator[TS]:
