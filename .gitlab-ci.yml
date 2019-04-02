@@ -4,6 +4,7 @@ services:
   - docker:dind
 
 stages:
+  - test
   - publish
 
 before_script:
@@ -14,6 +15,14 @@ before_script:
   - poetry config settings.virtualenvs.in-project true
   - .venv/bin/pip install --no-cache-dir -U pip setuptools
   - /root/.poetry/bin/poetry install --no-interaction
+
+test:
+  stage: test
+  script:
+    - poetry run black --check simple_smartsheet
+  tags:
+    - docker
+
 
 publish:
   stage: publish
