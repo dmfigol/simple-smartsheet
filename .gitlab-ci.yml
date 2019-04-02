@@ -1,15 +1,12 @@
 image: python:3.6-slim-stretch
 
-services:
-  - docker:dind
-
 stages:
   - test
   - publish
 
 before_script:
   - apt-get update
-  - apt-get install -yq curl git \
+  - apt-get install -yq curl git
   - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
   - python -m venv .venv
   - poetry config settings.virtualenvs.in-project true
