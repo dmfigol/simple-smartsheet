@@ -9,7 +9,7 @@ before_script:
   - apt-get install -yq curl git
   - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
   - python -m venv .venv
-  - poetry config settings.virtualenvs.in-project true
+  - /root/.poetry/bin/poetry config settings.virtualenvs.in-project true
   - .venv/bin/pip install --no-cache-dir -U pip setuptools
   - /root/.poetry/bin/poetry install --no-interaction
 
