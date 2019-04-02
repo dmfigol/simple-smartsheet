@@ -107,3 +107,4 @@ venv.bak/
 
 dist/
 settings.toml
+pip-wheel-metadata/
