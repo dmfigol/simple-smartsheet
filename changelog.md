@@ -1,4 +1,6 @@
 ## Changelog
+#### 0.1.11 (2019-04-02)
+* Add exceptions SmartsheetHTTPClientError and SmartsheetHTTPServerError
 #### 0.1.10 (2019-01-09)
 * Change models.extra.AutoNumberFormat to support absent arguments [#7](https://github.com/dmfigol/simple-smartsheet/issues/7)
 * Handle invalid values in dates and datetimes columns [#9](https://github.com/dmfigol/simple-smartsheet/issues/9)
