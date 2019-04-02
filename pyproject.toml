@@ -5,7 +5,7 @@ build-backend = "poetry.masonry.api"
 [tool.poetry]
 name = "simple-smartsheet"
 version = "0.1.10"
-description = "Python library to interact with Smartsheet objects"
+description = "Python library to interact with Smartsheet API"
 authors = ["Dmitry Figol <git@dmfigol.me>"]
 license = "MIT"
 
@@ -25,7 +25,6 @@ classifiers = [
     "Intended Audience :: Developers",
 ]
 
-
 [tool.poetry.dependencies]
 python = ">=3.6"
 marshmallow = "^3.0.0rc1"
@@ -35,11 +34,10 @@ cattrs = "*"
 mypy-extensions = "*"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.6"
-mypy = "^0.641.0"
+flake8 = "*"
+mypy = "*"
 black = { version = "*", allows-prereleases = true }
-isort = "^4.3"
-ipython = "^7.2"
-ipdb = "^0.11.0"
-pytest = "^4.0"
-python-decouple = "^3.1"
+isort = "*"
+ipython = "*"
+ipdb = "*"
+pytest = "*"
