@@ -1,0 +1,25 @@
+image: python:3.6-slim-stretch
+
+services:
+  - docker:dind
+
+stages:
+  - publish
+
+before_script:
+  - apt-get update
+  - apt-get install -yq curl git \
+  - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+  - python -m venv .venv
+  - poetry config settings.virtualenvs.in-project true
+  - .venv/bin/pip install --no-cache-dir -U pip setuptools
+  - /root/.poetry/bin/poetry install --no-interaction
+
+publish:
+  stage: publish
+  script:
+    - poetry publish --build -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
+  tags:
+    - docker
+  only:
+    - tags
