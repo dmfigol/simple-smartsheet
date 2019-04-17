@@ -1,22 +1,18 @@
-image: python:3.6-slim-stretch
+image: "registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-stretch"
 
 stages:
   - test
   - publish
 
 before_script:
-  - apt-get update
-  - apt-get install -yq curl git
-  - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
-  - python -m venv .venv
-  - /root/.poetry/bin/poetry config settings.virtualenvs.in-project true
-  - .venv/bin/pip install --no-cache-dir -U pip setuptools
   - /root/.poetry/bin/poetry install --no-interaction
 
 test:
   stage: test
   script:
     - .venv/bin/black --check simple_smartsheet
+    - .venv/bin/mypy simple_smartsheet
+    - .venv/bin/flake8 simple_smartsheet
   tags:
     - docker
 
