@@ -25,6 +25,7 @@ new_sheet = Sheet(
         Column(primary=True, title="Full Name", type="TEXT_NUMBER"),
         Column(title="Number of read books", type="TEXT_NUMBER"),
         Column(title="Birth date", type="DATE"),
+        Column(title="Library member", type="CHECKBOX"),
     ],
 )
 

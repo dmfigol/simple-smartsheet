@@ -24,6 +24,30 @@ class CellValueField(fields.Field):
         else:
             return super()._serialize(value, attr, obj, **kwargs)
 
+    def _deserialize(self, value, attr, data, **kwargs):
+        column_id_to_type = self.context["column_id_to_type"]
+        if "virtualColumnId" in data:
+            column_id = data["virtualColumnId"]
+        else:
+            column_id = data["columnId"]
+        column_type = column_id_to_type[column_id]
+        if not value:
+            return value
+        if column_type == "DATE":
+            try:
+                return marshmallow.utils.from_iso_date(value)
+            except ValueError:
+                logger.warning("Cell value %r is not a valid date", value)
+                return value
+        elif column_type in ("DATETIME", "ABSTRACT_DATETIME"):
+            try:
+                return marshmallow.utils.from_iso_datetime(value)
+            except ValueError:
+                logger.info("Cell value %r is not a valid datetime ", value)
+                return value
+        else:
+            return value
+
 
 class CellSchema(Schema):
     column_id = fields.Int(data_key="columnId")
@@ -61,10 +85,14 @@ class Cell(Object):
     strict: bool = True
     value: Union[float, str, datetime, None] = None
 
-    schema: ClassVar[Type[CellSchema]] = CellSchema
+    _schema: ClassVar[Type[CellSchema]] = CellSchema
 
     def __repr__(self) -> str:
         return utils.create_repr(self, ["column_id", "value"])
+
+    @property
+    def _column_id(self) -> Optional[int]:
+        return self.column_id
 
     def deserealize_value(self, row: "models.Row", column: "models.Column") -> None:
         column_type = column.type

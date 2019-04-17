@@ -4,9 +4,10 @@ import requests
 
 from simple_smartsheet import constants
 from simple_smartsheet import exceptions
-from simple_smartsheet.models.sheet import SheetsCRUD
-from simple_smartsheet.models.extra import Result
 from simple_smartsheet.types import JSONType
+from simple_smartsheet.models.extra import Result
+from simple_smartsheet.models.report import ReportCRUD
+from simple_smartsheet.models.sheet import SheetCRUD
 
 
 class Smartsheet:
@@ -23,7 +24,9 @@ class Smartsheet:
     def __init__(self, token: str) -> None:
         self.session = requests.Session()
         self.token = token
-        self.sheets = SheetsCRUD(self)
+
+        self.sheets = SheetCRUD(self)
+        self.reports = ReportCRUD(self)
 
     @property
     def token(self) -> str:

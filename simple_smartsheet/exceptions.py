@@ -3,7 +3,7 @@ from typing import Optional
 
 from requests import Response
 
-from simple_smartsheet import models
+from simple_smartsheet.models.extra import Error
 
 
 class SmartsheetError(Exception):
@@ -11,12 +11,7 @@ class SmartsheetError(Exception):
 
 
 class SmartsheetHTTPError(SmartsheetError):
-    def __init__(
-        self,
-        http_response_code: int,
-        error: "models.extra.Error" = None,
-        message: str = "",
-    ):
+    def __init__(self, http_response_code: int, error: Error = None, message: str = ""):
         result_msg_items = [f"HTTP response code {http_response_code}"]
         if error is not None:
             result_msg_items.append(f"Error code {error.error_code}")
@@ -36,11 +31,11 @@ class SmartsheetHTTPError(SmartsheetError):
     @classmethod
     def from_response(cls, response: Response):
         http_response_code = response.status_code
-        error: Optional["models.extra.Error"] = None
+        error: Optional[Error] = None
         message = ""
         if response.text:
             try:
-                error = models.extra.Error.load(response.json())
+                error = Error.load(response.json())
             except json.JSONDecodeError:
                 message = response.text
 
@@ -61,4 +56,12 @@ class SmartsheetHTTPServerError(SmartsheetHTTPError):
 
 
 class SmartsheetObjectNotFound(SmartsheetError):
+    pass
+
+
+class SmartsheetIndexNotFound(SmartsheetError):
+    pass
+
+
+class SmartsheetIndexNotUnique(SmartsheetError):
     pass

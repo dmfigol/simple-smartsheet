@@ -1,17 +1,16 @@
 import logging
 from datetime import datetime
-from typing import Optional, List, TYPE_CHECKING, Dict, Tuple, Any, ClassVar, Type, cast
+from typing import Generic, Optional, List, Dict, Any, ClassVar, Type, TypeVar, cast
 
 import attr
 from marshmallow import fields
 
 from simple_smartsheet import utils
+from simple_smartsheet.models import sheet as sheet_models
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.cell import Cell, CellSchema
 from simple_smartsheet.models.column import Column, ColumnSchema
 
-if TYPE_CHECKING:
-    from simple_smartsheet.models.sheet import Sheet
 
 logger = logging.getLogger(__name__)
 
@@ -21,8 +20,6 @@ class RowSchema(Schema):
     sheet_id = fields.Int(data_key="sheetId")
     access_level = fields.Str(data_key="accessLevel")
     attachments = fields.List(fields.Field())  # TODO: Attachment object
-    cells = fields.Nested(CellSchema, many=True)
-    columns = fields.Nested(ColumnSchema, many=True)
     conditional_format = fields.Str(data_key="conditionalFormat")
     created_at = fields.DateTime(data_key="createdAt")
     created_by = fields.Field(data_key="createdBy")  # TODO: User object
@@ -39,6 +36,9 @@ class RowSchema(Schema):
     permalink = fields.Str()
     version = fields.Int()
 
+    cells = fields.Nested(CellSchema, many=True)
+    columns = fields.Nested(ColumnSchema, many=True)
+
     # location-specifier attributes
     parent_id = fields.Int(data_key="parentId")
     sibling_id = fields.Int(data_key="siblingId")
@@ -49,14 +49,17 @@ class RowSchema(Schema):
     to_top = fields.Bool(data_key="toTop")
 
 
+CellT = TypeVar("CellT", bound=Cell)
+RowT = TypeVar("RowT", bound="_RowBase[Any]")
+ColumnT = TypeVar("ColumnT", bound=Column)
+
+
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
-class Row(Object):
+class _RowBase(Object, Generic[CellT]):
     id: Optional[int] = None
     sheet_id: Optional[int] = None
     access_level: Optional[str] = None
     attachments: List[Any] = attr.Factory(list)
-    cells: List[Cell] = attr.Factory(list)
-    columns: List[Column] = attr.Factory(list)
     conditional_format: Optional[str] = None
     created_at: Optional[datetime] = None
     created_by: Optional[Any] = None
@@ -73,6 +76,9 @@ class Row(Object):
     permalink: Optional[str] = None
     version: Optional[int] = None
 
+    cells: List[CellT] = attr.Factory(list)
+    columns: List[Column] = attr.Factory(list)
+
     # location-specified attributes
     parent_id: Optional[int] = None
     sibling_id: Optional[int] = None
@@ -83,25 +89,22 @@ class Row(Object):
     to_top: Optional[bool] = None
 
     # index
-    column_title_to_cell: Dict[str, Cell] = attr.Factory(dict)
-    column_id_to_cell: Dict[int, Cell] = attr.Factory(dict)
+    column_title_to_cell: Dict[str, CellT] = attr.Factory(dict)
+    column_id_to_cell: Dict[int, CellT] = attr.Factory(dict)
 
-    schema: ClassVar[Type[RowSchema]] = RowSchema
+    _schema: ClassVar[Type[RowSchema]] = RowSchema
 
     def __repr__(self) -> str:
         return utils.create_repr(self, ["id", "num"])
 
-    def update_index(
-        self,
-        sheet: "Sheet",
-        index_key_to_unique: Dict[Tuple[str, ...], bool],
-        deserealize_cell_values: bool = False,
+    def _update_cell_lookup(
+        self, sheet: "sheet_models._SheetBase[RowT, ColumnT]"
     ) -> None:
         self.column_title_to_cell.clear()
         self.column_id_to_cell.clear()
 
         for cell in self.cells:
-            column_id = cell.column_id
+            column_id = cell._column_id
             if column_id is None:
                 continue
             column = sheet.get_column(column_id=column_id)
@@ -111,21 +114,26 @@ class Row(Object):
             if column_title is not None:
                 self.column_title_to_cell[column_title] = cell
 
-            if deserealize_cell_values:
-                cell.deserealize_value(self, column)
+    def _update_index(self, sheet: "sheet_models._SheetBase[RowT, ColumnT]") -> None:
+        for index_key, index_dict in sheet.indexes.items():
+            index = index_dict["index"]
+            unique = index_dict["unique"]
+            if isinstance(index_key, str):
+                key = self.get_cell(index_key).value
+            else:
+                key = tuple(
+                    self.get_cell(column_title).value for column_title in index_key
+                )
 
-        for index_key, unique in index_key_to_unique.items():
-            index = sheet.indexes[index_key]
-            key = tuple(self.get_cell(column_title).value for column_title in index_key)
             if unique:
                 index[key] = self
             else:
-                container = cast(List["Row"], index.setdefault(key, []))
+                container = cast(List[_RowBase[CellT]], index.setdefault(key, []))
                 container.append(self)
 
     def get_cell(
         self, column_title: Optional[str] = None, column_id: Optional[int] = None
-    ) -> Cell:
+    ) -> CellT:
         if column_title is not None:
             return self.column_title_to_cell[column_title]
         elif column_id is not None:
@@ -141,3 +149,8 @@ class Row(Object):
             column_title: cell.value
             for column_title, cell in self.column_title_to_cell.items()
         }
+
+
+@attr.s(auto_attribs=True, repr=False, kw_only=True)
+class Row(_RowBase[Cell]):
+    cells: List[Cell] = attr.Factory(list)

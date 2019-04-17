@@ -1,12 +1,13 @@
 import logging
-from collections import defaultdict
 from datetime import datetime
 from typing import (
     Optional,
     Dict,
     List,
     ClassVar,
+    Generic,
     Type,
+    TypeVar,
     Sequence,
     Tuple,
     Any,
@@ -15,15 +16,16 @@ from typing import (
 )
 
 import attr
-from marshmallow import fields
+from marshmallow import fields, pre_load
 
-
-from simple_smartsheet.models.base import Schema, CoreSchema, Object, CoreObject, CRUD
-from simple_smartsheet.models.column import Column, ColumnSchema
-from simple_smartsheet.models.row import Row, RowSchema
-from simple_smartsheet.models.cell import Cell
-from simple_smartsheet.models.extra import Result
+from simple_smartsheet import exceptions
+from simple_smartsheet.crud import CRUD
 from simple_smartsheet.types import IndexKeysDict, IndexesType
+from simple_smartsheet.models.base import Schema, CoreSchema, Object, CoreObject
+from simple_smartsheet.models.cell import Cell
+from simple_smartsheet.models.column import Column, ColumnSchema
+from simple_smartsheet.models.row import Row, RowSchema, _RowBase
+from simple_smartsheet.models.extra import Result
 
 
 logger = logging.getLogger(__name__)
@@ -82,20 +84,28 @@ class SheetSchema(CoreSchema):
     rows = fields.Nested(RowSchema, many=True)
     workspace = fields.Nested(WorkspaceSchema)
 
+    class Meta:
+        ordered = True
+
+    @pre_load()
+    def update_context(self, data):
+        self.context["column_id_to_type"] = {}
+        return data
+
+
+RowT = TypeVar("RowT", bound=_RowBase[Any])
+ColumnT = TypeVar("ColumnT", bound=Column)
+
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
-class Sheet(CoreObject):
-    """Represent Smartsheet Sheet object
+class _SheetBase(CoreObject, Generic[RowT, ColumnT]):
+    """Represents Smartsheet Sheet object
 
     Additional details about fields can be found here:
     http://smartsheet-platform.github.io/api-docs/#sheets
 
     Extra attributes:
-        row_rum_to_row: mapping of row number to Row object
-        row_id_to_row: mapping of row id to Row object
-        column_title_to_column: mapping of column title to Column object
-        column_id_to_column: mapping of column id to Column object
-        schema: reference to SheetSchema
+        indexes: contains all built indices
     """
 
     name: str
@@ -115,74 +125,72 @@ class Sheet(CoreObject):
     cell_image_upload_enabled: Optional[bool] = None
     user_settings: Optional[UserSettings] = None
 
-    columns: List[Column] = attr.Factory(list)
-    rows: List[Row] = attr.Factory(list)
+    columns: List[ColumnT] = attr.Factory(list)
+    rows: List[RowT] = attr.Factory(list)
     workspace: Optional[Workspace] = None
 
-    row_num_to_row: Dict[int, Row] = attr.Factory(dict)
-    row_id_to_row: Dict[int, Row] = attr.Factory(dict)
-    column_title_to_column: Dict[str, Column] = attr.Factory(dict)
-    column_id_to_column: Dict[int, Column] = attr.Factory(dict)
+    _row_num_to_row: Dict[int, RowT] = attr.ib(attr.Factory(dict), init=False)
+    _row_id_to_row: Dict[int, RowT] = attr.ib(attr.Factory(dict), init=False)
+    _column_title_to_column: Dict[str, ColumnT] = attr.ib(
+        attr.Factory(dict), init=False
+    )
+    _column_id_to_column: Dict[int, ColumnT] = attr.ib(attr.Factory(dict), init=False)
+    indexes: IndexesType = attr.ib(attr.Factory(dict), init=False)
 
-    index_keys: List[IndexKeysDict] = attr.Factory(list)
-    index_key_to_unique: Dict[Tuple[str, ...], bool] = attr.Factory(dict)
-    indexes: IndexesType = attr.Factory(lambda: defaultdict(dict))
-
-    schema: ClassVar[Type[SheetSchema]] = SheetSchema
+    _schema: ClassVar[Type[SheetSchema]] = SheetSchema
 
     def __attrs_post_init__(self) -> None:
-        self.update_index(deserealize_cell_values=True)
+        self._update_column_lookup()
+        self._update_row_cell_lookup()
 
-    def update_index(self, deserealize_cell_values: bool = False) -> None:
-        """Updates columns and row indices for quick lookup"""
-        for index_key_dict in self.index_keys:
-            columns = index_key_dict["columns"]
-            unique = index_key_dict["unique"]
-            self.index_key_to_unique[tuple(sorted(columns))] = unique
-
-        self.update_column_index()
-        self.update_row_index(self.index_key_to_unique, deserealize_cell_values)
-
-    def update_column_index(self) -> None:
-        """Updates columns index for quick lookup by title and ID"""
-        self.column_title_to_column.clear()
-        self.column_id_to_column.clear()
+    def _update_column_lookup(self) -> None:
+        self._column_title_to_column.clear()
+        self._column_id_to_column.clear()
 
         for column in self.columns:
-            if column.id is None:
+            column_id = column._id
+            if column_id is None:
                 continue
-            self.column_id_to_column[column.id] = column
+            self._column_id_to_column[column_id] = column
 
             column_title = column.title
             if column_title is None:
                 continue
-            if column_title in self.column_title_to_column:
+            if column_title in self._column_title_to_column:
                 logger.info(
                     "Column with the title %s is already present in the index",
                     column_title,
                 )
-            self.column_title_to_column[column_title] = column
+            self._column_title_to_column[column_title] = column
 
-    def update_row_index(
-        self,
-        index_keys: Dict[Tuple[str, ...], bool],
-        deserealize_cell_values: bool = False,
-    ) -> None:
-        """Updates row index for quick lookup by row number and ID"""
-        self.row_num_to_row.clear()
-        self.row_id_to_row.clear()
+    def _update_row_cell_lookup(self) -> None:
+        self._row_num_to_row.clear()
+        self._row_id_to_row.clear()
 
         for row in self.rows:
-            self.row_num_to_row[row.num] = row
-            self.row_id_to_row[row.id] = row
-            row.update_index(self, index_keys, deserealize_cell_values)
+            if row.num:
+                self._row_num_to_row[row.num] = row
+
+            if row.id:
+                self._row_id_to_row[row.id] = row
+
+            row._update_cell_lookup(self)
+
+    def build_index(self, indexes: List[IndexKeysDict]) -> None:
+        for index in indexes:
+            columns = index["columns"]
+            unique = index["unique"]
+            self.indexes[columns] = {"index": {}, "unique": unique}
+
+        for row in self.rows:
+            row._update_index(self)
 
     def get_row(
         self,
         row_num: Optional[int] = None,
         row_id: Optional[int] = None,
         filter: Optional[Dict[str, Any]] = None,
-    ) -> Optional[Row]:
+    ) -> Optional[RowT]:
         """Returns Row object by row number or ID
 
         Either row_num or row_id must be provided
@@ -197,26 +205,30 @@ class Sheet(CoreObject):
             Row object
         """
         if row_num is not None:
-            return self.row_num_to_row.get(row_num)
+            return self._row_num_to_row.get(row_num)
         elif row_id is not None:
-            return self.row_id_to_row.get(row_id)
+            return self._row_id_to_row.get(row_id)
         elif filter is not None:
-            index_key, query = zip(*sorted(filter.items()))
-            unique = self.index_key_to_unique.get(index_key)
-            if unique is None:
-                raise ValueError("Index %s was not built", index_key)
-            elif not unique:
-                raise ValueError(
-                    "Index %s is non-unique and lookup will potentially "
-                    "return multiple rows, use get_rows method instead",
-                    index_key,
+            columns, query = zip(*sorted(filter.items()))
+            index_dict = self.indexes.get(columns)
+            if index_dict is None:
+                raise exceptions.SmartsheetIndexNotFound(
+                    f"Index {columns} is not found, "
+                    f"build it first with build_index method"
                 )
-            index = cast(Dict[Tuple, Row], self.indexes[index_key])
+
+            unique = index_dict["unique"]
+            if not unique:
+                raise exceptions.SmartsheetIndexNotUnique(
+                    f"Index {columns} is non-unique and lookup will potentially "
+                    "return multiple rows, use get_rows method instead"
+                )
+            index = cast(Dict[Tuple[Any, ...], RowT], index_dict["index"])
             return index[query]
         else:
             raise ValueError("Either row_num or row_id argument should be provided")
 
-    def get_rows(self, filter: Dict[str, Any]) -> [List[Row]]:
+    def get_rows(self, filter: Dict[str, Any]) -> List[RowT]:
         """Returns Row objects by index query
 
         Args:
@@ -226,24 +238,31 @@ class Sheet(CoreObject):
         Returns:
             Row object
         """
-        index_key, query = zip(*sorted(filter.items()))
-        unique = self.index_key_to_unique.get(index_key)
-        if unique is None:
-            raise ValueError("Index %s was not built", index_key)
-        elif unique:
-            index = cast(Dict[Tuple, Row], self.indexes[index_key])
-            result = index.get(query)
+        columns, query = zip(*sorted(filter.items()))
+        index_dict = self.indexes.get(columns)
+        if index_dict is None:
+            raise exceptions.SmartsheetIndexNotFound(
+                f"Index {columns} is not found, "
+                f"build it first with build_index method"
+            )
+
+        unique = index_dict["unique"]
+        if unique:
+            unique_index = cast(Dict[Tuple[Any, ...], RowT], index_dict["index"])
+            result = unique_index.get(query)
             if result is not None:
                 return [result]
             else:
                 return []
         else:
-            index = cast(Dict[Tuple, List[Row]], self.indexes[index_key])
-            return index.get(query, [])
+            non_unique_index = cast(
+                Dict[Tuple[Any, ...], List[RowT]], index_dict["index"]
+            )
+            return non_unique_index.get(query, [])
 
     def get_column(
         self, column_title: Optional[str] = None, column_id: Optional[int] = None
-    ) -> Optional[Column]:
+    ) -> ColumnT:
         """Returns Column object by column title or ID
 
         Either column_title or column_id must be provided
@@ -256,18 +275,41 @@ class Sheet(CoreObject):
             Column object
         """
         if column_title is not None:
-            return self.column_title_to_column.get(column_title)
+            return self._column_title_to_column[column_title]
         elif column_id is not None:
-            return self.column_id_to_column.get(column_id)
+            return self._column_id_to_column[column_id]
         else:
             raise ValueError(
                 "Either column_title or column_id argument should be provided"
             )
 
+    def as_list(self) -> List[Dict[str, Union[float, str, datetime, None]]]:
+        """Returns a list of dictionaries with column titles and cell values"""
+        return [row.as_dict() for row in self.rows]
+
+
+@attr.s(auto_attribs=True, repr=False, kw_only=True)
+class Sheet(_SheetBase[Row, Column]):
+    """Represents Smartsheet Sheet object
+
+    Additional details about fields can be found here:
+    http://smartsheet-platform.github.io/api-docs/#sheets
+
+    Extra attributes:
+        _row_тum_to_row: mapping of row number to Row object
+        _row_id_to_row: mapping of row id to Row object
+        _column_title_to_column: mapping of column title to Column object
+        _column_id_to_column: mapping of column id to Column object
+        _schema: reference to SheetSchema
+    """
+
+    columns: List[Column] = cast(List[Column], attr.Factory(list))
+    rows: List[Row] = attr.Factory(list)
+
     def add_rows(self, rows: Sequence[Row]) -> Result:
         """Adds several rows to the smartsheet.
 
-        Sheet must have api attribute set. It is automatically set when method
+        Sheet must have smartsheet attribute set. It is automatically set when method
             Smartsheet.sheets.get() is used
         Every row must have either location-specifier attributes or row number set
         More details: http://smartsheet-platform.github.io/api-docs/#add-rows
@@ -278,8 +320,8 @@ class Sheet(CoreObject):
         Returns:
             Result object
         """
-        if self.api is None:
-            raise ValueError("To use this method, api attribute must be set")
+        if self.smartsheet is None:
+            raise ValueError("To use this method, smartsheet attribute must be set")
         include_fields = (
             "parent_id",
             "sibling_id",
@@ -311,12 +353,15 @@ class Sheet(CoreObject):
                 if cell.value is not None or cell.formula is not None
             ]
             data.append(schema.dump(new_row))
-        return self.api.post(f"/sheets/{self.id}/rows", data=data)
+        result = cast(
+            "Result", self.smartsheet.post(f"/sheets/{self.id}/rows", data=data)
+        )
+        return result
 
     def add_row(self, row: Row) -> Result:
         """Adds a single row to the smartsheet.
 
-        Sheet must have api attribute set. It is automatically set when method
+        Sheet must have smartsheet attribute set. It is automatically set when method
             Smartsheet.sheets.get() is used
         A row must have either location-specifier attributes or row number set
         More details: http://smartsheet-platform.github.io/api-docs/#add-rows
@@ -332,7 +377,7 @@ class Sheet(CoreObject):
     def update_rows(self, rows: Sequence[Row]) -> Result:
         """Updates several rows in the Sheet.
 
-        Sheet must have api attribute set. It is automatically set when method
+        Sheet must have smartsheet attribute set. It is automatically set when method
             Smartsheet.sheets.get() is used
         More details: http://smartsheet-platform.github.io/api-docs/#update-rows
 
@@ -342,8 +387,8 @@ class Sheet(CoreObject):
         Returns:
             Result object
         """
-        if self.api is None:
-            raise ValueError("To use this method, api attribute must be set")
+        if self.smartsheet is None:
+            raise ValueError("To use this method, smartsheet attribute must be set")
         include_fields = (
             "id",
             "parent_id",
@@ -375,12 +420,15 @@ class Sheet(CoreObject):
                 if cell.value is not None or cell.formula is not None
             ]
             data.append(schema.dump(new_row))
-        return self.api.put(f"/sheets/{self.id}/rows", data=data)
+        result = cast(
+            "Result", self.smartsheet.put(f"/sheets/{self.id}/rows", data=data)
+        )
+        return result
 
     def update_row(self, row: Row) -> Result:
         """Updates a single row in the Sheet.
 
-        Sheet must have api attribute set. It is automatically set when method
+        Sheet must have smartsheet attribute set. It is automatically set when method
             Smartsheet.sheets.get() is used
         More details: http://smartsheet-platform.github.io/api-docs/#update-rows
 
@@ -403,11 +451,11 @@ class Sheet(CoreObject):
         Returns:
             Result object
         """
-        if self.api is None:
-            raise ValueError("To use this method, api attribute must be set")
+        if self.smartsheet is None:
+            raise ValueError("To use this method, smartsheet attribute must be set")
         endpoint = f"/sheets/{self.id}/rows"
         params = {"ids": ",".join(str(row_id) for row_id in row_ids)}
-        return self.api.delete(endpoint, params=params)
+        return self.smartsheet.delete(endpoint, params=params)
 
     def delete_row(self, row_id: int) -> Result:
         """Deletes a single row in the Sheet specified by ID.
@@ -435,7 +483,7 @@ class Sheet(CoreObject):
         Returns:
             Sheet object
         """
-        # TODO: add validation schema for sorting order
+        # TODO: add validation _schema for sorting order
         normalized_order = []
         for item in order:
             normalized_item = {}
@@ -459,9 +507,13 @@ class Sheet(CoreObject):
 
         data = {"sortCriteria": normalized_order}
         endpoint = f"/sheets/{self.id}/sort"
-        response = self.api.post(endpoint, data, result_obj=False)
+        if not self.smartsheet:
+            raise ValueError("Can't use API because smartsheet attribute is not set")
+        response = cast(
+            Dict[str, Any], self.smartsheet.post(endpoint, data, result_obj=False)
+        )
         sheet = self.load(response)
-        sheet.api = self.api
+        sheet.smartsheet = self.smartsheet
         return sheet
 
     def make_cell(
@@ -505,10 +557,9 @@ class Sheet(CoreObject):
         return [row.as_dict() for row in self.rows]
 
 
-class SheetsCRUD(CRUD[Sheet]):
+class SheetCRUD(CRUD[Sheet]):
     base_url = "/sheets"
     factory = Sheet
-    default_path = "sheets"
 
     create_include_fields = (
         "name",

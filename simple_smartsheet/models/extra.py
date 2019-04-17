@@ -35,7 +35,7 @@ class Error(Object):
     ref_id: str
     detail: Optional[Any] = None
 
-    schema: ClassVar[Type[ErrorSchema]] = ErrorSchema
+    _schema: ClassVar[Type[ErrorSchema]] = ErrorSchema
 
 
 class ResultSchema(Schema):
@@ -54,7 +54,7 @@ class Result(Object):
     result_code: Optional[int] = None
     version: Optional[int] = None
 
-    schema: ClassVar[Type[ResultSchema]] = ResultSchema
+    _schema: ClassVar[Type[ResultSchema]] = ResultSchema
 
 
 class HyperlinkSchema(Schema):
@@ -71,4 +71,4 @@ class Hyperlink(Object):
     sheet_id: Optional[int] = None
     sight_id: Optional[int] = None
 
-    schema: ClassVar[Type[HyperlinkSchema]] = HyperlinkSchema
+    _schema: ClassVar[Type[HyperlinkSchema]] = HyperlinkSchema

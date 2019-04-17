@@ -5,12 +5,8 @@ from typing import (
     TypeVar,
     Dict,
     Any,
-    Generic,
     Optional,
-    cast,
     Type,
-    List,
-    Iterator,
     TYPE_CHECKING,
     Union,
     ClassVar,
@@ -24,20 +20,17 @@ from marshmallow import fields
 from cattr.converters import Converter
 
 from simple_smartsheet import config
-from simple_smartsheet import exceptions
 from simple_smartsheet import utils
-from simple_smartsheet.types import IndexesType, IndexesKeysType
+from simple_smartsheet.types import IndexesType
 
 if TYPE_CHECKING:
     from simple_smartsheet.smartsheet import Smartsheet  # noqa: F401
-    from simple_smartsheet.models.extra import Result
 
 
 logger = logging.getLogger(__name__)
 
 converter = Converter()
 converter.register_structure_hook(datetime, lambda ts, _: ts)
-converter.register_structure_hook(IndexesKeysType, lambda x, _: x)
 converter.register_structure_hook(IndexesType, lambda x, _: x)
 converter.register_structure_hook(Union[float, str, datetime, None], lambda ts, _: ts)
 
@@ -61,7 +54,7 @@ T = TypeVar("T", bound="Object")
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
 class Object:
-    schema: ClassVar[Type[Schema]] = Schema
+    _schema: ClassVar[Type[Schema]] = Schema
 
     @classmethod
     def load(
@@ -71,7 +64,7 @@ class Object:
         exclude: Sequence[str] = (),
         **kwargs: Any,
     ) -> T:
-        schema = cls.schema(only=only, exclude=exclude)
+        schema = cls._schema(only=only, exclude=exclude)
         normalized_data = schema.load(data)
         normalized_data.update(kwargs)
         obj = converter.structure(normalized_data, cls)
@@ -80,7 +73,7 @@ class Object:
     def dump(
         self, only: Optional[Sequence[str]] = None, exclude: Sequence[str] = ()
     ) -> Dict[str, Any]:
-        schema = self.schema(only=only, exclude=exclude)
+        schema = self._schema(only=only, exclude=exclude)
         return schema.dump(self)
 
     def __repr__(self) -> str:
@@ -106,8 +99,8 @@ class CoreObject(Object):
     name: str
     id: Optional[int] = None
 
-    schema: ClassVar[Type[CoreSchema]] = CoreSchema
-    api: Optional["Smartsheet"] = attr.ib(default=None, init=False)
+    _schema: ClassVar[Type[CoreSchema]] = CoreSchema
+    smartsheet: Optional["Smartsheet"] = attr.ib(default=None, init=False)
 
     @property
     def _id(self) -> Optional[int]:
@@ -116,176 +109,3 @@ class CoreObject(Object):
     @property
     def _name(self) -> str:
         return getattr(self, "name")
-
-
-TS = TypeVar("TS", bound=CoreObject)
-
-
-# noinspection PyShadowingBuiltins
-class CRUD(Generic[TS]):
-    base_url = ""
-    _get_url: Optional[str] = None
-    _list_url: Optional[str] = None
-    _update_url: Optional[str] = None
-    _create_url: Optional[str] = None
-    _delete_url: Optional[str] = None
-
-    get_include_fields: Optional[Sequence[str]] = None
-    get_exclude_fields: Sequence[str] = ()
-    list_include_fields: Optional[Sequence[str]] = None
-    list_exclude_fields: Sequence[str] = ()
-    create_include_fields: Optional[Sequence[str]] = None
-    create_exclude_fields: Sequence[str] = ()
-    update_include_fields: Optional[Sequence[str]] = None
-    update_exclude_fields: Sequence[str] = ()
-
-    factory: Type[TS] = cast(Type[TS], CoreObject)
-
-    def __init__(self, smartsheet: Optional["Smartsheet"]) -> None:
-        self.api = smartsheet
-
-    @property
-    def get_url(self) -> str:
-        return self._get_url or self.base_url + "/{id}"
-
-    @property
-    def list_url(self) -> str:
-        return self._list_url or self.base_url
-
-    @property
-    def create_url(self) -> str:
-        return self._create_url or self.base_url
-
-    @property
-    def update_url(self) -> str:
-        return self._update_url or self.base_url + "/{id}"
-
-    @property
-    def delete_url(self) -> str:
-        return self._delete_url or self.base_url + "/{id}"
-
-    def get_id(self, name: str) -> int:
-        for obj in self.list():
-            print(f"name: {obj._name}, id: {obj._id}")
-            if obj._name == name:
-                return obj._id
-        raise exceptions.SmartsheetObjectNotFound(
-            f"{self.factory.__qualname__} object with the name {name!r} "
-            f"has not been found"
-        )
-
-    def get(
-        self, name: Optional[str] = None, id: Optional[int] = None, **kwargs: Any
-    ) -> TS:
-        """Fetches a CoreObject by name or id.
-
-        Args:
-            name: name of the object
-            id: id of the object
-
-        Returns:
-            CoreObject
-        """
-        if name is None and id is None:
-            raise ValueError(f"To use get method, either name or id must be provided")
-        elif id:
-            endpoint = self.get_url.format(id=id)
-            obj_data = self.api.get(endpoint, path=None)
-            logger.debug(
-                "Creating an object %s from data: %s",
-                repr(self.factory.__qualname__),
-                str(obj_data),
-            )
-            obj = self.factory.load(
-                obj_data, self.get_include_fields, self.get_exclude_fields, **kwargs
-            )
-            if not obj.id:
-                obj.id = id
-            obj.api = self.api
-            return obj
-        else:
-            id_ = self.get_id(name)
-            return self.get(id=id_, **kwargs)
-
-    def list(self) -> List[TS]:
-        """Fetches a list of CoreObject objects.
-
-        Note: API usually returns an incomplete view of objects.
-        For example: /sheets will return a list of sheets without columns or rows
-
-        Returns:
-            CoreObject
-        """
-        result = []
-        for obj_data in self.api.get(self.list_url, params={"includeAll": "true"}):
-            logger.debug(
-                "Creating an object '%s' from data: %s",
-                self.factory.__qualname__,
-                str(obj_data),
-            )
-            obj = self.factory.load(
-                obj_data, self.list_include_fields, self.list_exclude_fields
-            )
-            obj.api = self.api
-            result.append(obj)
-        return result
-
-    def create(self, obj: TS) -> "Result":
-        """Creates CoreObject
-
-        Args:
-            obj: CoreObject
-
-        Returns:
-            Result object
-        """
-        obj.api = self.api
-        endpoint = self.create_url.format(obj=obj)
-        return self.api.post(
-            endpoint,
-            obj.dump(
-                only=self.create_include_fields, exclude=self.create_exclude_fields
-            ),
-        )
-
-    def update(self, obj: TS) -> "Result":
-        """Updates CoreObject
-
-        Args:
-            obj: CoreObject
-
-        Returns:
-            Result object
-        """
-        obj.api = self.api
-        endpoint = self.update_url.format(id=obj.id)
-        return self.api.put(
-            endpoint,
-            obj.dump(
-                only=self.update_include_fields, exclude=self.update_exclude_fields
-            ),
-        )
-
-    def delete(self, name: Optional[str] = None, id: Optional[int] = None) -> "Result":
-        """Deletes CoreObject by name or id
-
-        Args:
-            name: CoreObject name attribute
-            id: CoreObject id attribute
-
-        Returns:
-            Result object
-        """
-        if name is None and id is None:
-            raise ValueError(
-                f"To use delete method, either name or id must be provided"
-            )
-        elif id:
-            endpoint = self.delete_url.format(id=id)
-            return self.api.delete(endpoint)
-        else:
-            id_ = self.get_id(name)
-            return self.delete(id=id_)
-
-    def __iter__(self) -> Iterator[TS]:
-        return iter(self.list())

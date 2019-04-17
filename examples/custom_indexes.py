@@ -7,12 +7,13 @@ from pprint import pprint
 TOKEN = os.getenv("SMARTSHEET_API_TOKEN")
 smartsheet = Smartsheet(TOKEN)
 
-INDEX_KEYS = [
+INDEXES = [
     {"columns": ("Company Name",), "unique": False},
     {"columns": ("Company Name", "Full Name"), "unique": True},
     {"columns": ("Email Address",), "unique": True},
 ]
-sheet = smartsheet.sheets.get("Index Test Sheet", index_keys=INDEX_KEYS)
+sheet = smartsheet.sheets.get("Index Test Sheet")
+sheet.build_index(INDEXES)
 
 pprint(sheet.indexes)
 # >
@@ -39,12 +40,14 @@ pprint(sheet.as_list())
 #   'Email Address': 'charlie.brown@globex.com',
 #   'Full Name': 'Charlie Brown'}]
 
+print("\nRow where email address is 'charlie.brown@globex.com':")
 pprint(sheet.get_row(filter={"Email Address": "charlie.brown@globex.com"}).as_dict())
 # >
 # {'Company Name': 'Globex',
 #  'Email Address': 'charlie.brown@globex.com',
 #  'Full Name': 'Charlie Brown'}
 
+print("\nRow where full name is 'Alice Smith' and the company name is 'ACME':")
 pprint(
     sheet.get_row(filter={"Full Name": "Alice Smith", "Company Name": "ACME"}).as_dict()
 )
@@ -53,6 +56,7 @@ pprint(
 #  'Email Address': 'alice.smith@acme.com',
 #  'Full Name': 'Alice Smith'}
 
+print("\nRows where the company name is 'ACME':")
 pprint([row.as_dict() for row in sheet.get_rows(filter={"Company Name": "ACME"})])
 # >
 # [{'Company Name': 'ACME',

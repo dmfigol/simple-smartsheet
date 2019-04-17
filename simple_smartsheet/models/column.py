@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 import attr
-from marshmallow import fields
+from marshmallow import fields, post_load
 
 from simple_smartsheet import utils
 from simple_smartsheet.models.base import Schema, Object
@@ -43,6 +43,18 @@ class ColumnSchema(Schema):
     version = fields.Int()
     width = fields.Int()
 
+    @property
+    def _id_attr(self):
+        return "id"
+
+    @post_load
+    def post_load_update_parent_context(self, data):
+        column_id_to_type = self.context["column_id_to_type"]
+        id_ = data[self._id_attr]
+        type_ = data["type"]
+        column_id_to_type[id_] = type_
+        return data
+
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
 class Column(Object):
@@ -64,6 +76,10 @@ class Column(Object):
     validation: Optional[bool] = None
     version: Optional[int] = None
     width: Optional[int] = None
+
+    @property
+    def _id(self) -> Optional[int]:
+        return self.id
 
     def __repr__(self) -> str:
         return utils.create_repr(self, ["id", "title"])

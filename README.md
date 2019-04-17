@@ -8,26 +8,38 @@ Requires Python 3.6+
 ### Why not smartsheet-python-sdk
 `smartsheet-python-sdk` has very wide object coverage and maps to Smartsheet API very nicely, but it does not have any additional features (for example, easy access to cells by column titles).  
 `simple-smartsheet` library is focused on user experience first in expense of feature coverage. 
-As of now, you can only interact with Sheets and nested objects (rows, columns, cells).
+As of now, you can only interact with Sheets and Reports and their children objects (rows, columns, cells). For reports Smartsheet API provides read-only access.
 
 ### Usage
 ```python
+import os
 from datetime import date
 from pprint import pprint
 
 from simple_smartsheet import Smartsheet
 from simple_smartsheet.models import Sheet, Column, Row, Cell
 
-TOKEN = "my-secret-token"
+TOKEN = os.getenv("SMARTSHEET_API_TOKEN")
 smartsheet = Smartsheet(TOKEN)
+
+# getting a simplified view of sheets
+sheets = smartsheet.sheets.list()
+pprint(sheets)
+
+sheet_name = "My New Sheet"
+# Delete the test sheet if already exists
+for sheet in sheets:
+    if sheet.name == sheet_name:
+        smartsheet.sheets.delete(sheet_name)
 
 # creating new Sheet
 new_sheet = Sheet(
-    name="My New Sheet",
+    name=sheet_name,
     columns=[
         Column(primary=True, title="Full Name", type="TEXT_NUMBER"),
         Column(title="Number of read books", type="TEXT_NUMBER"),
         Column(title="Birth date", type="DATE"),
+        Column(title="Library member", type="CHECKBOX"),
     ],
 )
 
@@ -67,9 +79,7 @@ sheet.add_rows(
         ),
         Row(
             to_top=True,
-            cells=sheet.make_cells(
-                {"Full Name": "Bob Lee", "Number of read books": 2}
-            )
+            cells=sheet.make_cells({"Full Name": "Bob Lee", "Number of read books": 2}),
         ),
         Row(
             to_top=True,
@@ -126,7 +136,7 @@ print("\nSheet after deleting rows:")
 pprint(sheet.as_list())
 
 # deleting Sheet
-# sheet = smartsheet.sheets.delete('My New Sheet')
+sheet = smartsheet.sheets.delete("My New Sheet")
 sheets = smartsheet.sheets.list()
 pprint(sheets)
 ```
@@ -156,7 +166,6 @@ Attributes (converted from camelCase to snake_case):
   * [http://smartsheet-platform.github.io/api-docs/#sheets](http://smartsheet-platform.github.io/api-docs/#sheets)
   
 Methods:
-  * `def update_index()`: rebuilds mapping tables for rows and columns for quick lookup
   * `def get_row(row_num: Optional[int], row_id: Optional[int], filter: Optional[Dict[str, Any]])`: returns a Row object by row number, ID or by filter, if a unique index was built (see section "Custom Indexes")
   * `def get_rows(index_query: Dict[str, Any])`: returns list of Row objects by filter, if an index was built (see section "Custom Indexes")
   * `def get_column(column_title: Optional[str], column_id: Optional[int])`: returns a Column object by column title or id
@@ -166,18 +175,25 @@ Methods:
   * `def update_row(row: Row)`: updates a single row
   * `def delete_rows(row_ids: Sequence[int])`: delete several rows with provided ids
   * `def delete_row(row_id: int)`: delete a single row with a provided id
-  * `def sort_rows(order: List[Dict[str, Any]])`: sorts sheet rows with the specified order. An argument example:  
+  * `def build_index(indexes: List[IndexKeysDict])`: builds one or more indexes for quick row lookup using `get_row` or `get_rows`, e.g.:  
 ```
-[
+sheet.build_index([
+    {"columns": ("Company Name",), "unique": False},
+    {"columns": ("Company Name", "Full Name"), "unique": True}
+])
+```  
+  * `def sort_rows(order: List[Dict[str, Any]])`: sorts sheet rows with the specified order, e.g.:   
+```
+sheet.sort_rows([
     {"column_title": "Birth date", "descending": True},
     {"column_title": "Full Name"}
-]
+])
 ```
   * `def make_cell(column_title: str, field_value: Union[float, str, datetime, None])`: creates a Cell object with provided column title and an associated value
   * `def make_cells(fields: Dict[str, Union[float, str, datetime, None]])`: creates a list of Cell objects from an input dictionary where column title is key associated with the field value
   * `def as_list()`: returns a list of dictionaries where column title is key associated with the field value
   
-#### Class `simple_smartsheet.models.Row`
+#### Class `simple_smartsheet.models.row.Row`
 Attributes (converted from camelCase to snake_case):
   * [http://smartsheet-platform.github.io/api-docs/#rows](http://smartsheet-platform.github.io/api-docs/#rows)
   * `rowNumber` is mapped to `num`
@@ -186,32 +202,52 @@ Methods:
   * `def get_cell(column_title: Optional[str], column_id: Optional[int])` - returns a Cell object by column title (case-sensitive) or column id
   * `def as_dict()` - returns a dictionary of column title to cell value mappings
 
-#### Class `simple_smartsheet.models.Column`
+#### Class `simple_smartsheet.models.column.Column`
 Attributes (converted from camelCase to snake_case):
   * [http://smartsheet-platform.github.io/api-docs/#columns](http://smartsheet-platform.github.io/api-docs/#columns)
 
-#### Class `simple_smartsheet.models.Cell`
+#### Class `simple_smartsheet.models.cell.Cell`
 Attributes (converted from camelCase to snake_case):
   * [http://smartsheet-platform.github.io/api-docs/#cells](http://smartsheet-platform.github.io/api-docs/#cells)
+
+#### Class `simple_smartsheet.models.Report`
+Attributes (converted from camelCase to snake_case):
+  * [http://smartsheet-platform.github.io/api-docs/#reports](http://smartsheet-platform.github.io/api-docs/#reports)
+  
+Implements the following Sheet methods:
+  * `def get_row(row_num: Optional[int], row_id: Optional[int], filter: Optional[Dict[str, Any]])`: returns a Row object by row number, ID or by filter, if a unique index was built (see section "Custom Indexes")
+  * `def get_rows(index_query: Dict[str, Any])`: returns list of Row objects by filter, if an index was built (see section "Custom Indexes")
+  * `def get_column(column_title: Optional[str], column_id: Optional[int])`: returns a Column object by column title or id
+  * `def build_index(indexes: List[IndexKeysDict])`: builds one or more indexes for quick row lookup using `get_row` or `get_rows`, e.g.:  
+```
+sheet.build_index([
+    {"columns": ("Company Name",), "unique": False},
+    {"columns": ("Company Name", "Full Name"), "unique": True}
+])
+```  
+  * `def as_list()`: returns a list of dictionaries where column title is key associated with the field value
   
 ### Custom Indexes
-When you are retrieving a smartsheet, it is possible to build an index to enable quick rows lookups.
-This is controlled using `index_key` argument in `get` method. This argument is a dictionary with two keys `columns` and `unique`. `columns` should contain a tuple with column titles (case sensitive). `unique` controls if the index always points to a single row (value `True`, lookups are done using `get_row` method) or multiple rows (value `False`, lookups are done using `get_rows` method).
+It is possible to build indexes to enable quick rows lookups. For this, after retrieving the sheet, call `sheet.build_index` function. It takes only one argument: a list of dictionaries, where every dictionary has two keys `columns` and `unique`. `columns` should contain a tuple with column titles (case sensitive). `unique` controls if the index always points to a single row (value `True`, lookups are done using `get_row` method) or multiple rows (value `False`, lookups are done using `get_rows` method).
 
 Below you can find a code example:
 ```python
+import os
+
 from simple_smartsheet import Smartsheet
+
 from pprint import pprint
 
-TOKEN = 'my-token'
+TOKEN = os.getenv("SMARTSHEET_API_TOKEN")
 smartsheet = Smartsheet(TOKEN)
 
-INDEX_KEYS = [
+INDEXES = [
     {"columns": ("Company Name",), "unique": False},
     {"columns": ("Company Name", "Full Name"), "unique": True},
     {"columns": ("Email Address",), "unique": True},
 ]
-sheet = smartsheet.sheets.get("Index Test Sheet", index_keys=INDEX_KEYS)
+sheet = smartsheet.sheets.get("Index Test Sheet")
+sheet.build_index(INDEXES)
 
 pprint(sheet.indexes)
 # >
@@ -226,7 +262,7 @@ pprint(sheet.indexes)
 #                                   ('bob.lee@acme.com',): Row(id=5029390859954052, num=2),
 #                                   ('charlie.brown@globex.com',): Row(id=2777591046268804, num=3)}})
 
-pprint([row.as_dict() for row in sheet.rows])
+pprint(sheet.as_list())
 # >
 # [{'Company Name': 'ACME',
 #   'Email Address': 'alice.smith@acme.com',
@@ -238,12 +274,14 @@ pprint([row.as_dict() for row in sheet.rows])
 #   'Email Address': 'charlie.brown@globex.com',
 #   'Full Name': 'Charlie Brown'}]
 
+print("\nRow where email address is 'charlie.brown@globex.com':")
 pprint(sheet.get_row(filter={"Email Address": "charlie.brown@globex.com"}).as_dict())
 # >
 # {'Company Name': 'Globex',
 #  'Email Address': 'charlie.brown@globex.com',
 #  'Full Name': 'Charlie Brown'}
 
+print("\nRow where full name is 'Alice Smith' and the company name is 'ACME':")
 pprint(
     sheet.get_row(filter={"Full Name": "Alice Smith", "Company Name": "ACME"}).as_dict()
 )
@@ -252,6 +290,7 @@ pprint(
 #  'Email Address': 'alice.smith@acme.com',
 #  'Full Name': 'Alice Smith'}
 
+print("\nRows where the company name is 'ACME':")
 pprint([row.as_dict() for row in sheet.get_rows(filter={"Company Name": "ACME"})])
 # >
 # [{'Company Name': 'ACME',
