@@ -4,9 +4,8 @@ from typing import Optional, Union, ClassVar, Type, Any, List
 
 import attr
 import marshmallow.utils
-from marshmallow import fields
+from marshmallow import fields, post_load
 
-from simple_smartsheet import models
 from simple_smartsheet import utils
 from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.extra import Hyperlink, HyperlinkSchema
@@ -45,8 +44,7 @@ class CellValueField(fields.Field):
             except ValueError:
                 logger.info("Cell value %r is not a valid datetime ", value)
                 return value
-        else:
-            return value
+        return value
 
 
 class CellSchema(Schema):
@@ -66,6 +64,18 @@ class CellSchema(Schema):
     override_validation = fields.Bool(data_key="overrideValidation")
     strict = fields.Bool()
     value = CellValueField()
+
+    @post_load
+    def fix_checkbox_value(self, data):
+        column_id_to_type = self.context["column_id_to_type"]
+        if "virtual_column_id" in data:
+            column_id = data["virtual_column_id"]
+        else:
+            column_id = data["column_id"]
+        column_type = column_id_to_type[column_id]
+        if column_type == "CHECKBOX" and "value" not in data:
+            data["value"] = False
+        return data
 
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
@@ -93,27 +103,3 @@ class Cell(Object):
     @property
     def _column_id(self) -> Optional[int]:
         return self.column_id
-
-    def deserealize_value(self, row: "models.Row", column: "models.Column") -> None:
-        column_type = column.type
-        if self.value and isinstance(self.value, str):
-            if column_type == "DATE":
-                try:
-                    self.value = marshmallow.utils.from_iso_date(self.value)
-                except ValueError:
-                    logger.info(
-                        "Row #%d, value %r in column %r isn't a valid date",
-                        row.num,
-                        self.value,
-                        column.title,
-                    )
-            elif column_type in ("DATETIME", "ABSTRACT_DATETIME"):
-                try:
-                    self.value = marshmallow.utils.from_iso_datetime(self.value)
-                except ValueError:
-                    logger.info(
-                        "Row #%d, value %r in column %r isn't a valid datetime ",
-                        row.num,
-                        self.value,
-                        column.title,
-                    )
