@@ -1,4 +1,8 @@
 ## Changelog
+#### 0.2.0 (2019-04-18)
+* Add support for Report objects
+* \[Backwards incompatible\] Change the way indexes are handled, `build_index` method should be used on Sheet or Report objects
+* Unchecked checkboxes return False instead of None (#12)
 #### 0.1.11 (2019-04-02)
 * Add exceptions SmartsheetHTTPClientError and SmartsheetHTTPServerError
 #### 0.1.10 (2019-01-09)
