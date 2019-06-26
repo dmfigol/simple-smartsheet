@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "simple-smartsheet"
-version = "0.2.0"
+version = "0.3.0"
 description = "Python library to interact with Smartsheet API"
 authors = ["Dmitry Figol <git@dmfigol.me>"]
 license = "MIT"
@@ -32,6 +32,7 @@ requests = "*"
 attrs = "*"
 cattrs = "*"
 mypy-extensions = "*"
+aiohttp = "*"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"

@@ -4,7 +4,7 @@ from typing import Optional, List
 import attr
 from marshmallow import fields
 
-from simple_smartsheet.crud import CRUDRead
+from simple_smartsheet.crud import CRUDRead, AsyncCRUDRead, CRUDAttrs
 from simple_smartsheet.models.cell import Cell, CellSchema
 from simple_smartsheet.models.column import Column, ColumnSchema
 from simple_smartsheet.models.row import _RowBase, RowSchema
@@ -29,7 +29,7 @@ class ReportCell(Cell):
 
 
 class ReportRowSchema(RowSchema):
-    cells = fields.Nested(ReportCellSchema, many=True)
+    cells = fields.List(fields.Nested(ReportCellSchema))
     sheet_id = fields.Int(data_key="sheetId")
 
 
@@ -69,9 +69,9 @@ class ReportSchema(SheetSchema):
     http://smartsheet-platform.github.io/api-docs/#reports
     """
 
-    columns = fields.Nested(ReportColumnSchema, many=True)
-    rows = fields.Nested(ReportRowSchema, many=True)
-    source_sheets = fields.Nested(SheetSchema, many=True, data_key="sourceSheets")
+    columns = fields.List(fields.Nested(ReportColumnSchema))
+    rows = fields.List(fields.Nested(ReportRowSchema))
+    source_sheets = fields.List(fields.Nested(SheetSchema, data_key="sourceSheets"))
 
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
@@ -89,6 +89,13 @@ class Report(_SheetBase[ReportRow, ReportColumn]):
     _schema = ReportSchema
 
 
-class ReportCRUD(CRUDRead[Report]):
+class ReportCRUDMixin(CRUDAttrs):
     base_url = "/reports"
+
+
+class ReportCRUD(ReportCRUDMixin, CRUDRead[Report]):
+    factory = Report
+
+
+class ReportAsyncCRUD(ReportCRUDMixin, AsyncCRUDRead[Report]):
     factory = Report

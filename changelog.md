@@ -1,4 +1,7 @@
 ## Changelog
+#### 0.3.0 (2019-06-26)
+* Add asyncio support, check readme and `examples/async.py` for more details
+* \[Deprecated\] All methods on Sheet object, which do API call, like `add_rows`, `update_rows`, `delete_rows`, `sort_rows`, they are now available under `smartsheet.sheets` and the first argument is sheet object
 #### 0.2.0 (2019-04-18)
 * Add support for Report objects
 * \[Backwards incompatible\] Change the way indexes are handled, `build_index` method should be used on Sheet or Report objects

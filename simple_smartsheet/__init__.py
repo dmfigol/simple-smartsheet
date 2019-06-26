@@ -1,3 +1,3 @@
-from .smartsheet import Smartsheet
+from .smartsheet import Smartsheet, AsyncSmartsheet
 
-__all__ = ("Smartsheet",)
+__all__ = ("Smartsheet", "AsyncSmartsheet")

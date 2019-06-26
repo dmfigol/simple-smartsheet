@@ -8,7 +8,8 @@ Requires Python 3.6+
 ### Why not smartsheet-python-sdk
 `smartsheet-python-sdk` has very wide object coverage and maps to Smartsheet API very nicely, but it does not have any additional features (for example, easy access to cells by column titles).  
 `simple-smartsheet` library is focused on user experience first in expense of feature coverage. 
-As of now, you can only interact with Sheets and Reports and their children objects (rows, columns, cells). For reports Smartsheet API provides read-only access.
+As of now, you can only interact with Sheets and Reports and their children objects (rows, columns, cells).  
+Also `simple-smartsheet` support asyncio and provided both sync and async API (asyncio).
 
 ### Usage
 ```python
@@ -68,7 +69,7 @@ num_books_column = sheet.get_column("Number of read books")
 pprint(num_books_column.__dict__)
 
 # adding rows (cells created using different ways):
-sheet.add_rows(
+smartsheet.sheets.add_rows(sheet,
     [
         Row(
             to_top=True,
@@ -93,7 +94,7 @@ sheet.add_rows(
 )
 
 # sort rows now by column "Full Name" descending / returns updated sheet
-sheet = sheet.sort_rows([{"column_title": "Full Name", "descending": True}])
+sheet = smartsheet.sheets.sort_rows(sheet, [{"column_title": "Full Name", "descending": True}])
 
 # or getting an updated sheet again
 # sheet = smartsheet.sheets.get("My New Sheet")
@@ -118,7 +119,7 @@ for row in sheet.rows:
         row_id_to_delete = row.id  # used later
 
 # update rows
-sheet.update_rows(rows_to_update)
+smartsheet.sheets.update_rows(sheet, rows_to_update)
 # or a single row
 # sheet.update_rows(rows_to_update[0])
 
@@ -128,7 +129,7 @@ print("\nSheet after updating rows:")
 pprint(sheet.as_list())
 
 # deleting row by id
-sheet.delete_row(row_id_to_delete)
+sheet.delete_row(sheet, row_id_to_delete)
 
 # getting an updated sheet
 sheet = smartsheet.sheets.get("My New Sheet")
@@ -141,7 +142,7 @@ sheets = smartsheet.sheets.list()
 pprint(sheets)
 ```
 
-### Docs
+### API reference
 While a separate docs page is work in progress, available public API is described here
 #### Class `simple_smartsheet.Smartsheet`
 This class a main entry point for the library  
@@ -151,15 +152,43 @@ Methods:
 Attributes:
   * `token`: Smartsheet API token, obtained in Personal Settings -> API access
   * `session`: requests.Session object which stores headers based on the token
-  * `sheets`: `simple_smartsheet.models.sheet.SheetsCRUD` object which provides methods to interact with Sheets
+  * `sheets`: `simple_smartsheet.models.sheet.SheetCRUD` object which provides methods to interact with Sheets
   
-#### Class `simple_smartsheet.models.sheet.SheetsCRUD`
+#### Class `simple_smartsheet.models.sheet.SheetCRUD`
 Methods:
-  * `def get(name: Optional[str], id: Optional[int], index_keys: Optional[Dict[str, Any]])`: fetches Sheet by name or ID. It can also build an index for several fields to do quick rows lookup (see section "Custom Indexes")
+  * `def get(name: Optional[str], id: Optional[int])`: fetches Sheet by name or ID.
   * `def list()`: fetches a list of all sheets (summary only)
   * `def create(obj: Sheet)`: adds a new sheet
   * `def update(obj: Sheet)`: updates a sheet
   * `def delete(name: Optional[str], id: Optional[int])`: deletes a sheet by name or ID
+  * `def add_rows(sheet: Sheet, rows: Sequence[Row])`: adds rows to the sheet
+  * `def add_row(sheet: Sheet, row: Row)`: add a single row to the sheet
+  * `def update_rows(sheet: Sheet, rows: Sequence[Row])`: updates several rows in the sheet
+  * `def update_row(sheet: Sheet, row: Row)`: updates a single row
+  * `def delete_rows(sheet: Sheet, row_ids: Sequence[int])`: deletes several rows with provided ids
+  * `def delete_row(sheet: Sheet, row_id: int)`: deletes a single row with a provided id
+  * `def sort_rows(sheet, order: List[Dict[str, Any]])`: sorts sheet rows with the specified order, e.g.:   
+```
+sheet.sort_rows([
+    {"column_title": "Birth date", "descending": True},
+    {"column_title": "Full Name"}
+])
+```
+
+#### Class `simple_smartsheet.models.sheet.SheetAsyncCRUD`
+The methods listed below are asynchronous version of methods in `SheetCRUD`, listed for completeness:
+  * `async def get(name: Optional[str], id: Optional[int])`
+  * `async def list()`
+  * `async def create(obj: Sheet)`
+  * `async def update(obj: Sheet)`
+  * `async def delete(name: Optional[str], id: Optional[int])`
+  * `async def add_rows(sheet: Sheet, rows: Sequence[Row])`
+  * `async def add_row(sheet: Sheet, row: Row)`
+  * `async def update_rows(sheet: Sheet, rows: Sequence[Row])`
+  * `async def update_row(sheet: Sheet, row: Row)`
+  * `async def delete_rows(sheet: Sheet, row_ids: Sequence[int])`
+  * `async def delete_row(sheet: Sheet, row_id: int)`
+  * `async def sort_rows(sheet, order: List[Dict[str, Any]])`
 
 #### Class `simple_smartsheet.models.Sheet`
 Attributes (converted from camelCase to snake_case):
@@ -169,12 +198,6 @@ Methods:
   * `def get_row(row_num: Optional[int], row_id: Optional[int], filter: Optional[Dict[str, Any]])`: returns a Row object by row number, ID or by filter, if a unique index was built (see section "Custom Indexes")
   * `def get_rows(index_query: Dict[str, Any])`: returns list of Row objects by filter, if an index was built (see section "Custom Indexes")
   * `def get_column(column_title: Optional[str], column_id: Optional[int])`: returns a Column object by column title or id
-  * `def add_rows(rows: Sequence[Row])`: adds rows to the sheet
-  * `def add_row(row: Row)`: add a single row to the sheet
-  * `def update_rows(rows: Sequence[Row])`: updates several rows in the sheet
-  * `def update_row(row: Row)`: updates a single row
-  * `def delete_rows(row_ids: Sequence[int])`: delete several rows with provided ids
-  * `def delete_row(row_id: int)`: delete a single row with a provided id
   * `def build_index(indexes: List[IndexKeysDict])`: builds one or more indexes for quick row lookup using `get_row` or `get_rows`, e.g.:  
 ```
 sheet.build_index([
@@ -182,13 +205,6 @@ sheet.build_index([
     {"columns": ("Company Name", "Full Name"), "unique": True}
 ])
 ```  
-  * `def sort_rows(order: List[Dict[str, Any]])`: sorts sheet rows with the specified order, e.g.:   
-```
-sheet.sort_rows([
-    {"column_title": "Birth date", "descending": True},
-    {"column_title": "Full Name"}
-])
-```
   * `def make_cell(column_title: str, field_value: Union[float, str, datetime, None])`: creates a Cell object with provided column title and an associated value
   * `def make_cells(fields: Dict[str, Union[float, str, datetime, None]])`: creates a list of Cell objects from an input dictionary where column title is key associated with the field value
   * `def as_list()`: returns a list of dictionaries where column title is key associated with the field value
@@ -300,3 +316,17 @@ pprint([row.as_dict() for row in sheet.get_rows(filter={"Company Name": "ACME"})
 #   'Email Address': 'bob.lee@acme.com',
 #   'Full Name': 'Bob Lee'}]
 ``` 
+
+### Asyncio
+The library supports asyncio for all i/o methods, instead of calling:
+```
+smartsheet = Smartsheet(token)
+sheet = smartsheets.sheets.get('my-sheet')
+```  
+you need to call asynchronous context manager with an async version of smartsheet class:
+```
+with AsyncSmartsheet(token) as smartsheet:
+   sheet = await smartsheet.sheets.get('my-sheet')
+```
+
+A complete asyncio example with different operations on sheets and reports can be found in `examples/async.py`

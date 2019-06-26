@@ -36,8 +36,8 @@ class RowSchema(Schema):
     permalink = fields.Str()
     version = fields.Int()
 
-    cells = fields.Nested(CellSchema, many=True)
-    columns = fields.Nested(ColumnSchema, many=True)
+    cells = fields.List(fields.Nested(CellSchema))
+    columns = fields.List(fields.Nested(ColumnSchema))
 
     # location-specifier attributes
     parent_id = fields.Int(data_key="parentId")

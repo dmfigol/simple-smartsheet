@@ -26,8 +26,8 @@ class ColumnSchema(Schema):
     auto_number_format = fields.Nested(
         AutoNumberFormatSchema, data_key="autoNumberFormat"
     )
-    contact_options = fields.Nested(
-        ContactOptionSchema, data_key="contactOptions", many=True
+    contact_options = fields.List(
+        fields.Nested(ContactOptionSchema, data_key="contactOptions")
     )
     format = fields.Str()
     hidden = fields.Bool()
@@ -48,7 +48,7 @@ class ColumnSchema(Schema):
         return "id"
 
     @post_load
-    def post_load_update_parent_context(self, data):
+    def post_load_update_parent_context(self, data, many: bool, **kwargs):
         column_id_to_type = self.context["column_id_to_type"]
         id_ = data[self._id_attr]
         type_ = data["type"]

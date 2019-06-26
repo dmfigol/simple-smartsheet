@@ -12,9 +12,10 @@ mypy:
 
 .PHONY: examples
 examples:
-	poetry run python examples/sheets.py
-	poetry run python examples/report.py
-	poetry run python examples/custom_indexes.py
+	poetry run python -Werror examples/sheets.py
+	poetry run python -Werror examples/report.py
+	poetry run python -Werror examples/custom_indexes.py
+	poetry run python -Werror examples/async.py
 
 .PHONY: tests
 tests: black flake8 mypy examples

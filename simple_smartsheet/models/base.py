@@ -21,10 +21,11 @@ from cattr.converters import Converter
 
 from simple_smartsheet import config
 from simple_smartsheet import utils
+from simple_smartsheet import smartsheet
 from simple_smartsheet.types import IndexesType
 
 if TYPE_CHECKING:
-    from simple_smartsheet.smartsheet import Smartsheet  # noqa: F401
+    from simple_smartsheet.smartsheet import Smartsheet, AsyncSmartsheet  # noqa: F401
 
 
 logger = logging.getLogger(__name__)
@@ -40,7 +41,7 @@ class Schema(marshmallow.Schema):
         unknown = utils.get_unknown_field_handling(config.DEBUG)
 
     @marshmallow.post_dump
-    def remove_none(self, data):
+    def remove_none(self, data, many: bool, **kwargs):
         return {key: value for key, value in data.items() if value is not None}
 
 
@@ -100,7 +101,23 @@ class CoreObject(Object):
     id: Optional[int] = None
 
     _schema: ClassVar[Type[CoreSchema]] = CoreSchema
-    smartsheet: Optional["Smartsheet"] = attr.ib(default=None, init=False)
+    smartsheet: Union[None, "Smartsheet", "AsyncSmartsheet"] = attr.ib(
+        default=None, init=False
+    )
+
+    def _check_sync_smartsheet(self) -> None:
+        if not isinstance(self.smartsheet, smartsheet.Smartsheet):
+            raise ValueError(
+                f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
+                f"must be 'Smartsheet'"
+            )
+
+    def _check_async_smartsheet(self) -> None:
+        if not isinstance(self.smartsheet, smartsheet.AsyncSmartsheet):
+            raise ValueError(
+                f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
+                f"must be 'AsyncSmartsheet'"
+            )
 
     @property
     def _id(self) -> Optional[int]:

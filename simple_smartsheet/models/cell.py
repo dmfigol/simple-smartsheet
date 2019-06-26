@@ -66,7 +66,7 @@ class CellSchema(Schema):
     value = CellValueField()
 
     @post_load
-    def fix_checkbox_value(self, data):
+    def fix_checkbox_value(self, data, many: bool, **kwargs):
         column_id_to_type = self.context["column_id_to_type"]
         if "virtual_column_id" in data:
             column_id = data["virtual_column_id"]
