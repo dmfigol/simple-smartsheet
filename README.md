@@ -9,7 +9,7 @@ Requires Python 3.6+
 `smartsheet-python-sdk` has very wide object coverage and maps to Smartsheet API very nicely, but it does not have any additional features (for example, easy access to cells by column titles).  
 `simple-smartsheet` library is focused on user experience first in expense of feature coverage. 
 As of now, you can only interact with Sheets and Reports and their children objects (rows, columns, cells).  
-Also `simple-smartsheet` support asyncio and provided both sync and async API (asyncio).
+Also `simple-smartsheet` supports asyncio and provides both sync and async API (asyncio).
 
 ### Usage
 ```python
