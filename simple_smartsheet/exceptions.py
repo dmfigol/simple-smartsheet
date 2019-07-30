@@ -56,14 +56,16 @@ class SmartsheetHTTPError(SmartsheetError):
     @classmethod
     def from_response(cls: Type[T], response: Response) -> "SmartsheetHTTPError":
         response_text = response.text
-        return cls._from_response_data(response.status_code, response_text)
+        status_code = response.status_code
+        return cls._from_response_data(status_code, response_text)
 
     @classmethod
     async def from_async_response(
         cls: Type[T], response: ClientResponse
     ) -> "SmartsheetHTTPError":
         response_text = await response.text()
-        return cls._from_response_data(response.status, response_text)
+        status_code = response.status
+        return cls._from_response_data(status_code, response_text)
 
 
 class SmartsheetHTTPClientError(SmartsheetHTTPError):

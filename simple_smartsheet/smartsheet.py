@@ -204,7 +204,7 @@ class AsyncSmartsheet(SmartsheetBase):
             method=method, url=url, params=params, json=data
         ) as response:
             if response.status >= 400:
-                raise exceptions.SmartsheetHTTPError.from_async_response(  # type: ignore
+                raise await exceptions.SmartsheetHTTPError.from_async_response(
                     response
                 )
             response_text = await response.text()
