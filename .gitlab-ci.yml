@@ -10,9 +10,14 @@ before_script:
 test:
   stage: test
   script:
-    - .venv/bin/black --check simple_smartsheet
+    - .venv/bin/black --check simple_smartsheet examples tests
+    - .venv/bin/flake8 simple_smartsheet examples tests
     - .venv/bin/mypy simple_smartsheet
-    - .venv/bin/flake8 simple_smartsheet
+    - .venv/bin/pytest --record-mode=all
+    - .venv/bin/python -Werror examples/sheets.py > /dev/null
+    - .venv/bin/python -Werror examples/report.py > /dev/null
+    - .venv/bin/python -Werror examples/custom_indexes.py > /dev/null
+    - .venv/bin/python -Werror examples/async.py > /dev/null
   tags:
     - docker
 
