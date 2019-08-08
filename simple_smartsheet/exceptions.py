@@ -47,7 +47,10 @@ class SmartsheetHTTPError(SmartsheetError):
                 message = response_text
 
         if 400 <= status_code < 500:
-            return SmartsheetHTTPClientError(status_code, error, message)
+            if status_code == 404:
+                return SmartsheetHTTPObjectNotFound(status_code, error, message)
+            else:
+                return SmartsheetHTTPClientError(status_code, error, message)
         elif 500 <= status_code < 600:
             return SmartsheetHTTPServerError(status_code, error, message)
         else:
@@ -69,6 +72,10 @@ class SmartsheetHTTPError(SmartsheetError):
 
 
 class SmartsheetHTTPClientError(SmartsheetHTTPError):
+    pass
+
+
+class SmartsheetHTTPObjectNotFound(SmartsheetHTTPClientError):
     pass
 
 
