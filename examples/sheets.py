@@ -3,60 +3,56 @@ from datetime import date
 from pprint import pprint
 
 from simple_smartsheet import Smartsheet
-from simple_smartsheet.models import Sheet, Column, Row, Cell
+from simple_smartsheet.models import Sheet, Column, Row, Cell, ColumnType
+
 
 TOKEN = os.getenv("SMARTSHEET_API_TOKEN")
-with Smartsheet(TOKEN) as smartsheet:
+SHEET_NAME = "[TEST] My New Sheet"
 
-    # getting a simplified view of sheets
-    sheets = smartsheet.sheets.list()
-    pprint(sheets)
 
-    sheet_name = "My New Sheet"
-    # Delete the test sheet if already exists
-    for sheet in sheets:
-        if sheet.name == sheet_name:
-            smartsheet.sheets.delete(sheet_name)
+def main() -> None:
+    with Smartsheet(TOKEN) as smartsheet:
+        # retrieve a list of sheets (limited set of attributes)
+        sheets = smartsheet.sheets.list()
+        pprint(sheets)
 
-    # creating new Sheet
-    new_sheet = Sheet(
-        name=sheet_name,
-        columns=[
-            Column(primary=True, title="Full Name", type="TEXT_NUMBER"),
-            Column(title="Number of read books", type="TEXT_NUMBER"),
-            Column(title="Birth date", type="DATE"),
-            Column(title="Library member", type="CHECKBOX"),
-        ],
-    )
+        # delete the test sheet if already exists
+        for sheet in sheets:
+            if sheet.name == SHEET_NAME:
+                smartsheet.sheets.delete(id=sheet.id)
 
-    # print the sheet object as a dictionary which will be used in REST API
-    pprint(new_sheet.dump())
+        # create a new Sheet
+        new_sheet_skeleton = Sheet(
+            name=SHEET_NAME,
+            columns=[
+                Column(primary=True, title="Full Name", type=ColumnType.TEXT_NUMBER),
+                Column(title="Number of read books", type=ColumnType.TEXT_NUMBER),
+                Column(title="Birth date", type=ColumnType.DATE),
+                Column(title="Library member", type=ColumnType.CHECKBOX),
+            ],
+        )
 
-    # adding the sheet via API
-    smartsheet.sheets.create(new_sheet)
+        # print the sheet object attributes used by the Smartsheet API (camelCase)
+        pprint(new_sheet_skeleton.dump())
 
-    # getting a simplified view of sheets
-    sheets = smartsheet.sheets.list()
-    pprint(sheets)
+        # add the sheet via API
+        result = smartsheet.sheets.create(new_sheet_skeleton)
+        sheet = result.obj
+        print(f"ID of the created sheet is {sheet.id!r}")
 
-    # getting the sheet by name
-    sheet = smartsheet.sheets.get("My New Sheet")
+        # retrieve a sheet by name
+        # this object is exactly the same as result.obj
+        sheet = smartsheet.sheets.get(SHEET_NAME)
 
-    # printing the sheet object attributes
-    pprint(sheet.__dict__)
-    # or printing the sheet object as a dictionary which will be used in REST API
-    pprint(sheet.dump())
+        # get columns details by column title (case-sensitive)
+        full_name_column = sheet.get_column("Full Name")
+        pprint(full_name_column.__dict__)
+        num_books_column = sheet.get_column("Number of read books")
+        pprint(num_books_column.__dict__)
 
-    # getting columns details by column title (case-sensitive)
-    full_name_column = sheet.get_column("Full Name")
-    pprint(full_name_column.__dict__)
-    num_books_column = sheet.get_column("Number of read books")
-    pprint(num_books_column.__dict__)
-
-    # adding rows (cells created using different ways):
-    smartsheet.sheets.add_rows(
-        sheet,
-        [
+        # add rows (cells are created using different ways)
+        # second way is the easiest
+        new_rows = [
             Row(
                 to_top=True,
                 cells=[
@@ -78,55 +74,56 @@ with Smartsheet(TOKEN) as smartsheet:
                     sheet.make_cell("Birth date", date(1990, 1, 1)),
                 ],
             ),
-        ],
-    )
+        ]
+        smartsheet.sheets.add_rows(sheet.id, new_rows)
 
-    # sort rows now by column "Full Name" descending / returns updated sheet
-    sheet = smartsheet.sheets.sort_rows(
-        sheet, [{"column_title": "Full Name", "descending": True}]
-    )
+        # sort rows by column "Full Name" descending / returns updated sheet
+        sheet = smartsheet.sheets.sort_rows(
+            sheet, [{"column_title": "Full Name", "descending": True}]
+        )
 
-    # or getting an updated sheet again
-    # sheet = smartsheet.sheets.get("My New Sheet")
-    print("\nSheet after adding rows:")
-    # all sheet attributes
-    pprint(sheet.__dict__)
-    # or just a list of dictionaries containing column titles and values
-    pprint(sheet.as_list())
+        print("\nSheet after adding rows:")
+        # print a list of dictionaries containing column titles and values for each row
+        pprint(sheet.as_list())
 
-    # getting a specific cell and updating it:
-    row_id_to_delete = None
-    rows_to_update = []
-    for row in sheet.rows:
-        full_name = row.get_cell("Full Name").value
-        num_books = row.get_cell("Number of read books").value
-        print(f"{full_name} has read {num_books} books")
-        if full_name.startswith("Charlie"):
-            num_books_cell = row.get_cell("Number of read books")
-            num_books_cell.value += 1
-            rows_to_update.append(row)
-        elif full_name.startswith("Bob"):
-            row_id_to_delete = row.id  # used later
+        # get a specific cell and updating it:
+        row_id_to_delete = None
+        rows_to_update = []
+        for row in sheet.rows:
+            full_name = row.get_cell("Full Name").value
+            num_books = row.get_cell("Number of read books").value
+            print(f"{full_name} has read {num_books} books")
+            if full_name.startswith("Charlie"):
+                updated_row = Row(
+                    id=row.id, cells=[sheet.make_cell("Number of read books", 15)]
+                )
+                rows_to_update.append(updated_row)
+            elif full_name.startswith("Bob"):
+                row_id_to_delete = row.id  # used later
 
-    # update rows
-    smartsheet.sheets.update_rows(sheet, rows_to_update)
-    # or a single row
-    # sheet.update_rows(rows_to_update[0])
+        # update rows
+        smartsheet.sheets.update_rows(sheet.id, rows_to_update)
+        # or a single row
+        # smartsheet.sheets.update_row(sheet.id, rows_to_update[0])
 
-    # getting an updated sheet
-    sheet = smartsheet.sheets.get("My New Sheet")
-    print("\nSheet after updating rows:")
-    pprint(sheet.as_list())
+        # get an updated sheet
+        sheet = smartsheet.sheets.get(id=sheet.id)
+        print("\nSheet after updating rows:")
+        pprint(sheet.as_list())
 
-    # deleting row by id
-    smartsheet.sheets.delete_row(sheet, row_id_to_delete)
+        # delete a row
+        smartsheet.sheets.delete_row(sheet.id, row_id_to_delete)
 
-    # getting an updated sheet
-    sheet = smartsheet.sheets.get("My New Sheet")
-    print("\nSheet after deleting rows:")
-    pprint(sheet.as_list())
+        # get an updated sheet
+        sheet = smartsheet.sheets.get(id=sheet.id)
+        print("\nSheet after deleting rows:")
+        pprint(sheet.as_list())
 
-    # deleting Sheet
-    sheet = smartsheet.sheets.delete("My New Sheet")
-    sheets = smartsheet.sheets.list()
-    pprint(sheets)
+        # delete a sheet by name
+        smartsheet.sheets.delete(SHEET_NAME)
+        sheets = smartsheet.sheets.list()
+        pprint(sheets)
+
+
+if __name__ == "__main__":
+    main()
