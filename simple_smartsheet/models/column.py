@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional, List
 
 import attr
@@ -19,10 +20,23 @@ class ContactOption(Object):
     name: Optional[str] = None
 
 
+class ColumnType(Enum):
+    TEXT_NUMBER = "TEXT_NUMBER"
+    PICKLIST = "PICKLIST"
+    CHECKBOX = "CHECKBOX"
+    DATE = "DATE"
+    DATETIME = "DATETIME"
+    ABSTRACT_DATETIME = "ABSTRACT_DATETIME"
+    CONTACT_LIST = "CONTACT_LIST"
+    MULTI_CONTACT_LIST = "MULTI_CONTACT_LIST"
+    DURATION = "DURATION"
+    PREDECESSOR = "PREDECESSOR"
+
+
 class ColumnSchema(Schema):
     id = fields.Int()
     system_column_type = fields.Str(data_key="systemColumnType")
-    type = fields.Str()  # TODO: should be enum
+    type = fields.Str()
     auto_number_format = fields.Nested(
         AutoNumberFormatSchema, data_key="autoNumberFormat"
     )
@@ -60,7 +74,7 @@ class ColumnSchema(Schema):
 class Column(Object):
     id: Optional[int] = None
     system_column_type: Optional[str] = None
-    type: Optional[str] = None
+    type: Optional[ColumnType] = None
     auto_number_format: Optional[AutoNumberFormat] = None
     contact_options: Optional[List[ContactOption]] = None
     format: Optional[str] = None

@@ -19,8 +19,10 @@ from typing import (
 import attr
 from marshmallow import fields, pre_load
 
+from simple_smartsheet import config
 from simple_smartsheet import exceptions
 from simple_smartsheet import smartsheet
+from simple_smartsheet import utils
 from simple_smartsheet.crud import CRUD, AsyncCRUD, CRUDAttrs
 from simple_smartsheet.types import IndexKeysDict, IndexesType
 from simple_smartsheet.models.base import Schema, CoreSchema, Object, CoreObject
@@ -41,6 +43,15 @@ class UserSettingsSchema(Schema):
 class UserSettings(Object):
     critical_path_enabled: bool
     display_summary_tasks: bool
+
+
+class UserPermissionsSchema(Schema):
+    summary_permissions = fields.Str(data_key="summaryPermissions")
+
+
+@attr.s(auto_attribs=True, repr=False, kw_only=True)
+class UserPermissions(Object):
+    summary_permissions: str
 
 
 class WorkspaceSchema(Schema):
@@ -80,12 +91,15 @@ class SheetSchema(CoreSchema):
     resource_management_enabled = fields.Bool(data_key="resourceManagementEnabled")
     cell_image_upload_enabled = fields.Bool(data_key="cellImageUploadEnabled")
     user_settings = fields.Nested(UserSettingsSchema, data_key="userSettings")
+    user_permissions = fields.Nested(UserPermissionsSchema, data_key="userPermissions")
+    has_summary_fields = fields.Bool(data_key="hasSummaryFields")
 
     columns = fields.List(fields.Nested(ColumnSchema))
     rows = fields.List(fields.Nested(RowSchema))
     workspace = fields.Nested(WorkspaceSchema)
 
     class Meta:
+        unknown = utils.get_unknown_field_handling(config.IS_DEVELOPMENT)
         ordered = True
 
     @pre_load
@@ -125,6 +139,8 @@ class _SheetBase(CoreObject, Generic[RowT, ColumnT]):
     resource_management_enabled: Optional[bool] = None
     cell_image_upload_enabled: Optional[bool] = None
     user_settings: Optional[UserSettings] = None
+    user_permissions: Optional[UserPermissions] = None
+    has_summary_fields: Optional[bool] = None
 
     columns: List[ColumnT] = attr.Factory(list)
     rows: List[RowT] = attr.Factory(list)
@@ -294,9 +310,7 @@ class _Sheet(_SheetBase[Row, Column]):
     columns: List[Column] = cast(List[Column], attr.Factory(list))
     rows: List[Row] = attr.Factory(list)
 
-    def make_cell(
-        self, column_title: str, field_value: Union[float, str, datetime, None]
-    ) -> Cell:
+    def make_cell(self, column_title: str, field_value: Any) -> Cell:
         """Creates a Cell object for an existing column
 
         Args:
@@ -314,9 +328,7 @@ class _Sheet(_SheetBase[Row, Column]):
         cell = Cell(column_id=column.id, value=field_value)
         return cell
 
-    def make_cells(
-        self, fields: Dict[str, Union[float, str, datetime, None]]
-    ) -> List[Cell]:
+    def make_cells(self, fields: Dict[str, Any]) -> List[Cell]:
         """Create a list of Cell objects from dictionary
 
         Args:
@@ -372,8 +384,10 @@ class Sheet(_Sheet):
                 f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
                 f"must be 'Smartsheet'"
             )
+        elif self.id is None:
+            raise ValueError("The attribute 'id' must not be None")
         else:
-            return self.smartsheet.sheets.add_rows(self, rows)
+            return self.smartsheet.sheets.add_rows(self.id, rows)
 
     def add_row(self, row: Row) -> Result:
         """Adds a single row to the Sheeet (deprecated).
@@ -397,8 +411,10 @@ class Sheet(_Sheet):
                 f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
                 f"must be 'Smartsheet'"
             )
+        elif self.id is None:
+            raise ValueError("The attribute 'id' must not be None")
         else:
-            return self.smartsheet.sheets.add_row(self, row)
+            return self.smartsheet.sheets.add_row(self.id, row)
 
     def update_rows(self, rows: Sequence[Row]) -> Result:
         """Updates several rows in the Sheet (deprecated).
@@ -421,8 +437,10 @@ class Sheet(_Sheet):
                 f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
                 f"must be 'Smartsheet'"
             )
+        elif self.id is None:
+            raise ValueError("The attribute 'id' must not be None")
         else:
-            return self.smartsheet.sheets.update_rows(self, rows)
+            return self.smartsheet.sheets.update_rows(self.id, rows)
 
     def update_row(self, row: Row) -> Result:
         """Updates a single row in the Sheet (deprecated).
@@ -445,8 +463,10 @@ class Sheet(_Sheet):
                 f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
                 f"must be 'Smartsheet'"
             )
+        elif self.id is None:
+            raise ValueError("The attribute 'id' must not be None")
         else:
-            return self.smartsheet.sheets.update_row(self, row)
+            return self.smartsheet.sheets.update_row(self.id, row)
 
     def delete_rows(self, row_ids: Sequence[int]) -> Result:
         """Deletes several rows in the Sheet (deprecated).
@@ -469,8 +489,10 @@ class Sheet(_Sheet):
                 f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
                 f"must be 'Smartsheet'"
             )
+        elif self.id is None:
+            raise ValueError("The attribute 'id' must not be None")
         else:
-            return self.smartsheet.sheets.delete_rows(self, row_ids)
+            return self.smartsheet.sheets.delete_rows(self.id, row_ids)
 
     def delete_row(self, row_id: int) -> Result:
         """Deletes a single row in the Sheet specified by ID (deprecated).
@@ -491,8 +513,10 @@ class Sheet(_Sheet):
                 f"The attribute 'smartsheet' is of type {type(self.smartsheet)}, "
                 f"must be 'Smartsheet'"
             )
+        elif self.id is None:
+            raise ValueError("The attribute 'id' must not be None")
         else:
-            return self.smartsheet.sheets.delete_row(self, row_id)
+            return self.smartsheet.sheets.delete_row(self.id, row_id)
 
     def sort_rows(self, order: List[Dict[str, Any]]) -> "Sheet":
         """Sorts rows in the sheet with the specified order (deprecated)
@@ -537,6 +561,8 @@ class SheetCRUDMixin(CRUDAttrs):
         "columns.width",
     )
 
+    update_include_fields = ("name",)
+
     _rows_include_fields = [
         "parent_id",
         "above",
@@ -557,8 +583,41 @@ class SheetCRUDMixin(CRUDAttrs):
         "cells.override_validation",
         "locked",
     ]
-    _rows_endpoint = "/sheets/{sheet.id}/rows"
+    _rows_endpoint = "/sheets/{sheet_id}/rows"
     _sort_rows_endpoint: ClassVar[str] = "/sheets/{sheet.id}/sort"
+
+    @staticmethod
+    def _sheet_id(sheet_id: Union[Sheet, int]):
+        if isinstance(sheet_id, int):
+            return sheet_id
+        elif isinstance(sheet_id, Sheet):
+            msg = (
+                "Please provide ID of a sheet as the first "
+                "argument instead of a Sheet object."
+            )
+            warnings.warn(msg, DeprecationWarning)
+            return sheet_id.id
+        else:
+            raise ValueError(f"Unknown type {type(sheet_id)} for sheet_id")
+
+    @staticmethod
+    def _add_or_update_row_data(row: Row, schema: RowSchema):
+        updated_row = row.copy(deep=False)
+        updated_row.cells = [
+            cell
+            for cell in row.cells
+            if cell.value is not None or cell.formula is not None
+        ]
+        result = schema.dump(updated_row)
+        return result
+
+    @property
+    def _add_row_schema(self) -> RowSchema:
+        return RowSchema(only=self._rows_include_fields + ["sibling_id"])
+
+    @property
+    def _update_row_schema(self) -> RowSchema:
+        return RowSchema(only=self._rows_include_fields + ["id"])
 
     def _add_rows_data(self, rows: Sequence[Row]) -> List[Dict[str, Any]]:
         data = []
@@ -593,7 +652,7 @@ class SheetCRUDMixin(CRUDAttrs):
 
     @staticmethod
     def _sort_rows_data(sheet: Sheet, order: List[Dict[str, Any]]) -> Dict[str, Any]:
-        # TODO: add validation _schema for sorting order
+        # TODO: add validation schema for sorting order
         normalized_order = []
         for item in order:
             normalized_item = {}
@@ -622,104 +681,112 @@ class SheetCRUDMixin(CRUDAttrs):
 class SheetCRUD(SheetCRUDMixin, CRUD[Sheet]):
     factory = Sheet
 
-    def add_rows(self, sheet: Sheet, rows: Sequence[Row]) -> Result:
+    def add_rows(self, sheet_id: int, rows: Sequence[Row]) -> Result:
         """Adds several rows to the sheet.
 
         Every row must have either location-specifier attributes or row number set
         More details: http://smartsheet-platform.github.io/api-docs/#add-rows
 
         Args:
-            sheet: the sheet where rows should be added to
+            sheet_id: ID of the sheet where rows should be added to
             rows: sequence of Row objects
 
         Returns:
             Result object
         """
-        data = self._add_rows_data(rows)
-        endpoint = self._rows_endpoint.format(sheet=sheet)
-        result = self.smartsheet.post(endpoint, data=data)
-        return cast(Result, result)
+        data = [self._add_or_update_row_data(row, self._add_row_schema) for row in rows]
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = self.smartsheet._post(endpoint, data=data)
+        return result
 
-    def add_row(self, sheet: Sheet, row: Row) -> Result:
+    def add_row(self, sheet_id: int, row: Row) -> Result:
         """Adds a single row to the Sheet.
 
         A row must have either location-specifier attributes or row number set
         More details: http://smartsheet-platform.github.io/api-docs/#add-rows
 
         Args:
-            sheet: the sheet where the row should be added to
+            sheet_id: ID of the sheet where a row should be added to
             row: Row object
 
         Returns:
             Result object
         """
-        return self.add_rows(sheet, [row])
+        data = self._add_or_update_row_data(row, self._add_row_schema)
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = self.smartsheet._post(endpoint, data=data)
+        return result
 
-    def update_rows(self, sheet: Sheet, rows: Sequence[Row]) -> Result:
+    def update_rows(self, sheet_id: int, rows: Sequence[Row]) -> Result:
         """Updates several rows in the Sheet.
 
         More details: http://smartsheet-platform.github.io/api-docs/#update-rows
 
         Args:
-            sheet: the sheet where the rows should be updated
+            sheet_id: ID of the sheet where rows should be updated
             rows: sequence of Row objects
 
         Returns:
             Result object
         """
-        data = self._update_rows_data(rows)
-        endpoint = self._rows_endpoint.format(sheet=sheet)
-        result = self.smartsheet.put(endpoint, data=data)
-        return cast(Result, result)
+        data = [
+            self._add_or_update_row_data(row, self._update_row_schema) for row in rows
+        ]
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = self.smartsheet._put(endpoint, data=data)
+        return result
 
-    def update_row(self, sheet: Sheet, row: Row) -> Result:
+    def update_row(self, sheet_id: int, row: Row) -> Result:
         """Updates a single row in the Sheet.
 
         More details: http://smartsheet-platform.github.io/api-docs/#update-rows
 
         Args:
-            sheet: the sheet were the row should be updated
+            sheet_id: ID of the sheet where a row should be updated
             row: Row object
 
         Returns:
             Result object
         """
-        return self.update_rows(sheet, [row])
+        data = self._add_or_update_row_data(row, self._update_row_schema)
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = self.smartsheet._put(endpoint, data=data)
+        return result
 
-    def delete_rows(self, sheet: Sheet, row_ids: Sequence[int]) -> Result:
+    def delete_rows(self, sheet_id: int, row_ids: Sequence[int]) -> Result:
         """Deletes several rows in the Sheet.
 
         Rows are identified by ids.
 
         Args:
-            sheet: the sheet where the rows should be deleted
+            sheet_id: ID of the sheet where rows should be deleted from
             row_ids: sequence of row ids
 
         Returns:
             Result object
         """
-        endpoint = self._rows_endpoint.format(sheet=sheet)
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
         params = self._delete_rows_params(row_ids)
-        result = self.smartsheet.delete(endpoint, params=params)
+        result = self.smartsheet._delete(endpoint, params=params)
         return result
 
-    def delete_row(self, sheet: Sheet, row_id: int) -> Result:
+    def delete_row(self, sheet_id: int, row_id: int) -> Result:
         """Deletes a single row in the Sheet specified by ID.
 
         Args:
-            sheet: the sheet where the row should be deleted
+            sheet_id: ID of the sheet where a row should be deleted from
             row_id: Row id
 
         Returns:
             Result object
         """
-        return self.delete_rows(sheet, [row_id])
+        return self.delete_rows(sheet_id, [row_id])
 
     def sort_rows(self, sheet: Sheet, order: List[Dict[str, Any]]) -> "Sheet":
-        """Sorts rows in the sheet with the specified order
+        """Sorts rows in the sheet with the specified order.
 
         Args:
-            sheet: the sheet where the rows should be sorted
+            sheet: Sheet object where the rows should be sorted
             order: List of dictionaries containing column_title or column_id and
                 (optional) descending bool (default is ascending). Example:
                 [
@@ -732,109 +799,118 @@ class SheetCRUD(SheetCRUDMixin, CRUD[Sheet]):
         """
         data = self._sort_rows_data(sheet, order)
         endpoint = self._sort_rows_endpoint.format(sheet=sheet)
-        response = self.smartsheet.post(endpoint, data, result_obj=False)
-        sheet = sheet.load(cast(Dict[str, Any], response))
-        sheet.smartsheet = self.smartsheet  # TODO: remove in 0.4.0
-        return sheet
+        response = self.smartsheet._post(endpoint, data, result_obj=False)
+        updated_sheet = Sheet.load(cast(Dict[str, Any], response))
+        updated_sheet.smartsheet = self.smartsheet  # TODO: remove in later release
+        return updated_sheet
 
 
 class SheetAsyncCRUD(SheetCRUDMixin, AsyncCRUD[Sheet]):
     factory = Sheet
 
-    async def add_rows(self, sheet: Sheet, rows: Sequence[Row]) -> Result:
+    async def add_rows(self, sheet_id: int, rows: Sequence[Row]) -> Result:
         """Adds several rows to the sheet asynchronously.
 
         Every row must have either location-specifier attributes or row number set
         More details: http://smartsheet-platform.github.io/api-docs/#add-rows
 
         Args:
-            sheet: the sheet where rows should be added to
+            sheet_id: ID of the sheet where rows should be added to
             rows: sequence of Row objects
 
         Returns:
             Result object
         """
-        data = self._add_rows_data(rows)
-        endpoint = self._rows_endpoint.format(sheet=sheet)
-        result = await self.smartsheet.post(endpoint, data=data)
+        data = [self._add_or_update_row_data(row, self._add_row_schema) for row in rows]
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = await self.smartsheet._post(endpoint, data=data)
         return cast(Result, result)
 
-    async def add_row(self, sheet: Sheet, row: Row) -> Result:
-        """Adds a single row to the sheet asynchronously.
+    async def add_row(self, sheet_id: int, row: Row) -> Result:
+        """Adds a single row to the Sheet asynchronously.
 
         A row must have either location-specifier attributes or row number set
         More details: http://smartsheet-platform.github.io/api-docs/#add-rows
 
         Args:
-            sheet: the sheet where the row should be added to
+            sheet_id: ID of the sheet where a row should be added to
             row: Row object
 
         Returns:
             Result object
         """
-        return await self.add_rows(sheet, [row])
+        data = self._add_or_update_row_data(row, self._add_row_schema)
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = await self.smartsheet._post(endpoint, data=data)
+        return cast(Result, result)
 
-    async def update_rows(self, sheet: Sheet, rows: Sequence[Row]) -> Result:
+    async def update_rows(self, sheet_id: int, rows: Sequence[Row]) -> Result:
         """Updates several rows in the Sheet asynchronously.
 
         More details: http://smartsheet-platform.github.io/api-docs/#update-rows
 
         Args:
-            sheet: the sheet where the rows should be updated
+            sheet_id: ID of the sheet where rows should be updated
             rows: sequence of Row objects
 
         Returns:
             Result object
         """
-        data = self._update_rows_data(rows)
-        endpoint = self._rows_endpoint.format(sheet=sheet)
-        result = await self.smartsheet.put(endpoint, data=data)
+        data = [
+            self._add_or_update_row_data(row, self._update_row_schema) for row in rows
+        ]
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = await self.smartsheet._put(endpoint, data=data)
         return cast(Result, result)
 
-    async def update_row(self, sheet: Sheet, row: Row) -> Result:
+    async def update_row(self, sheet_id: int, row: Row) -> Result:
         """Updates a single row in the Sheet asynchronously.
 
         More details: http://smartsheet-platform.github.io/api-docs/#update-rows
 
         Args:
-            sheet: the sheet were the row should be updated
+            sheet_id: ID of the sheet where a row should be updated
             row: Row object
 
         Returns:
             Result object
         """
-        return await self.update_rows(sheet, [row])
+        data = self._add_or_update_row_data(row, self._update_row_schema)
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
+        result = await self.smartsheet._put(endpoint, data=data)
+        return cast(Result, result)
 
-    async def delete_rows(self, sheet: Sheet, row_ids: Sequence[int]) -> Result:
+    async def delete_rows(self, sheet_id: int, row_ids: Sequence[int]) -> Result:
         """Deletes several rows in the Sheet asynchronously.
 
         Rows are identified by ids.
 
         Args:
+            sheet_id: ID of the sheet where rows should be deleted from
             row_ids: sequence of row ids
 
         Returns:
             Result object
         """
-        endpoint = self._rows_endpoint.format(sheet=sheet)
+        endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
         params = self._delete_rows_params(row_ids)
-        result = await self.smartsheet.delete(endpoint, params=params)
+        result = await self.smartsheet._delete(endpoint, params=params)
         return result
 
-    async def delete_row(self, sheet: Sheet, row_id: int) -> Result:
+    async def delete_row(self, sheet_id: int, row_id: int) -> Result:
         """Deletes a single row in the Sheet specified by ID asynchronously.
 
         Args:
-            sheet: the sheet where the row should be deleted
+            sheet_id: ID of the sheet where a row should be deleted from
             row_id: Row id
 
         Returns:
             Result object
         """
-        return await self.delete_rows(sheet, [row_id])
+        return await self.delete_rows(sheet_id, [row_id])
 
     async def sort_rows(self, sheet: Sheet, order: List[Dict[str, Any]]) -> "Sheet":
-        """Sorts rows in the sheet with the specified order
+        """Sorts rows in the sheet with the specified order asynchronously.
 
         Args:
             sheet: the sheet where the rows should be sorted
@@ -850,7 +926,7 @@ class SheetAsyncCRUD(SheetCRUDMixin, AsyncCRUD[Sheet]):
         """
         data = self._sort_rows_data(sheet, order)
         endpoint = self._sort_rows_endpoint.format(sheet=sheet)
-        response = await self.smartsheet.post(endpoint, data, result_obj=False)
+        response = await self.smartsheet._post(endpoint, data, result_obj=False)
         sheet = sheet.load(cast(Dict[str, Any], response))
-        sheet.smartsheet = self.smartsheet
+        sheet.smartsheet = self.smartsheet  # TODO: remove in later release
         return sheet

@@ -41,7 +41,7 @@ class Error(Object):
 class ResultSchema(Schema):
     failed_items = fields.List(fields.Field(), data_key="failedItems")
     message = fields.Str()
-    result = fields.Field()
+    obj = fields.Field(data_key="result")
     result_code = fields.Int(data_key="resultCode")
     version = fields.Int()
 
@@ -50,11 +50,15 @@ class ResultSchema(Schema):
 class Result(Object):
     failed_items: List[Any] = attr.Factory(list)
     message: Optional[str] = None
-    result: Optional[Any] = None
+    obj: Optional[Any] = None
     result_code: Optional[int] = None
     version: Optional[int] = None
 
     _schema: ClassVar[Type[ResultSchema]] = ResultSchema
+
+    @property
+    def result(self) -> Any:
+        return self.obj
 
 
 class HyperlinkSchema(Schema):

@@ -1,5 +1,5 @@
 import logging
-import copy
+import copy as cp
 from datetime import datetime
 from typing import (
     TypeVar,
@@ -38,7 +38,7 @@ converter.register_structure_hook(Union[float, str, datetime, None], lambda ts, 
 
 class Schema(marshmallow.Schema):
     class Meta:
-        unknown = utils.get_unknown_field_handling(config.DEBUG)
+        unknown = utils.get_unknown_field_handling(config.IS_DEVELOPMENT)
 
     @marshmallow.post_dump
     def remove_none(self, data, many: bool, **kwargs):
@@ -75,7 +75,9 @@ class Object:
         self, only: Optional[Sequence[str]] = None, exclude: Sequence[str] = ()
     ) -> Dict[str, Any]:
         schema = self._schema(only=only, exclude=exclude)
-        return schema.dump(self)
+        data = converter.unstructure(self)
+        result = schema.dump(data)
+        return result
 
     def __repr__(self) -> str:
         if hasattr(self, "id") and hasattr(self, "name"):
@@ -90,9 +92,9 @@ class Object:
 
     def copy(self: T, deep: bool = True) -> T:
         if deep:
-            return copy.deepcopy(self)
+            return cp.deepcopy(self)
         else:
-            return copy.copy(self)
+            return cp.copy(self)
 
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)

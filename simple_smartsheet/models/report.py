@@ -72,6 +72,8 @@ class ReportSchema(SheetSchema):
     columns = fields.List(fields.Nested(ReportColumnSchema))
     rows = fields.List(fields.Nested(ReportRowSchema))
     source_sheets = fields.List(fields.Nested(SheetSchema, data_key="sourceSheets"))
+    is_summary = fields.Bool(data_key="isSummaryReport")
+    read_only = fields.Bool(data_key="readOnly")
 
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)
@@ -86,6 +88,9 @@ class Report(_SheetBase[ReportRow, ReportColumn]):
     rows: List[ReportRow] = attr.Factory(list)
 
     source_sheets: List[Sheet] = attr.Factory(list)
+    is_summary: bool = False
+    read_only: Optional[bool] = None
+
     _schema = ReportSchema
 
 
