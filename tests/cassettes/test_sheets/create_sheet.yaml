@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: '{"name": "[TEST] New Sheet", "columns": [{"primary": true, "type": "TEXT_NUMBER",
+      "title": "Full Name"}, {"type": "TEXT_NUMBER", "title": "Email address"}, {"type":
+      "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title": "Number
+      of children"}, {"type": "DATE", "title": "Birth date"}, {"type": "CHECKBOX",
+      "title": "Married"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '340'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: POST
+    uri: https://api.smartsheet.com/2.0/sheets
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":1545587721037700,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/8Xh2jjQ3wv69RxPHx3pRG38cFFRpwR2mHxQJXwh1","columns":[{"id":664627756459908,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":5168227383830404,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2916427570145156,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":7420027197515652,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":1790527663302532,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":6294127290673028,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:27:50 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '940'
+    status:
+      code: 200
+      message: OK
+version: 1

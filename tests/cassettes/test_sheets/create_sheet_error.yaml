@@ -1,0 +1,43 @@
+interactions:
+- request:
+    body: '{"name": "[TEST] New Sheet", "columns": [{"primary": true, "type": "TEXT_NUMBER",
+      "title": "Full Name"}, {"type": "TEXT_NUMBER", "title": "Email address"}, {"type":
+      "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title": "Number
+      of children"}, {"type": "DATE", "title": "Birth date"}, {"type": "CHECKBOX",
+      "title": "Married"}, {"type": "TEXT_NUMBER", "title": "Full Name"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '387'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: POST
+    uri: https://api.smartsheet.com/2.0/sheets
+  response:
+    body:
+      string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be
+        unique.\",\n  \"refId\" : \"8dexje4uevl\"\n}"
+    headers:
+      Connection:
+      - close
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:27:53 GMT
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '98'
+    status:
+      code: 400
+      message: Bad Request
+version: 1

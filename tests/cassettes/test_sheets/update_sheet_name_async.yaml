@@ -1,0 +1,96 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      authorization:
+      - '[REDACTED]'
+    method: GET
+    uri: https://api.smartsheet.com/2.0/sheets?includeAll=true
+  response:
+    body:
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":4,"data":[{"id":4921432015693700,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/8xhQQgP3xQRvW8cJrfR36wcjXp73Vwvg68WcFwC1","createdAt":"2019-08-08T18:27:26Z","modifiedAt":"2019-08-08T18:27:26Z"},{"id":2207309037365124,"name":"[TEST]
+        Report Sheet 1","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/9v7qHWw32PWFgwjjrv3PrMm44XWCfHRMrj9wX9J1","createdAt":"2019-08-06T17:40:20Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":6710908664735620,"name":"[TEST]
+        Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":1269266705082244,"name":"[TEST]
+        Sheet To Update","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/jc8F7h4QWQwGqQWcPgcJWCrXMHfJx4Cw56gr4VF1","createdAt":"2019-08-08T18:28:02Z","modifiedAt":"2019-08-08T18:28:03Z"}]}'
+    headers:
+      Cache-Control: no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '450'
+      Content-Type: application/json;charset=UTF-8
+      Date: Thu, 08 Aug 2019 18:28:03 GMT
+      Expires: '0'
+      Pragma: no-cache
+      Vary: Accept-Encoding
+    status:
+      code: 200
+      message: OK
+    url: https://api.smartsheet.com/2.0/sheets?includeAll=true
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      authorization:
+      - '[REDACTED]'
+    method: GET
+    uri: https://api.smartsheet.com/2.0/sheets/1269266705082244
+  response:
+    body:
+      string: '{"id":1269266705082244,"name":"[TEST] Sheet To Update","version":2,"totalRowCount":3,"accessLevel":"OWNER","effectiveAttachmentOptions":["GOOGLE_DRIVE","DROPBOX","EGNYTE","ONEDRIVE","LINK","EVERNOTE","BOX_COM","FILE"],"ganttEnabled":false,"dependenciesEnabled":false,"resourceManagementEnabled":false,"cellImageUploadEnabled":true,"userSettings":{"criticalPathEnabled":false,"displaySummaryTasks":true},"permalink":"https://app.smartsheet.com/sheets/jc8F7h4QWQwGqQWcPgcJWCrXMHfJx4Cw56gr4VF1","createdAt":"2019-08-08T18:28:02Z","modifiedAt":"2019-08-08T18:28:03Z","columns":[{"id":7505651665528708,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":1876152131315588,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6379751758686084,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4127951945000836,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":8631551572371332,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":468777247762308,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}],"rows":[{"id":2724313574467460,"rowNumber":1,"expanded":true,"createdAt":"2019-08-08T18:28:03Z","modifiedAt":"2019-08-08T18:28:03Z","cells":[{"columnId":7505651665528708,"value":"Bob
+        Lee","displayValue":"Bob Lee"},{"columnId":1876152131315588,"value":"bob.lee@acme.com","displayValue":"bob.lee@acme.com"},{"columnId":6379751758686084,"value":"ACME","displayValue":"ACME"},{"columnId":4127951945000836,"value":2.0,"displayValue":"2"},{"columnId":8631551572371332},{"columnId":468777247762308,"value":true}]},{"id":7227913201837956,"rowNumber":2,"siblingId":2724313574467460,"expanded":true,"createdAt":"2019-08-08T18:28:03Z","modifiedAt":"2019-08-08T18:28:03Z","cells":[{"columnId":7505651665528708,"value":"Alice
+        Smith","displayValue":"Alice Smith"},{"columnId":1876152131315588,"value":"alice.smith@globex.com","displayValue":"alice.smith@globex.com"},{"columnId":6379751758686084,"value":"Globex","displayValue":"Globex"},{"columnId":4127951945000836},{"columnId":8631551572371332},{"columnId":468777247762308}]},{"id":1598413667624836,"rowNumber":3,"siblingId":7227913201837956,"expanded":true,"createdAt":"2019-08-08T18:28:03Z","modifiedAt":"2019-08-08T18:28:03Z","cells":[{"columnId":7505651665528708,"value":"Charlie
+        Brown","displayValue":"Charlie Brown"},{"columnId":1876152131315588,"value":"charlie.brown@acme.com","displayValue":"charlie.brown@acme.com"},{"columnId":6379751758686084,"value":"ACME","displayValue":"ACME"},{"columnId":4127951945000836,"value":1.0,"displayValue":"1"},{"columnId":8631551572371332,"value":"1990-01-01"},{"columnId":468777247762308,"value":false}]}]}'
+    headers:
+      Cache-Control: no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '942'
+      Content-Type: application/json;charset=UTF-8
+      Date: Thu, 08 Aug 2019 18:28:03 GMT
+      Expires: '0'
+      Pragma: no-cache
+      Vary: Accept-Encoding
+    status:
+      code: 200
+      message: OK
+    url: https://api.smartsheet.com/2.0/sheets/1269266705082244
+- request:
+    body:
+      name: '[TEST] Updated Sheet'
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      authorization:
+      - '[REDACTED]'
+    method: PUT
+    uri: https://api.smartsheet.com/2.0/sheets/1269266705082244
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":1269266705082244,"name":"[TEST]
+        Updated Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/jc8F7h4QWQwGqQWcPgcJWCrXMHfJx4Cw56gr4VF1"},"version":2}'
+    headers:
+      Cache-Control: no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '210'
+      Content-Type: application/json;charset=UTF-8
+      Date: Thu, 08 Aug 2019 18:28:03 GMT
+      Expires: '0'
+      Pragma: no-cache
+      Vary: Accept-Encoding
+    status:
+      code: 200
+      message: OK
+    url: https://api.smartsheet.com/2.0/sheets/1269266705082244
+version: 1

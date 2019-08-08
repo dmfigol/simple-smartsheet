@@ -1,0 +1,706 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/7562218427443076
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:02 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/1269266705082244
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:05 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/49702151448452
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:08 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/2923224251033476
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:15 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/214903773521796
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:18 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/565476184090500
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:21 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/8306828317616004
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:24 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/2466703587207044
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:27 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/8406368479668100
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:30 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/6049187348408196
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:33 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/1088019085191044
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:36 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/7989825371432836
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:39 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/8024666146137988
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:42 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/8299131736221572
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:45 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/5140234829621124
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:48 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/7602350601856900
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 08 Aug 2019 18:28:52 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+version: 1
