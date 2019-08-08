@@ -1,3 +1,3 @@
-from .utils import is_debug
+from .utils import is_development
 
-DEBUG = is_debug()
+IS_DEVELOPMENT = is_development()

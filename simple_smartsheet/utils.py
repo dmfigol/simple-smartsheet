@@ -1,14 +1,14 @@
 import os
 from typing import Optional, Sequence, Any, List
 
-from marshmallow import EXCLUDE, RAISE
+import marshmallow
 
 
-def get_unknown_field_handling(debug: bool) -> str:
-    if debug:
-        return RAISE
+def get_unknown_field_handling(is_development: bool) -> str:
+    if is_development:
+        return marshmallow.RAISE
     else:
-        return EXCLUDE
+        return marshmallow.EXCLUDE
 
 
 def is_env_var(env_var: str) -> bool:
@@ -16,8 +16,8 @@ def is_env_var(env_var: str) -> bool:
     return env_var_str in ("yes", "true", "y", "1")
 
 
-def is_debug() -> bool:
-    return is_env_var("SIMPLE_SMARTSHEET_DEBUG")
+def is_development() -> bool:
+    return is_env_var("SIMPLE_SMARTSHEET_DEV")
 
 
 def create_repr(obj: Any, attrs: Optional[Sequence[str]] = None):

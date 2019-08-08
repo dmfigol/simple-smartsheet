@@ -61,7 +61,7 @@ class Smartsheet(SmartsheetBase):
 
     Attributes:
         token: Smartsheet API token, obtained in Personal Settings -> API access
-        session: requests.Session object which stores headers based on the token
+        _session: requests.Session object which stores headers based on the token
         sheets: SheetsCRUD object which provides methods to interact with Sheets
     """
 
@@ -70,8 +70,8 @@ class Smartsheet(SmartsheetBase):
     def __init__(self, token: str) -> None:
         super().__init__(token)
 
-        self.session = requests.Session()
-        self.session.headers.update(**self._headers)
+        self._session = requests.Session()
+        self._session.headers.update(**self._headers)
 
         self.sheets = SheetCRUD(self)
         self.reports = ReportCRUD(self)
@@ -83,7 +83,7 @@ class Smartsheet(SmartsheetBase):
         self.close()
 
     def close(self) -> None:
-        self.session.close()
+        self._session.close()
 
     def _request(
         self,
@@ -95,7 +95,7 @@ class Smartsheet(SmartsheetBase):
         result_obj: bool = False,
     ) -> Union[None, Result, JSONType]:
         url = self.build_url(endpoint)
-        response = self.session.request(
+        response = self._session.request(
             method=method, url=url, params=params, json=data
         )
         if not response.ok:
@@ -104,7 +104,7 @@ class Smartsheet(SmartsheetBase):
             response_text = response.text
             return self._process_response_text(response_text, response_path, result_obj)
 
-    def get(
+    def _get(
         self,
         endpoint: str,
         path: Optional[str] = "data",
@@ -124,9 +124,9 @@ class Smartsheet(SmartsheetBase):
         result = self._request("GET", endpoint, response_path=path, params=params)
         return cast(JSONType, result)
 
-    def post(
+    def _post(
         self, endpoint: str, data: Optional[JSONType] = None, result_obj: bool = True
-    ) -> Union[Result, JSONType, None]:
+    ) -> Result:
         """Performs HTTP POST on the endpoint
 
         Args:
@@ -138,9 +138,9 @@ class Smartsheet(SmartsheetBase):
             Result object
         """
         result = self._request("POST", endpoint, data=data, result_obj=result_obj)
-        return result
+        return cast(Result, result)
 
-    def put(self, endpoint: str, data: JSONType) -> Optional[Result]:
+    def _put(self, endpoint: str, data: JSONType) -> Result:
         """Performs HTTP PUT on the endpoint
 
         Args:
@@ -151,9 +151,9 @@ class Smartsheet(SmartsheetBase):
             Result object
         """
         result = self._request("PUT", endpoint, data=data, result_obj=True)
-        return cast(Optional[Result], result)
+        return cast(Result, result)
 
-    def delete(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Result:
+    def _delete(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Result:
         """Performs HTTP DELETE on the endpoint
 
         Args:
@@ -171,13 +171,14 @@ class AsyncSmartsheet(SmartsheetBase):
     def __init__(self, token: str) -> None:
         super().__init__(token)
 
-        self.session = aiohttp.ClientSession(headers=self._headers)
+        self._session = aiohttp.ClientSession()
+        self._session._default_headers.update(**self._headers)
 
         self.sheets = SheetAsyncCRUD(self)
         self.reports = ReportAsyncCRUD(self)
 
     async def close(self) -> None:
-        await self.session.close()
+        await self._session.close()
 
     async def __aenter__(self) -> "AsyncSmartsheet":
         return self
@@ -200,17 +201,15 @@ class AsyncSmartsheet(SmartsheetBase):
         result_obj: bool = False,
     ) -> Union[None, Result, JSONType]:
         url = self.build_url(endpoint)
-        async with self.session.request(
+        async with self._session.request(
             method=method, url=url, params=params, json=data
         ) as response:
             if response.status >= 400:
-                raise await exceptions.SmartsheetHTTPError.from_async_response(
-                    response
-                )
+                raise await exceptions.SmartsheetHTTPError.from_async_response(response)
             response_text = await response.text()
             return self._process_response_text(response_text, response_path, result_obj)
 
-    async def get(
+    async def _get(
         self,
         endpoint: str,
         path: Optional[str] = "data",
@@ -230,7 +229,7 @@ class AsyncSmartsheet(SmartsheetBase):
         result = await self._request("GET", endpoint, response_path=path, params=params)
         return cast(JSONType, result)
 
-    async def post(
+    async def _post(
         self, endpoint: str, data: Optional[JSONType] = None, result_obj: bool = True
     ) -> Union[Result, JSONType, None]:
         """Performs HTTP POST on the endpoint asynchronously
@@ -246,7 +245,7 @@ class AsyncSmartsheet(SmartsheetBase):
         result = await self._request("POST", endpoint, data=data, result_obj=result_obj)
         return result
 
-    async def put(self, endpoint: str, data: JSONType) -> Optional[Result]:
+    async def _put(self, endpoint: str, data: JSONType) -> Optional[Result]:
         """Performs HTTP PUT on the endpoint
 
         Args:
@@ -259,7 +258,7 @@ class AsyncSmartsheet(SmartsheetBase):
         result = await self._request("PUT", endpoint, data=data, result_obj=True)
         return cast(Optional[Result], result)
 
-    async def delete(
+    async def _delete(
         self, endpoint: str, params: Optional[Dict[str, Any]] = None
     ) -> Result:
         """Performs HTTP DELETE on the endpoint asynchronously
