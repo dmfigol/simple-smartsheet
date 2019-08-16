@@ -143,10 +143,6 @@ def fix_cassette(path: Path):
             url = request["uri"]
             method = request["method"]
             response = req_resp["response"]
-            # response_url = response.get("url")
-            # if not response_url:
-            #     response["url"] = url
-            #     changed = True
 
             tests_sheets_data = []
             if method == "GET" and url in {

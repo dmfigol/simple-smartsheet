@@ -34,6 +34,7 @@ class CRUDAttrs:
 
     get_include_fields: Optional[Sequence[str]] = None
     get_exclude_fields: Sequence[str] = ()
+    get_params: Optional[Dict[str, str]] = None
     list_include_fields: Optional[Sequence[str]] = None
     list_exclude_fields: Sequence[str] = ()
 
@@ -125,6 +126,14 @@ class CRUDRead(CRUDReadBase[TS]):
         objects = self.list()
         return self._get_id(name, objects)
 
+    def _get_by_id(self, id: int) -> TS:
+        endpoint = self.get_url.format(id=id)
+        data = cast(
+            Dict[str, Any],
+            self.smartsheet._get(endpoint, path=None, params=self.get_params),
+        )
+        return self._create_obj_from_data(data)
+
     def get(self, name: Optional[str] = None, id: Optional[int] = None) -> TS:
         """Fetches a CoreObject by name or id.
 
@@ -136,13 +145,10 @@ class CRUDRead(CRUDReadBase[TS]):
             CoreObject
         """
         if id:
-            endpoint = self.get_url.format(id=id)
-            smartsheet = self.smartsheet
-            obj_data = cast(Dict[str, Any], smartsheet._get(endpoint, path=None))
-            return self._create_obj_from_data(obj_data)
+            return self._get_by_id(id)
         elif name:
             id_ = self.get_id(name)
-            return self.get(id=id_)
+            return self._get_by_id(id_)
         raise ValueError(f"To use get method, either name or id must be provided")
 
     def list(self) -> List[TS]:
@@ -154,10 +160,9 @@ class CRUDRead(CRUDReadBase[TS]):
         Returns:
             CoreObject
         """
-        smartsheet = self.smartsheet
         objects_data = cast(
             List[Dict[str, Any]],
-            smartsheet._get(self.list_url, params={"includeAll": "true"}),
+            self.smartsheet._get(self.list_url, params={"includeAll": "true"}),
         )
         return self._create_objects_from_data(objects_data)
 
@@ -173,13 +178,12 @@ class CRUD(CRUDRead[TS]):
         Returns:
             Result object
         """
-        smartsheet = self.smartsheet
-        obj.smartsheet = smartsheet
+        obj.smartsheet = self.smartsheet
         endpoint = self.create_url.format(obj=obj)
         obj_data = obj.dump(
             only=self.create_include_fields, exclude=self.create_exclude_fields
         )
-        result = smartsheet._post(endpoint, obj_data)
+        result = self.smartsheet._post(endpoint, obj_data)
         result.obj = obj.load(cast(Dict[str, Any], result.obj))
         return result
 
@@ -192,14 +196,18 @@ class CRUD(CRUDRead[TS]):
         Returns:
             Result object
         """
-        smartsheet = self.smartsheet
-        obj.smartsheet = smartsheet
+        obj.smartsheet = self.smartsheet
         endpoint = self.update_url.format(id=obj.id)
         obj_data = obj.dump(
             only=self.update_include_fields, exclude=self.update_exclude_fields
         )
-        result = smartsheet._put(endpoint, obj_data)
+        result = self.smartsheet._put(endpoint, obj_data)
         result.obj = obj.load(cast(Dict[str, Any], result.obj))
+        return result
+
+    def _delete_by_id(self, id: int) -> "Result":
+        endpoint = self.delete_url.format(id=id)
+        result = self.smartsheet._delete(endpoint)
         return result
 
     def delete(self, name: Optional[str] = None, id: Optional[int] = None) -> "Result":
@@ -213,13 +221,10 @@ class CRUD(CRUDRead[TS]):
             Result object
         """
         if id:
-            endpoint = self.delete_url.format(id=id)
-            smartsheet = self.smartsheet
-            result = smartsheet._delete(endpoint)
-            return result
+            return self._delete_by_id(id)
         elif name:
             id_ = self.get_id(name)
-            return self.delete(id=id_)
+            return self._delete_by_id(id_)
         raise ValueError(f"To use delete method, either name or id must be provided")
 
 
@@ -229,6 +234,14 @@ class AsyncCRUDRead(CRUDReadBase[TS]):
     async def get_id(self, name: str) -> int:
         objects = await self.list()
         return self._get_id(name, objects)
+
+    async def _get_by_id(self, id: int) -> TS:
+        endpoint = self.get_url.format(id=id)
+        data = cast(
+            Dict[str, Any],
+            await self.smartsheet._get(endpoint, path=None, params=self.get_params),
+        )
+        return self._create_obj_from_data(data)
 
     async def get(self, name: Optional[str] = None, id: Optional[int] = None) -> TS:
         """Fetches a CoreObject by name or id.
@@ -241,13 +254,10 @@ class AsyncCRUDRead(CRUDReadBase[TS]):
             CoreObject
         """
         if id:
-            endpoint = self.get_url.format(id=id)
-            smartsheet = self.smartsheet
-            data = cast(Dict[str, Any], await smartsheet._get(endpoint, path=None))
-            return self._create_obj_from_data(data)
+            return await self._get_by_id(id)
         elif name:
             id_ = await self.get_id(name)
-            return await self.get(id=id_)
+            return await self._get_by_id(id_)
         raise ValueError(f"To use get method, either name or id must be provided")
 
     async def list(self) -> List[TS]:
@@ -259,8 +269,7 @@ class AsyncCRUDRead(CRUDReadBase[TS]):
         Returns:
             CoreObject
         """
-        smartsheet = self.smartsheet
-        data = await smartsheet._get(self.list_url, params={"includeAll": "true"})
+        data = await self.smartsheet._get(self.list_url, params={"includeAll": "true"})
         return self._create_objects_from_data(cast(List[Dict[str, Any]], data))
 
 
@@ -274,13 +283,12 @@ class AsyncCRUD(AsyncCRUDRead[TS]):
         Returns:
             Result object
         """
-        smartsheet = self.smartsheet
-        obj.smartsheet = smartsheet
+        obj.smartsheet = self.smartsheet
         endpoint = self.create_url.format(obj=obj)
         obj_data = obj.dump(
             only=self.create_include_fields, exclude=self.create_exclude_fields
         )
-        result = cast("Result", await smartsheet._post(endpoint, obj_data))
+        result = cast("Result", await self.smartsheet._post(endpoint, obj_data))
         result.obj = obj.load(cast(Dict[str, Any], result.obj))
         return result
 
@@ -293,14 +301,18 @@ class AsyncCRUD(AsyncCRUDRead[TS]):
         Returns:
             Result object
         """
-        smartsheet = self.smartsheet
-        obj.smartsheet = smartsheet
+        obj.smartsheet = self.smartsheet
         endpoint = self.update_url.format(id=obj.id)
         obj_data = obj.dump(
             only=self.update_include_fields, exclude=self.update_exclude_fields
         )
-        result = cast("Result", await smartsheet._put(endpoint, obj_data))
+        result = cast("Result", await self.smartsheet._put(endpoint, obj_data))
         result.obj = obj.load(cast(Dict[str, Any], result.obj))
+        return result
+
+    async def _delete_by_id(self, id: int) -> "Result":
+        endpoint = self.delete_url.format(id=id)
+        result = await self.smartsheet._delete(endpoint)
         return result
 
     async def delete(
@@ -316,13 +328,10 @@ class AsyncCRUD(AsyncCRUDRead[TS]):
             Result object
         """
         if id:
-            endpoint = self.delete_url.format(id=id)
-            smartsheet = self.smartsheet
-            result = await smartsheet._delete(endpoint)
-            return result
+            return await self._delete_by_id(id)
         elif name:
             id_ = await self.get_id(name)
-            return await self.delete(id=id_)
+            return await self._delete_by_id(id_)
         else:
             raise ValueError(
                 f"To use delete method, either name or id must be provided"
