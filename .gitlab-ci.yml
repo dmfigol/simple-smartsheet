@@ -20,6 +20,8 @@ test:
     - .venv/bin/python -Werror examples/async.py > /dev/null
   tags:
     - docker
+  except:
+    - master
 
 
 publish:
