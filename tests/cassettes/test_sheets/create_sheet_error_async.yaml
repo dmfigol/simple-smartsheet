@@ -30,13 +30,13 @@ interactions:
   response:
     body:
       string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be
-        unique.\",\n  \"refId\" : \"1s6cft0dh2xim\"\n}"
+        unique.\",\n  \"refId\" : \"1hv49t5v6ybrx\"\n}"
     headers:
       Connection: close
       Content-Encoding: gzip
-      Content-Length: '107'
+      Content-Length: '108'
       Content-Type: application/json;charset=UTF-8
-      Date: Thu, 08 Aug 2019 18:27:54 GMT
+      Date: Fri, 16 Aug 2019 02:39:26 GMT
       Vary: Accept-Encoding
     status:
       code: 400

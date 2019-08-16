@@ -1,10 +1,10 @@
 interactions:
 - request:
-    body: '{"name": "[TEST] New Sheet", "columns": [{"primary": true, "type": "TEXT_NUMBER",
-      "title": "Full Name"}, {"type": "TEXT_NUMBER", "title": "Email address"}, {"type":
-      "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title": "Number
-      of children"}, {"type": "DATE", "title": "Birth date"}, {"type": "CHECKBOX",
-      "title": "Married"}]}'
+    body: '{"name": "[TEST] New Sheet", "columns": [{"primary": true, "title": "Full
+      Name", "type": "TEXT_NUMBER"}, {"title": "Email address", "type": "TEXT_NUMBER"},
+      {"title": "Company", "type": "TEXT_NUMBER"}, {"title": "Number of children",
+      "type": "TEXT_NUMBER"}, {"title": "Birth date", "type": "DATE"}, {"title": "Married",
+      "type": "CHECKBOX"}]}'
     headers:
       Accept:
       - application/json
@@ -24,12 +24,12 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":1545587721037700,"name":"[TEST]
-        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/8Xh2jjQ3wv69RxPHx3pRG38cFFRpwR2mHxQJXwh1","columns":[{"id":664627756459908,"version":0,"index":0,"title":"Full
-        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":5168227383830404,"version":0,"index":1,"title":"Email
-        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2916427570145156,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":7420027197515652,"version":0,"index":3,"title":"Number
-        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":1790527663302532,"version":0,"index":4,"title":"Birth
-        date","type":"DATE","validation":false,"width":150},{"id":6294127290673028,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":5552385260054404,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/3j8MXG54Cp9J7gx6pw76hj56mrChvRQXhWjH8Wg1","columns":[{"id":2920460276000644,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":7424059903371140,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":1794560369158020,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6298159996528516,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4046360182843268,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":8549959810213764,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate
@@ -38,7 +38,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Thu, 08 Aug 2019 18:27:50 GMT
+      - Fri, 16 Aug 2019 02:39:21 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -48,7 +48,7 @@ interactions:
       Vary:
       - Accept-Encoding
       content-length:
-      - '940'
+      - '941'
     status:
       code: 200
       message: OK

@@ -42,3 +42,4 @@ async def test_reports():
             for report_id in REPORT_IDS
         ]
         await asyncio.gather(*futures)
+        assert len(futures[1].result().rows) > 1000

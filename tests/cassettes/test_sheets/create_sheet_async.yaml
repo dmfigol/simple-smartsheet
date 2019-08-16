@@ -27,18 +27,18 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":3486174204454788,"name":"[TEST]
-        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/X3Q6RVcRghq8p2XGx7fvRHrCvrJ8fVP7xcRMMFw1","columns":[{"id":5772486332704644,"version":0,"index":0,"title":"Full
-        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":3520686519019396,"version":0,"index":1,"title":"Email
-        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":8024286146389892,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":705936751912836,"version":0,"index":3,"title":"Number
-        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":5209536379283332,"version":0,"index":4,"title":"Birth
-        date","type":"DATE","validation":false,"width":150},{"id":2957736565598084,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":537375286814596,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/MgVj94wQQ4pRP6gwPhP4C338VWHh7Pg8GRHwMwr1","columns":[{"id":4880919573096324,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":2629119759411076,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":7132719386781572,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":1503219852568452,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6006819479938948,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":3755019666253700,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
     headers:
       Cache-Control: no-cache, no-store, must-revalidate
       Content-Encoding: gzip
       Content-Length: '449'
       Content-Type: application/json;charset=UTF-8
-      Date: Thu, 08 Aug 2019 18:27:52 GMT
+      Date: Fri, 16 Aug 2019 02:39:23 GMT
       Expires: '0'
       Pragma: no-cache
       Vary: Accept-Encoding

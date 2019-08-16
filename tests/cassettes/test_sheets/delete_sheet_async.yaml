@@ -12,17 +12,17 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets?includeAll=true
   response:
     body:
-      string: '{"pageNumber":1,"totalPages":1,"totalCount":4,"data":[{"id":4921432015693700,"name":"[TEST]
-        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/8xhQQgP3xQRvW8cJrfR36wcjXp73Vwvg68WcFwC1","createdAt":"2019-08-08T18:27:26Z","modifiedAt":"2019-08-08T18:27:26Z"},{"id":2207309037365124,"name":"[TEST]
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":4,"data":[{"id":4227473748584324,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/QC7GMmRFCwX3x8q3rjMMv5Cg665cCHQRQRxjPwW1","createdAt":"2019-08-16T02:38:33Z","modifiedAt":"2019-08-16T02:38:34Z"},{"id":2207309037365124,"name":"[TEST]
         Report Sheet 1","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/9v7qHWw32PWFgwjjrv3PrMm44XWCfHRMrj9wX9J1","createdAt":"2019-08-06T17:40:20Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":6710908664735620,"name":"[TEST]
-        Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":2247728974587780,"name":"[TEST]
-        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/mX3MjwJC4qPMVX5C6pgj8gJfMQ9Vpqg9Jfh5g271","createdAt":"2019-08-08T18:27:58Z","modifiedAt":"2019-08-08T18:27:58Z"}]}'
+        Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-16T01:00:14Z"},{"id":6924438332565380,"name":"[TEST]
+        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/8Wj7PMwg5VrGqq9W4gPhPjXxc4prHVWpx4fqX5Q1","createdAt":"2019-08-16T02:39:29Z","modifiedAt":"2019-08-16T02:39:29Z"}]}'
     headers:
       Cache-Control: no-cache, no-store, must-revalidate
       Content-Encoding: gzip
-      Content-Length: '448'
+      Content-Length: '454'
       Content-Type: application/json;charset=UTF-8
-      Date: Thu, 08 Aug 2019 18:27:59 GMT
+      Date: Fri, 16 Aug 2019 02:39:30 GMT
       Expires: '0'
       Pragma: no-cache
       Vary: Accept-Encoding
@@ -40,7 +40,7 @@ interactions:
       authorization:
       - '[REDACTED]'
     method: DELETE
-    uri: https://api.smartsheet.com/2.0/sheets/2247728974587780
+    uri: https://api.smartsheet.com/2.0/sheets/6924438332565380
   response:
     body:
       string: '{"message":"SUCCESS","resultCode":0}'
@@ -49,12 +49,12 @@ interactions:
       Content-Encoding: gzip
       Content-Length: '55'
       Content-Type: application/json;charset=UTF-8
-      Date: Thu, 08 Aug 2019 18:27:59 GMT
+      Date: Fri, 16 Aug 2019 02:39:30 GMT
       Expires: '0'
       Pragma: no-cache
       Vary: Accept-Encoding
     status:
       code: 200
       message: OK
-    url: https://api.smartsheet.com/2.0/sheets/2247728974587780
+    url: https://api.smartsheet.com/2.0/sheets/6924438332565380
 version: 1

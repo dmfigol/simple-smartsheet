@@ -1,10 +1,10 @@
 interactions:
 - request:
-    body: '{"name": "[TEST] New Sheet", "columns": [{"primary": true, "type": "TEXT_NUMBER",
-      "title": "Full Name"}, {"type": "TEXT_NUMBER", "title": "Email address"}, {"type":
-      "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title": "Number
-      of children"}, {"type": "DATE", "title": "Birth date"}, {"type": "CHECKBOX",
-      "title": "Married"}, {"type": "TEXT_NUMBER", "title": "Full Name"}]}'
+    body: '{"name": "[TEST] New Sheet", "columns": [{"primary": true, "title": "Full
+      Name", "type": "TEXT_NUMBER"}, {"title": "Email address", "type": "TEXT_NUMBER"},
+      {"title": "Company", "type": "TEXT_NUMBER"}, {"title": "Number of children",
+      "type": "TEXT_NUMBER"}, {"title": "Birth date", "type": "DATE"}, {"title": "Married",
+      "type": "CHECKBOX"}, {"title": "Full Name", "type": "TEXT_NUMBER"}]}'
     headers:
       Accept:
       - application/json
@@ -25,18 +25,18 @@ interactions:
   response:
     body:
       string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be
-        unique.\",\n  \"refId\" : \"8dexje4uevl\"\n}"
+        unique.\",\n  \"refId\" : \"1qxj96hvyi33i\"\n}"
     headers:
       Connection:
       - close
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Thu, 08 Aug 2019 18:27:53 GMT
+      - Fri, 16 Aug 2019 02:39:25 GMT
       Vary:
       - Accept-Encoding
       content-length:
-      - '98'
+      - '100'
     status:
       code: 400
       message: Bad Request

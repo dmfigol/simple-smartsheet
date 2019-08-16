@@ -45,7 +45,6 @@ class TestGetReport:
         report = smartsheet.reports.get(name=self.REPORT_NAME)
         assert report.name == self.REPORT_NAME
         assert report.columns
-        assert len(report.rows) == 4
         assert any(
             row.get_cell("Email address").value == "bob.lee@acme.com"
             for row in report.rows
@@ -53,7 +52,7 @@ class TestGetReport:
         assert any(
             row.get_cell("Full Name").value == "David Ward" for row in report.rows
         )
-
+        assert len(report.rows) > 100
         self.check_indexes(report)
 
     @pytest.mark.asyncio
@@ -62,7 +61,6 @@ class TestGetReport:
         report = await async_smartsheet.reports.get(name=self.REPORT_NAME)
         assert report.name == self.REPORT_NAME
         assert report.columns
-        assert len(report.rows) == 4
         assert any(
             row.get_cell("Email address").value == "bob.lee@acme.com"
             for row in report.rows
@@ -70,5 +68,5 @@ class TestGetReport:
         assert any(
             row.get_cell("Full Name").value == "David Ward" for row in report.rows
         )
-
+        assert len(report.rows) > 100
         self.check_indexes(report)
