@@ -1,4 +1,6 @@
 on: [push, release]
+env:
+  GITHUB_WORKSPACE: /app/ 
 jobs:
   test:
     if: github.event_name == 'release' || github.ref != 'refs/heads/master'
