@@ -1,7 +1,8 @@
 on: [push, release]
 jobs:
   test:
-    if: github.event_name == 'release' || github.ref != 'refs/heads/master'
+    # issue: https://github.community/t5/GitHub-Actions/Workflow-is-failing-if-no-job-can-be-ran-due-to-condition/td-p/38085
+    # if: github.event_name == 'release' || github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
     container:
       image: registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-stretch
