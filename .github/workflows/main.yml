@@ -1,0 +1,35 @@
+on: [push, release]
+jobs:
+  test:
+    if: github.event_name == 'release' || github.ref != 'refs/heads/master'
+    runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-stretch
+    env:
+      SMARTSHEET_API_TOKEN: ${{ secrets.SMARTSHEET_API_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Running tests
+      run: |
+        /root/.poetry/bin/poetry install --no-interaction
+        .venv/bin/black --check simple_smartsheet examples tests
+        .venv/bin/flake8 simple_smartsheet examples tests
+        .venv/bin/mypy simple_smartsheet
+        .venv/bin/pytest --record-mode=all
+        .venv/bin/python -Werror examples/sheets.py > /dev/null
+        .venv/bin/python -Werror examples/report.py > /dev/null
+        .venv/bin/python -Werror examples/custom_indexes.py > /dev/null
+        .venv/bin/python -Werror examples/async.py > /dev/null
+
+  publish:
+    if: github.event_name == 'release'
+    needs: test
+    runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-stretch
+    env:
+      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish to PyPi
+      run: /root/.poetry/bin/poetry publish --build -u __token__ -p ${PYPI_TOKEN}
