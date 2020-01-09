@@ -37,7 +37,7 @@ aiohttp = "*"
 [tool.poetry.dev-dependencies]
 flake8 = "*"
 mypy = "*"
-black = { version = "*", allows-prereleases = true }
+black = { version = "*", allow-prereleases = true }
 isort = "*"
 pytest = "*"
 pytest-asyncio = "*"
