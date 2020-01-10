@@ -34,13 +34,13 @@ class CellValueField(fields.Field):
             return value
         if column_type == "DATE":
             try:
-                return marshmallow.utils.from_iso_date(value)
+                return marshmallow.utils.from_iso_date(value)  # type: ignore
             except ValueError:
                 logger.warning("Cell value %r is not a valid date", value)
                 return value
         elif column_type in ("DATETIME", "ABSTRACT_DATETIME"):
             try:
-                return marshmallow.utils.from_iso_datetime(value)
+                return marshmallow.utils.from_iso_datetime(value)  # type: ignore
             except ValueError:
                 logger.info("Cell value %r is not a valid datetime ", value)
                 return value

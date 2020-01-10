@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-converter = Converter()
+converter = Converter()  # type: ignore
 converter.register_structure_hook(datetime, lambda ts, _: ts)
 converter.register_structure_hook(IndexesType, lambda x, _: x)
 converter.register_structure_hook(Union[float, str, datetime, None], lambda ts, _: ts)
