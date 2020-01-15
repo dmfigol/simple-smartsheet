@@ -93,6 +93,7 @@ class SheetSchema(CoreSchema):
     user_settings = fields.Nested(UserSettingsSchema, data_key="userSettings")
     user_permissions = fields.Nested(UserPermissionsSchema, data_key="userPermissions")
     has_summary_fields = fields.Bool(data_key="hasSummaryFields")
+    is_multi_picklist_enabled = fields.Bool(data_key="isMultiPicklistEnabled")
 
     columns = fields.List(fields.Nested(ColumnSchema))
     rows = fields.List(fields.Nested(RowSchema))
@@ -141,6 +142,7 @@ class _SheetBase(CoreObject, Generic[RowT, ColumnT]):
     user_settings: Optional[UserSettings] = None
     user_permissions: Optional[UserPermissions] = None
     has_summary_fields: Optional[bool] = None
+    is_multi_picklist_enabled: Optional[bool] = None
 
     columns: List[ColumnT] = attr.Factory(list)
     rows: List[RowT] = attr.Factory(list)
