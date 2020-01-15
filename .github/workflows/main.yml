@@ -13,7 +13,14 @@ jobs:
     - name: Running tests
       run: |
         poetry install --no-interaction
-        make tests-ci
+        poetry run black --check simple_smartsheet examples tests
+        poetry run flake8 simple_smartsheet examples tests
+        poetry run mypy simple_smartsheet
+        poetry run pytest --record-mode=all
+        poetry run python -Werror examples/sheets.py > /dev/null
+        poetry run python -Werror examples/report.py > /dev/null
+        poetry run python -Werror examples/custom_indexes.py > /dev/null
+        poetry run python -Werror examples/async.py > /dev/null
 
   publish:
     if: github.event_name == 'release'
