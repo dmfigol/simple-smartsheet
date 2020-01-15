@@ -1,0 +1,148 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: GET
+    uri: https://api.smartsheet.com/2.0/sheets?includeAll=true
+  response:
+    body:
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":4,"data":[{"id":8079597905438596,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/5M6cWJG45FvPMM4qRFH46hCWp3Rp2Wrxv9gX4xM1","createdAt":"2020-01-15T18:48:55Z","modifiedAt":"2020-01-15T18:48:56Z"},{"id":2207309037365124,"name":"[TEST]
+        Report Sheet 1","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/9v7qHWw32PWFgwjjrv3PrMm44XWCfHRMrj9wX9J1","createdAt":"2019-08-06T17:40:20Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":6710908664735620,"name":"[TEST]
+        Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-16T01:00:14Z"},{"id":3532705007724420,"name":"[TEST]
+        Sheet To Update","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/WXhH2hcC6jgxF8945JPQ9cgHj3cvVcqR6Fp25HF1","createdAt":"2020-01-15T18:50:44Z","modifiedAt":"2020-01-15T18:50:45Z"}]}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Wed, 15 Jan 2020 18:50:45 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '1005'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: GET
+    uri: https://api.smartsheet.com/2.0/sheets/3532705007724420
+  response:
+    body:
+      string: '{"id":3532705007724420,"name":"[TEST] Sheet To Update","version":2,"totalRowCount":3,"accessLevel":"OWNER","effectiveAttachmentOptions":["DROPBOX","FILE","GOOGLE_DRIVE","BOX_COM","EGNYTE","EVERNOTE","ONEDRIVE","LINK"],"ganttEnabled":false,"dependenciesEnabled":false,"resourceManagementEnabled":false,"cellImageUploadEnabled":true,"userSettings":{"criticalPathEnabled":false,"displaySummaryTasks":true},"permalink":"https://app.smartsheet.com/sheets/WXhH2hcC6jgxF8945JPQ9cgHj3cvVcqR6Fp25HF1","createdAt":"2020-01-15T18:50:44Z","modifiedAt":"2020-01-15T18:50:45Z","isMultiPicklistEnabled":true,"columns":[{"id":3126891763787652,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":7630491391158148,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2000991856945028,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6504591484315524,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4252791670630276,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":8756391298000772,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}],"rows":[{"id":6031812710950788,"rowNumber":1,"expanded":true,"createdAt":"2020-01-15T18:50:45Z","modifiedAt":"2020-01-15T18:50:45Z","cells":[{"columnId":3126891763787652,"value":"Bob
+        Lee","displayValue":"Bob Lee"},{"columnId":7630491391158148,"value":"bob.lee@acme.com","displayValue":"bob.lee@acme.com"},{"columnId":2000991856945028,"value":"ACME","displayValue":"ACME"},{"columnId":6504591484315524,"value":2.0,"displayValue":"2"},{"columnId":4252791670630276},{"columnId":8756391298000772,"value":true}]},{"id":3780012897265540,"rowNumber":2,"siblingId":6031812710950788,"expanded":true,"createdAt":"2020-01-15T18:50:45Z","modifiedAt":"2020-01-15T18:50:45Z","cells":[{"columnId":3126891763787652,"value":"Alice
+        Smith","displayValue":"Alice Smith"},{"columnId":7630491391158148,"value":"alice.smith@globex.com","displayValue":"alice.smith@globex.com"},{"columnId":2000991856945028,"value":"Globex","displayValue":"Globex"},{"columnId":6504591484315524},{"columnId":4252791670630276},{"columnId":8756391298000772}]},{"id":8283612524636036,"rowNumber":3,"siblingId":3780012897265540,"expanded":true,"createdAt":"2020-01-15T18:50:45Z","modifiedAt":"2020-01-15T18:50:45Z","cells":[{"columnId":3126891763787652,"value":"Charlie
+        Brown","displayValue":"Charlie Brown"},{"columnId":7630491391158148,"value":"charlie.brown@acme.com","displayValue":"charlie.brown@acme.com"},{"columnId":2000991856945028,"value":"ACME","displayValue":"ACME"},{"columnId":6504591484315524,"value":1.0,"displayValue":"1"},{"columnId":4252791670630276,"value":"1990-01-01"},{"columnId":8756391298000772,"value":false}]}]}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Wed, 15 Jan 2020 18:50:46 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=29
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '2921'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"sortCriteria": [{"columnId": 3126891763787652, "direction": "ASCENDING"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '76'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: POST
+    uri: https://api.smartsheet.com/2.0/sheets/3532705007724420/sort
+  response:
+    body:
+      string: '{"id":3532705007724420,"name":"[TEST] Sheet To Update","version":3,"totalRowCount":3,"accessLevel":"OWNER","effectiveAttachmentOptions":["DROPBOX","FILE","GOOGLE_DRIVE","BOX_COM","EGNYTE","EVERNOTE","ONEDRIVE","LINK"],"ganttEnabled":false,"dependenciesEnabled":false,"resourceManagementEnabled":false,"cellImageUploadEnabled":true,"userSettings":{"criticalPathEnabled":false,"displaySummaryTasks":true},"permalink":"https://app.smartsheet.com/sheets/WXhH2hcC6jgxF8945JPQ9cgHj3cvVcqR6Fp25HF1","createdAt":"2020-01-15T18:50:44Z","modifiedAt":"2020-01-15T18:50:45Z","isMultiPicklistEnabled":true,"columns":[{"id":3126891763787652,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":7630491391158148,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2000991856945028,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6504591484315524,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4252791670630276,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":8756391298000772,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}],"rows":[{"id":3780012897265540,"rowNumber":1,"expanded":true,"createdAt":"2020-01-15T18:50:45Z","modifiedAt":"2020-01-15T18:50:46Z","cells":[{"columnId":3126891763787652,"value":"Alice
+        Smith","displayValue":"Alice Smith"},{"columnId":7630491391158148,"value":"alice.smith@globex.com","displayValue":"alice.smith@globex.com"},{"columnId":2000991856945028,"value":"Globex","displayValue":"Globex"},{"columnId":6504591484315524},{"columnId":4252791670630276},{"columnId":8756391298000772}]},{"id":6031812710950788,"rowNumber":2,"siblingId":3780012897265540,"expanded":true,"createdAt":"2020-01-15T18:50:45Z","modifiedAt":"2020-01-15T18:50:46Z","cells":[{"columnId":3126891763787652,"value":"Bob
+        Lee","displayValue":"Bob Lee"},{"columnId":7630491391158148,"value":"bob.lee@acme.com","displayValue":"bob.lee@acme.com"},{"columnId":2000991856945028,"value":"ACME","displayValue":"ACME"},{"columnId":6504591484315524,"value":2.0,"displayValue":"2"},{"columnId":4252791670630276},{"columnId":8756391298000772,"value":true}]},{"id":8283612524636036,"rowNumber":3,"siblingId":6031812710950788,"expanded":true,"createdAt":"2020-01-15T18:50:45Z","modifiedAt":"2020-01-15T18:50:46Z","cells":[{"columnId":3126891763787652,"value":"Charlie
+        Brown","displayValue":"Charlie Brown"},{"columnId":7630491391158148,"value":"charlie.brown@acme.com","displayValue":"charlie.brown@acme.com"},{"columnId":2000991856945028,"value":"ACME","displayValue":"ACME"},{"columnId":6504591484315524,"value":1.0,"displayValue":"1"},{"columnId":4252791670630276,"value":"1990-01-01"},{"columnId":8756391298000772,"value":false}]}]}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Wed, 15 Jan 2020 18:50:46 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=28
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '2921'
+    status:
+      code: 200
+      message: OK
+version: 1

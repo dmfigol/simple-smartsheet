@@ -1,10 +1,10 @@
 interactions:
 - request:
-    body: '{"name": "[TEST] New Sheet", "columns": [{"primary": true, "title": "Full
-      Name", "type": "TEXT_NUMBER"}, {"title": "Email address", "type": "TEXT_NUMBER"},
-      {"title": "Company", "type": "TEXT_NUMBER"}, {"title": "Number of children",
-      "type": "TEXT_NUMBER"}, {"title": "Birth date", "type": "DATE"}, {"title": "Married",
-      "type": "CHECKBOX"}, {"title": "Full Name", "type": "TEXT_NUMBER"}]}'
+    body: '{"name": "[TEST] New Sheet", "columns": [{"type": "TEXT_NUMBER", "title":
+      "Full Name", "primary": true}, {"type": "TEXT_NUMBER", "title": "Email address"},
+      {"type": "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title":
+      "Number of children"}, {"type": "DATE", "title": "Birth date"}, {"type": "CHECKBOX",
+      "title": "Married"}, {"type": "TEXT_NUMBER", "title": "Full Name"}]}'
     headers:
       Accept:
       - application/json
@@ -24,19 +24,19 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be
-        unique.\",\n  \"refId\" : \"1qxj96hvyi33i\"\n}"
+      string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be\
+        \ unique.\",\n  \"refId\" : \"708so0ktomdz\"\n}"
     headers:
       Connection:
       - close
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Fri, 16 Aug 2019 02:39:25 GMT
+      - Wed, 15 Jan 2020 18:49:50 GMT
       Vary:
       - Accept-Encoding
       content-length:
-      - '100'
+      - '99'
     status:
       code: 400
       message: Bad Request

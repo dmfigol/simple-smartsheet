@@ -18,11 +18,11 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets?includeAll=true
   response:
     body:
-      string: '{"pageNumber":1,"totalPages":1,"totalCount":4,"data":[{"id":4227473748584324,"name":"[TEST]
-        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/QC7GMmRFCwX3x8q3rjMMv5Cg665cCHQRQRxjPwW1","createdAt":"2019-08-16T02:38:33Z","modifiedAt":"2019-08-16T02:38:34Z"},{"id":2207309037365124,"name":"[TEST]
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":4,"data":[{"id":8079597905438596,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/5M6cWJG45FvPMM4qRFH46hCWp3Rp2Wrxv9gX4xM1","createdAt":"2020-01-15T18:48:55Z","modifiedAt":"2020-01-15T18:48:56Z"},{"id":2207309037365124,"name":"[TEST]
         Report Sheet 1","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/9v7qHWw32PWFgwjjrv3PrMm44XWCfHRMrj9wX9J1","createdAt":"2019-08-06T17:40:20Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":6710908664735620,"name":"[TEST]
-        Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-16T01:00:14Z"},{"id":3862985643976580,"name":"[TEST]
-        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/jx9WXVjcPGW6Xj7XFw33g9Xp8m694wqj388FFXG1","createdAt":"2019-08-16T02:39:28Z","modifiedAt":"2019-08-16T02:39:28Z"}]}'
+        Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-16T01:00:14Z"},{"id":8178072915601284,"name":"[TEST]
+        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/4jqxrq5qHWpwFV6HfHh4VPxqhRxpqjm7M8mr4gm1","createdAt":"2020-01-15T18:49:53Z","modifiedAt":"2020-01-15T18:49:53Z"}]}'
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate
@@ -31,7 +31,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Fri, 16 Aug 2019 02:39:28 GMT
+      - Wed, 15 Jan 2020 18:49:54 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -63,7 +63,7 @@ interactions:
       authorization:
       - '[REDACTED]'
     method: DELETE
-    uri: https://api.smartsheet.com/2.0/sheets/3862985643976580
+    uri: https://api.smartsheet.com/2.0/sheets/8178072915601284
   response:
     body:
       string: '{"message":"SUCCESS","resultCode":0}'
@@ -75,7 +75,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Fri, 16 Aug 2019 02:39:28 GMT
+      - Wed, 15 Jan 2020 18:49:54 GMT
       Expires:
       - '0'
       Keep-Alive:

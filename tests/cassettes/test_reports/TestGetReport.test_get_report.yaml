@@ -4,8 +4,14 @@ interactions:
     headers:
       Accept:
       - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.22.0
       authorization:
       - '[REDACTED]'
     method: GET
@@ -15,32 +21,47 @@ interactions:
       string: '{"pageNumber":1,"totalPages":1,"totalCount":1,"data":[{"id":8305449633113988,"name":"[TEST]
         Read-only Report","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/reports/46JC68pCQ4J87p9Q3PH52rxmWp6CvXWJ5jpx2cM1","isSummaryReport":false}]}'
     headers:
-      Cache-Control: no-cache, no-store, must-revalidate
-      Content-Encoding: gzip
-      Content-Length: '224'
-      Content-Type: application/json;charset=UTF-8
-      Date: Fri, 16 Aug 2019 02:39:17 GMT
-      Expires: '0'
-      Pragma: no-cache
-      Vary: Accept-Encoding
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Wed, 15 Jan 2020 18:49:42 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '248'
     status:
       code: 200
       message: OK
-    url: https://api.smartsheet.com/2.0/reports?includeAll=true
 - request:
     body: null
     headers:
       Accept:
       - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.22.0
       authorization:
       - '[REDACTED]'
     method: GET
     uri: https://api.smartsheet.com/2.0/reports/8305449633113988?pageSize=10000
   response:
     body:
-      string: '{"id":8305449633113988,"name":"[TEST] Read-only Report","totalRowCount":108,"accessLevel":"OWNER","effectiveAttachmentOptions":["ONEDRIVE","GOOGLE_DRIVE","FILE","LINK","EGNYTE","DROPBOX","BOX_COM","EVERNOTE"],"ganttEnabled":false,"cellImageUploadEnabled":true,"permalink":"https://app.smartsheet.com/reports/46JC68pCQ4J87p9Q3PH52rxmWp6CvXWJ5jpx2cM1","createdAt":"2019-08-07T00:06:15Z","modifiedAt":"2019-08-07T23:33:18Z","columns":[{"virtualId":3387000662321028,"version":0,"index":0,"title":"Sheet
+      string: '{"id":8305449633113988,"name":"[TEST] Read-only Report","totalRowCount":108,"accessLevel":"OWNER","effectiveAttachmentOptions":["ONEDRIVE","EGNYTE","FILE","GOOGLE_DRIVE","BOX_COM","LINK","EVERNOTE","DROPBOX"],"ganttEnabled":false,"cellImageUploadEnabled":true,"permalink":"https://app.smartsheet.com/reports/46JC68pCQ4J87p9Q3PH52rxmWp6CvXWJ5jpx2cM1","createdAt":"2019-08-07T00:06:15Z","modifiedAt":"2019-08-07T23:33:18Z","columns":[{"virtualId":3387000662321028,"version":0,"index":0,"title":"Sheet
         Name","type":"TEXT_NUMBER","sheetNameColumn":true,"validation":false,"width":150},{"virtualId":7890600289691524,"version":0,"index":1,"title":"Full
         Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"virtualId":1310950910388100,"version":0,"index":2,"title":"Email
         address","type":"TEXT_NUMBER","validation":false,"width":150},{"virtualId":5814550537758596,"version":0,"index":3,"title":"Birth
@@ -263,16 +284,25 @@ interactions:
         Report Sheet 2","displayValue":"[TEST] Report Sheet 2"},{"columnId":8603863361054596,"virtualColumnId":7890600289691524,"value":"H
         Z","displayValue":"H Z"},{"columnId":441089036445572,"virtualColumnId":1310950910388100,"value":"hz@unknown.com","displayValue":"hz@unknown.com"},{"columnId":7196488477501316,"virtualColumnId":5814550537758596},{"columnId":4944688663816068,"virtualColumnId":3562750724073348,"value":"Unknown","displayValue":"Unknown"},{"columnId":1566988943288196,"virtualColumnId":8066350351443844},{"columnId":2692888850130820,"virtualColumnId":748000956966788}]}],"isSummaryReport":false}'
     headers:
-      Cache-Control: no-cache, no-store, must-revalidate
-      Content-Encoding: gzip
-      Content-Length: '5200'
-      Content-Type: application/json;charset=UTF-8
-      Date: Fri, 16 Aug 2019 02:39:17 GMT
-      Expires: '0'
-      Pragma: no-cache
-      Vary: Accept-Encoding
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Wed, 15 Jan 2020 18:49:42 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=29
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '92822'
     status:
       code: 200
       message: OK
-    url: https://api.smartsheet.com/2.0/reports/8305449633113988?pageSize=10000
 version: 1

@@ -1,0 +1,49 @@
+interactions:
+- request:
+    body:
+      columns:
+      - primary: true
+        title: Full Name
+        type: TEXT_NUMBER
+      - title: Email address
+        type: TEXT_NUMBER
+      - title: Company
+        type: TEXT_NUMBER
+      - title: Number of children
+        type: TEXT_NUMBER
+      - title: Birth date
+        type: DATE
+      - title: Married
+        type: CHECKBOX
+      name: '[TEST] New Sheet'
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      authorization:
+      - '[REDACTED]'
+    method: POST
+    uri: https://api.smartsheet.com/2.0/sheets
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":3322011092051844,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/g7m3F9C7fv2Fw7x8VQ24G32HXGV6rjW6q56QpGM1","columns":[{"id":123446903498628,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":4627046530869124,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2375246717183876,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6878846344554372,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":1249346810341252,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":5752946437711748,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+    headers:
+      Cache-Control: no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '448'
+      Content-Type: application/json;charset=UTF-8
+      Date: Wed, 15 Jan 2020 18:49:48 GMT
+      Expires: '0'
+      Pragma: no-cache
+      Vary: Accept-Encoding
+    status:
+      code: 200
+      message: OK
+    url: https://api.smartsheet.com/2.0/sheets
+version: 1

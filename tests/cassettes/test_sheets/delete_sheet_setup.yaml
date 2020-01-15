@@ -18,8 +18,8 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets?includeAll=true
   response:
     body:
-      string: '{"pageNumber":1,"totalPages":1,"totalCount":3,"data":[{"id":4227473748584324,"name":"[TEST]
-        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/QC7GMmRFCwX3x8q3rjMMv5Cg665cCHQRQRxjPwW1","createdAt":"2019-08-16T02:38:33Z","modifiedAt":"2019-08-16T02:38:34Z"},{"id":2207309037365124,"name":"[TEST]
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":3,"data":[{"id":8079597905438596,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/5M6cWJG45FvPMM4qRFH46hCWp3Rp2Wrxv9gX4xM1","createdAt":"2020-01-15T18:48:55Z","modifiedAt":"2020-01-15T18:48:56Z"},{"id":2207309037365124,"name":"[TEST]
         Report Sheet 1","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/9v7qHWw32PWFgwjjrv3PrMm44XWCfHRMrj9wX9J1","createdAt":"2019-08-06T17:40:20Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":6710908664735620,"name":"[TEST]
         Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-16T01:00:14Z"}]}'
     headers:
@@ -30,7 +30,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Fri, 16 Aug 2019 02:39:28 GMT
+      - Wed, 15 Jan 2020 18:49:53 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -45,11 +45,11 @@ interactions:
       code: 200
       message: OK
 - request:
-    body: '{"name": "[TEST] Sheet To Delete", "columns": [{"primary": true, "title":
-      "Full Name", "type": "TEXT_NUMBER"}, {"title": "Email address", "type": "TEXT_NUMBER"},
-      {"title": "Company", "type": "TEXT_NUMBER"}, {"title": "Number of children",
-      "type": "TEXT_NUMBER"}, {"title": "Birth date", "type": "DATE"}, {"title": "Married",
-      "type": "CHECKBOX"}]}'
+    body: '{"name": "[TEST] Sheet To Delete", "columns": [{"type": "TEXT_NUMBER",
+      "title": "Full Name", "primary": true}, {"type": "TEXT_NUMBER", "title": "Email
+      address"}, {"type": "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER",
+      "title": "Number of children"}, {"type": "DATE", "title": "Birth date"}, {"type":
+      "CHECKBOX", "title": "Married"}]}'
     headers:
       Accept:
       - application/json
@@ -69,12 +69,12 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":3862985643976580,"name":"[TEST]
-        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/jx9WXVjcPGW6Xj7XFw33g9Xp8m694wqj388FFXG1","columns":[{"id":6209404497356676,"version":0,"index":0,"title":"Full
-        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":3957604683671428,"version":0,"index":1,"title":"Email
-        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":8461204311041924,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":298429986432900,"version":0,"index":3,"title":"Number
-        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4802029613803396,"version":0,"index":4,"title":"Birth
-        date","type":"DATE","validation":false,"width":150},{"id":2550229800118148,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":8178072915601284,"name":"[TEST]
+        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/4jqxrq5qHWpwFV6HfHh4VPxqhRxpqjm7M8mr4gm1","columns":[{"id":7604472479278980,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":1974972945065860,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6478572572436356,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4226772758751108,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":8730372386121604,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":145385596446596,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate
@@ -83,7 +83,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Fri, 16 Aug 2019 02:39:28 GMT
+      - Wed, 15 Jan 2020 18:49:53 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -116,8 +116,8 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets?includeAll=true
   response:
     body:
-      string: '{"pageNumber":1,"totalPages":1,"totalCount":3,"data":[{"id":4227473748584324,"name":"[TEST]
-        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/QC7GMmRFCwX3x8q3rjMMv5Cg665cCHQRQRxjPwW1","createdAt":"2019-08-16T02:38:33Z","modifiedAt":"2019-08-16T02:38:34Z"},{"id":2207309037365124,"name":"[TEST]
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":3,"data":[{"id":8079597905438596,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/5M6cWJG45FvPMM4qRFH46hCWp3Rp2Wrxv9gX4xM1","createdAt":"2020-01-15T18:48:55Z","modifiedAt":"2020-01-15T18:48:56Z"},{"id":2207309037365124,"name":"[TEST]
         Report Sheet 1","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/9v7qHWw32PWFgwjjrv3PrMm44XWCfHRMrj9wX9J1","createdAt":"2019-08-06T17:40:20Z","modifiedAt":"2019-08-07T23:11:38Z"},{"id":6710908664735620,"name":"[TEST]
         Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2019-08-16T01:00:14Z"}]}'
     headers:
@@ -128,7 +128,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Fri, 16 Aug 2019 02:39:29 GMT
+      - Wed, 15 Jan 2020 18:49:55 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -143,11 +143,11 @@ interactions:
       code: 200
       message: OK
 - request:
-    body: '{"name": "[TEST] Sheet To Delete", "columns": [{"primary": true, "title":
-      "Full Name", "type": "TEXT_NUMBER"}, {"title": "Email address", "type": "TEXT_NUMBER"},
-      {"title": "Company", "type": "TEXT_NUMBER"}, {"title": "Number of children",
-      "type": "TEXT_NUMBER"}, {"title": "Birth date", "type": "DATE"}, {"title": "Married",
-      "type": "CHECKBOX"}]}'
+    body: '{"name": "[TEST] Sheet To Delete", "columns": [{"type": "TEXT_NUMBER",
+      "title": "Full Name", "primary": true}, {"type": "TEXT_NUMBER", "title": "Email
+      address"}, {"type": "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER",
+      "title": "Number of children"}, {"type": "DATE", "title": "Birth date"}, {"type":
+      "CHECKBOX", "title": "Married"}]}'
     headers:
       Accept:
       - application/json
@@ -167,12 +167,12 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":6924438332565380,"name":"[TEST]
-        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/8Wj7PMwg5VrGqq9W4gPhPjXxc4prHVWpx4fqX5Q1","columns":[{"id":3348148824369028,"version":0,"index":0,"title":"Full
-        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":7851748451739524,"version":0,"index":1,"title":"Email
-        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2222248917526404,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6725848544896900,"version":0,"index":3,"title":"Number
-        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4474048731211652,"version":0,"index":4,"title":"Birth
-        date","type":"DATE","validation":false,"width":150},{"id":8977648358582148,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":6136949837719428,"name":"[TEST]
+        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/rjCcjQwcr3GH85M9H98v6whw5vfgHG4gmHpgmFG1","columns":[{"id":1840609188177796,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":6344208815548292,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4092409001863044,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":8596008629233540,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":433234304624516,"version":0,"index":4,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":4936833931995012,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate
@@ -181,7 +181,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Fri, 16 Aug 2019 02:39:29 GMT
+      - Wed, 15 Jan 2020 18:49:55 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -191,7 +191,7 @@ interactions:
       Vary:
       - Accept-Encoding
       content-length:
-      - '947'
+      - '946'
     status:
       code: 200
       message: OK

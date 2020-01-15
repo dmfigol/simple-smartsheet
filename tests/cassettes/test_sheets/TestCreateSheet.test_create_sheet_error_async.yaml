@@ -29,14 +29,14 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be
-        unique.\",\n  \"refId\" : \"1hv49t5v6ybrx\"\n}"
+      string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be\
+        \ unique.\",\n  \"refId\" : \"162os05wb5jcm\"\n}"
     headers:
       Connection: close
       Content-Encoding: gzip
-      Content-Length: '108'
+      Content-Length: '107'
       Content-Type: application/json;charset=UTF-8
-      Date: Fri, 16 Aug 2019 02:39:26 GMT
+      Date: Wed, 15 Jan 2020 18:49:51 GMT
       Vary: Accept-Encoding
     status:
       code: 400
