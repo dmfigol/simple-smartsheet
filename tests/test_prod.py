@@ -5,21 +5,20 @@ import pytest
 
 from simple_smartsheet import AsyncSmartsheet
 
+
 SHEET_IDS = [
-    1542164917315460,
-    1542164917315460,
-    5371296302294916,
-    6417264837715844,
-    3103471428757380,
+    int(id_) for id_ in os.getenv("SMARTSHEET_PROD_SHEET_IDS", "").split(",") if id_
 ]
-REPORT_IDS = [3135027476227972, 4507550579222404]
+REPORT_IDS = [
+    int(id_) for id_ in os.getenv("SMARTSHEET_PROD_REPORT_IDS", "").split(",") if id_
+]
 
 TOKEN = os.getenv("SMARTSHEET_API_TOKEN_PROD")
 
 
 @pytest.fixture(scope="module", autouse=True)
 def skip_fixture(pytestconfig):
-    prod = pytestconfig.getoption("--prod")
+    prod = pytestconfig.getoption("--prod") and os.getenv("SMARTSHEET_API_TOKEN_PROD")
     if not prod:
         pytest.skip("Test against production environment")
 

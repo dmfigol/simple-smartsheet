@@ -14,12 +14,8 @@ mypy:
 pytest:
 	poetry run pytest --record-mode=none --block-network
 
-.PHONY: pytest-stage
-pytest-stage:
-	poetry run pytest --record-mode=all
-
-.PHONY: pytest-stage-prod
-pytest-stage-prod:
+.PHONY: pytest-integration
+pytest-integration:
 	poetry run pytest --record-mode=all --prod
 
 .PHONY: examples
@@ -33,7 +29,4 @@ examples:
 tests: black flake8 mypy pytest
 
 .PHONY: tests-ci
-tests-ci: black flake8 mypy pytest-stage examples
-
-.PHONY: tests-stage-prod
-tests-stage-prod: black flake8 mypy pytest-stage-prod examples
+tests-ci: black flake8 mypy pytest-integration examples
