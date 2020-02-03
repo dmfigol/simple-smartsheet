@@ -23,6 +23,7 @@ class ContactOption(Object):
 class ColumnType(Enum):
     TEXT_NUMBER = "TEXT_NUMBER"
     PICKLIST = "PICKLIST"
+    MULTI_PICKLIST = "MULTI_PICKLIST"  # these columns are still returned as TEXT_NUMBER
     CHECKBOX = "CHECKBOX"
     DATE = "DATE"
     DATETIME = "DATETIME"

@@ -24,14 +24,15 @@ class CellValueField(fields.Field):
             return super()._serialize(value, attr, obj, **kwargs)
 
     def _deserialize(self, value, attr, data, **kwargs):
+        if not value:
+            return value
+
         column_id_to_type = self.context["column_id_to_type"]
         if "virtualColumnId" in data:
             column_id = data["virtualColumnId"]
         else:
             column_id = data["columnId"]
         column_type = column_id_to_type[column_id]
-        if not value:
-            return value
         if column_type == "DATE":
             try:
                 return marshmallow.utils.from_iso_date(value)  # type: ignore
@@ -42,8 +43,11 @@ class CellValueField(fields.Field):
             try:
                 return marshmallow.utils.from_iso_datetime(value)  # type: ignore
             except ValueError:
-                logger.info("Cell value %r is not a valid datetime ", value)
+                logger.info("Cell value %r is not a valid datetime", value)
                 return value
+        elif column_type == "MULTI_PICKLIST":
+            # TODO: implement once goes live
+            pass
         return value
 
 
