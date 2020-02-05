@@ -27,12 +27,6 @@ def sheet_to_delete(placeholder_sheet) -> Sheet:
     return placeholder_sheet
 
 
-@pytest.fixture
-def read_only_sheet(placeholder_sheet) -> Sheet:
-    placeholder_sheet.name = "[TEST] Read-only Sheet"
-    return placeholder_sheet
-
-
 def create_sheet_with_rows(smartsheet, target_sheet, rows_data) -> Sheet:
     result = smartsheet.sheets.create(target_sheet)
     new_sheet = cast(Sheet, result.obj)
@@ -71,22 +65,24 @@ class TestGetSheet:
     @pytest.mark.vcr("get_sheet.yaml")
     def test_get_sheet(self, smartsheet):
         sheet = smartsheet.sheets.get(name=self.SHEET_NAME)
+        self.check_sheet(sheet)
+
+    @pytest.mark.asyncio
+    @pytest.mark.vcr("get_sheet_async.yaml")
+    async def test_get_sheet_async(self, async_smartsheet):
+        sheet = await async_smartsheet.sheets.get(name=self.SHEET_NAME)
+        self.check_sheet(sheet)
+
+    def check_sheet(self, sheet):
         assert sheet.name == self.SHEET_NAME
         assert sheet.columns
         assert any(
             row.get_cell("Email address").value == "bob.lee@acme.com"
             for row in sheet.rows
         )
-        self.check_indexes(sheet)
-
-    @pytest.mark.asyncio
-    @pytest.mark.vcr("get_sheet_async.yaml")
-    async def test_get_sheet_async(self, async_smartsheet):
-        sheet = await async_smartsheet.sheets.get(name=self.SHEET_NAME)
-        assert sheet.name == self.SHEET_NAME
-        assert sheet.columns
         assert any(
-            row.get_cell("Email address").value == "bob.lee@acme.com"
+            "nornir" in row.get_cell("Maintains").get_value()
+            and row.get_cell("Full Name").value == "Charlie Brown"
             for row in sheet.rows
         )
         self.check_indexes(sheet)

@@ -45,7 +45,12 @@ def columns_gen() -> List[Column]:
         Column(primary=True, title="Full Name", type=ColumnType.TEXT_NUMBER),
         Column(title="Email address", type=ColumnType.TEXT_NUMBER),
         Column(title="Company", type="TEXT_NUMBER"),
-        Column(title="Number of children", type=ColumnType.TEXT_NUMBER),
+        Column(title="Number of children", type="TEXT_NUMBER"),
+        Column(
+            title="Maintains",
+            type=ColumnType.MULTI_PICKLIST,
+            options=["simple-smartsheet", "nornir", "napalm", "netmiko", "pydantic"],
+        ),
         Column(title="Birth date", type=ColumnType.DATE),
         Column(title="Married", type=ColumnType.CHECKBOX),
     ]
@@ -65,11 +70,13 @@ def rows_data_gen() -> List[Dict[str, Any]]:
             "Company": "ACME",
             "Number of children": 2,
             "Married": True,
+            "Maintains": ["simple-smartsheet", "nornir"],
         },
         {
             "Full Name": "Alice Smith",
             "Email address": "alice.smith@globex.com",
             "Company": "Globex",
+            "Maintains": ["napalm", "nornir"],
         },
         {
             "Full Name": "Charlie Brown",
@@ -78,6 +85,7 @@ def rows_data_gen() -> List[Dict[str, Any]]:
             "Number of children": 1,
             "Birth date": date(1990, 1, 1),
             "Married": False,
+            "Maintains": ["napalm", "netmiko", "nornir"],
         },
     ]
 
@@ -90,6 +98,7 @@ def additional_row_data_gen() -> Dict[str, Any]:
         "Number of children": 3,
         "Birth date": date(1980, 1, 1),
         "Married": True,
+        "Maintains": ["pydantic"],
     }
 
 
@@ -113,6 +122,7 @@ def additional_rows_data() -> List[Dict[str, Any]]:
             "Number of children": 3,
             "Birth date": date(1980, 1, 1),
             "Married": True,
+            "Maintains": ["pydantic"],
         },
         {
             "Full Name": "Elizabeth Warner",
@@ -218,7 +228,7 @@ def create_session_objects(vcr):
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_teardown(request, custom_vcr, custom_cassette_dir):
-    os.environ["SIMPLE_SMARTSHEET_DEV"] = "1"
+    os.environ["SIMPLE_SMARTSHEET_STRICT_VALIDATION"] = "1"
 
     record_mode = request.config.getoption("--record-mode")
     if record_mode == "all":
@@ -228,11 +238,6 @@ def setup_teardown(request, custom_vcr, custom_cassette_dir):
     remove_all_rw_objects(custom_vcr)
     create_session_objects(custom_vcr)
     yield
-
-    # record_mode = request.config.getoption("--record-mode")
-    # if record_mode != "none":
-    #     for path in custom_cassette_dir.rglob("*.yaml"):
-    #         fix_cassette(path)
 
 
 @pytest.fixture

@@ -1,0 +1,57 @@
+version: '2'
+
+tasks:
+  black:
+    cmds:
+      - poetry run black --check simple_smartsheet examples tests
+
+  flake8:
+    cmds:
+      - poetry run flake8 simple_smartsheet examples tests
+
+  mypy:
+    cmds:
+      - poetry run mypy simple_smartsheet
+
+  pytest:
+    cmds:
+      - poetry run pytest --record-mode=none --block-network
+
+  pytest-record:
+    cmds:
+      - poetry run pytest --record-mode=all
+
+  pytest-record-prod:
+    cmds:
+      - poetry run pytest --record-mode=all --prod
+
+  examples:
+    cmds:
+      - poetry run python -Werror examples/sheets.py > /dev/null
+      - poetry run python -Werror examples/report.py > /dev/null
+      - poetry run python -Werror examples/custom_indexes.py > /dev/null
+      - poetry run python -Werror examples/async.py > /dev/null
+
+  tests:
+    cmds:
+      - task: black
+      - task: flake8
+      - task: mypy
+      - task: pytest
+      - task: examples
+
+  tests-record:
+    cmds:
+      - task: black
+      - task: flake8
+      - task: mypy
+      - task: pytest-record
+      - task: examples
+
+  tests-record-prod:
+    cmds:
+      - task: black
+      - task: flake8
+      - task: mypy
+      - task: pytest-record-prod
+      - task: examples

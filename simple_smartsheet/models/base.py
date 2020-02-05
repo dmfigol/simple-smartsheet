@@ -38,7 +38,7 @@ converter.register_structure_hook(Union[float, str, datetime, None], lambda ts, 
 
 class Schema(marshmallow.Schema):
     class Meta:
-        unknown = utils.get_unknown_field_handling(config.IS_DEVELOPMENT)
+        unknown = utils.get_unknown_field_handling(config.STRICT_VALIDATION)
 
     @marshmallow.post_dump
     def remove_none(self, data, many: bool, **kwargs):
@@ -75,9 +75,12 @@ class Object:
         self, only: Optional[Sequence[str]] = None, exclude: Sequence[str] = ()
     ) -> Dict[str, Any]:
         schema = self._schema(only=only, exclude=exclude)
-        data = converter.unstructure(self)
-        result = schema.dump(data)
+        result = schema.dump(self.unstructured)
         return result
+
+    @property
+    def unstructured(self) -> Dict[str, Any]:
+        return converter.unstructure(self)
 
     def __repr__(self) -> str:
         if hasattr(self, "id") and hasattr(self, "name"):

@@ -8,8 +8,8 @@ from simple_smartsheet import constants
 from simple_smartsheet import exceptions
 from simple_smartsheet.types import JSONType
 from simple_smartsheet.models.extra import Result
-from simple_smartsheet.models.report import ReportCRUD, ReportAsyncCRUD
-from simple_smartsheet.models.sheet import SheetCRUD, SheetAsyncCRUD
+from simple_smartsheet.models.report import ReportCRUD, AsyncReportCRUD
+from simple_smartsheet.models.sheet import SheetCRUD, AsyncSheetCRUD
 
 
 class SmartsheetBase:
@@ -174,8 +174,8 @@ class AsyncSmartsheet(SmartsheetBase):
         self._session = aiohttp.ClientSession()
         self._session._default_headers.update(**self._headers)
 
-        self.sheets = SheetAsyncCRUD(self)
-        self.reports = ReportAsyncCRUD(self)
+        self.sheets = AsyncSheetCRUD(self)
+        self.reports = AsyncReportCRUD(self)
 
     async def close(self) -> None:
         await self._session.close()
