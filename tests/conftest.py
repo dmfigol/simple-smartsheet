@@ -44,8 +44,8 @@ def columns_gen() -> List[Column]:
     return [
         Column(primary=True, title="Full Name", type=ColumnType.TEXT_NUMBER),
         Column(title="Email address", type=ColumnType.TEXT_NUMBER),
-        Column(title="Company", type="TEXT_NUMBER"),
-        Column(title="Number of children", type="TEXT_NUMBER"),
+        Column(title="Company", type=ColumnType.TEXT_NUMBER),
+        Column(title="Number of children", type=ColumnType.TEXT_NUMBER),
         Column(
             title="Maintains",
             type=ColumnType.MULTI_PICKLIST,
@@ -133,6 +133,26 @@ def additional_rows_data() -> List[Dict[str, Any]]:
             "Married": True,
         },
     ]
+
+
+@pytest.fixture
+def mocked_sheet(pytestconfig) -> Sheet:
+    path = Path(pytestconfig.rootdir) / "tests/data/mocked_sheet.json"
+    with open(path) as f:
+        data = json.load(f)
+        sheet = Sheet.load(data)
+    # columns = columns_gen()
+    # for i, column in enumerate(columns):
+    #     column.id = (i+1) * 100000
+    # sheet = Sheet(name="Mocked Sheet", id=123, columns=columns)
+    #
+    # rows_data = rows_data_gen()
+    # for i, row_data in enumerate(rows_data):
+    #     id_ = (i+1) * 11111
+    #     row = Row(id=id_, num=i+1, cells=sheet.make_cells(row_data))
+    #     sheet.rows.append(row)
+    # sheet._update_row_cell_lookup()
+    return sheet
 
 
 def pytest_addoption(parser):

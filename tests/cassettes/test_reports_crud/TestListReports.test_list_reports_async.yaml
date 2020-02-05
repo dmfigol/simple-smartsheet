@@ -1,0 +1,30 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      authorization:
+      - '[REDACTED]'
+    method: GET
+    uri: https://api.smartsheet.com/2.0/reports?includeAll=true
+  response:
+    body:
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":1,"data":[{"id":8305449633113988,"name":"[TEST]
+        Read-only Report","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/reports/46JC68pCQ4J87p9Q3PH52rxmWp6CvXWJ5jpx2cM1","isSummaryReport":false}]}'
+    headers:
+      Cache-Control: no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '224'
+      Content-Type: application/json;charset=UTF-8
+      Date: Wed, 05 Feb 2020 15:53:26 GMT
+      Expires: '0'
+      Pragma: no-cache
+      Vary: Accept-Encoding
+    status:
+      code: 200
+      message: OK
+    url: https://api.smartsheet.com/2.0/reports?includeAll=true
+version: 1

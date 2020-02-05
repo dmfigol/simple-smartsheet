@@ -1,6 +1,17 @@
 import logging
 from datetime import datetime
-from typing import Generic, Optional, List, Dict, Any, ClassVar, Type, TypeVar, cast
+from typing import (
+    Generic,
+    Optional,
+    List,
+    Dict,
+    Any,
+    ClassVar,
+    Type,
+    TypeVar,
+    cast,
+    TYPE_CHECKING,
+)
 
 import attr
 from marshmallow import fields
@@ -11,6 +22,12 @@ from simple_smartsheet.models.base import Schema, Object
 from simple_smartsheet.models.cell import Cell, CellSchema
 from simple_smartsheet.models.column import Column, ColumnSchema
 
+
+if TYPE_CHECKING:
+    try:
+        import pandas as pd
+    except ImportError:
+        pass
 
 logger = logging.getLogger(__name__)
 
@@ -146,9 +163,22 @@ class _RowBase(Object, Generic[CellT]):
     def as_dict(self) -> Dict[str, Any]:
         """Returns a dictionary of column title to cell value"""
         return {
-            column_title: cell.value
+            column_title: cell.get_value()
             for column_title, cell in self.column_title_to_cell.items()
         }
+
+    def as_series(self) -> "pd.Series":
+        """Return the row as pandas Series
+
+        Columns will includes row id, row number and all columns from the sheet
+        Pandas must be installed either separately or as extras:
+          `pip install simple-smartsheet[pandas]`
+        """
+        import pandas as pd
+
+        data = {"_row_id": self.id, "_row_num": self.num, **self.as_dict()}
+        series = pd.Series(data)
+        return series
 
 
 @attr.s(auto_attribs=True, repr=False, kw_only=True)

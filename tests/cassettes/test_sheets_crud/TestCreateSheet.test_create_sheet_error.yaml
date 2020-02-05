@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: '{"name": "[TEST] New Sheet", "columns": [{"type": "TEXT_NUMBER", "title":
+      "Full Name", "primary": true}, {"type": "TEXT_NUMBER", "title": "Email address"},
+      {"type": "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title":
+      "Number of children"}, {"options": ["simple-smartsheet", "nornir", "napalm",
+      "netmiko", "pydantic"], "type": "MULTI_PICKLIST", "title": "Maintains"}, {"type":
+      "DATE", "title": "Birth date"}, {"type": "CHECKBOX", "title": "Married"}, {"type":
+      "TEXT_NUMBER", "title": "Full Name"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '514'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: POST
+    uri: https://api.smartsheet.com/2.0/sheets
+  response:
+    body:
+      string: "{\n  \"errorCode\" : 1056,\n  \"message\" : \"Column titles must be\
+        \ unique.\",\n  \"refId\" : \"12x24msuqfhih\"\n}"
+    headers:
+      Connection:
+      - close
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Wed, 05 Feb 2020 15:53:39 GMT
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '100'
+    status:
+      code: 400
+      message: Bad Request
+version: 1

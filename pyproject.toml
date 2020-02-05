@@ -27,13 +27,14 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6"
+python = ">=3.6.1"
 marshmallow = "^3"
 requests = "*"
 attrs = "*"
 cattrs = "*"
 mypy-extensions = "*"
 aiohttp = "*"
+pandas = { version = ">=1", optional = true }
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"
@@ -47,3 +48,6 @@ pdbpp = "*"
 vcrpy = "*"
 pytest-recording = "*"
 "ruamel.yaml" = "^0.16.0"
+
+[tool.poetry.extras]
+pandas = ["pandas"]
