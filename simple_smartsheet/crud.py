@@ -99,7 +99,6 @@ class CRUDReadBase(CRUDBase[TS]):
             str(data),
         )
         obj = self.factory.load(data, self.get_include_fields, self.get_exclude_fields)
-        obj.smartsheet = self.smartsheet
         return obj
 
     def _create_objects_from_data(self, data: List[Dict[str, Any]]) -> List[TS]:
@@ -113,7 +112,6 @@ class CRUDReadBase(CRUDBase[TS]):
             obj = self.factory.load(
                 obj_data, self.list_include_fields, self.list_exclude_fields
             )
-            obj.smartsheet = self.smartsheet
             result.append(obj)
         return result
 
@@ -178,7 +176,6 @@ class CRUD(CRUDRead[TS]):
         Returns:
             Result object
         """
-        obj.smartsheet = self.smartsheet
         endpoint = self.create_url.format(obj=obj)
         obj_data = obj.dump(
             only=self.create_include_fields, exclude=self.create_exclude_fields
@@ -196,7 +193,6 @@ class CRUD(CRUDRead[TS]):
         Returns:
             Result object
         """
-        obj.smartsheet = self.smartsheet
         endpoint = self.update_url.format(id=obj.id)
         obj_data = obj.dump(
             only=self.update_include_fields, exclude=self.update_exclude_fields
@@ -283,7 +279,6 @@ class AsyncCRUD(AsyncCRUDRead[TS]):
         Returns:
             Result object
         """
-        obj.smartsheet = self.smartsheet
         endpoint = self.create_url.format(obj=obj)
         obj_data = obj.dump(
             only=self.create_include_fields, exclude=self.create_exclude_fields
@@ -301,7 +296,6 @@ class AsyncCRUD(AsyncCRUDRead[TS]):
         Returns:
             Result object
         """
-        obj.smartsheet = self.smartsheet
         endpoint = self.update_url.format(id=obj.id)
         obj_data = obj.dump(
             only=self.update_include_fields, exclude=self.update_exclude_fields
