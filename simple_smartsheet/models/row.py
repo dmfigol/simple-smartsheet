@@ -95,7 +95,7 @@ class _RowBase(Object, Generic[CellT]):
     _schema: ClassVar[Type[RowSchema]] = RowSchema
 
     def __repr__(self) -> str:
-        return utils.create_repr(self, ["id", "num"])
+        return utils.create_repr(self, ["id", "num", "cells"])
 
     def _update_cell_lookup(
         self, sheet: "sheet_models._SheetBase[RowT, ColumnT]"

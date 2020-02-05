@@ -170,7 +170,7 @@ sheet.sort_rows([
 ])
 ```
 
-#### Class `simple_smartsheet.models.sheet.SheetAsyncCRUD`
+#### Class `simple_smartsheet.models.sheet.AsyncSheetCRUD`
 The methods listed below are asynchronous version of methods in `SheetCRUD`, listed for completeness:
   * `async def get(name: Optional[str], id: Optional[int]) -> Sheet`
   * `async def list() -> List[Sheet]`

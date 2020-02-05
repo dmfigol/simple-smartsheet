@@ -1,10 +1,11 @@
 interactions:
 - request:
-    body: '{"name": "[TEST] New Sheet", "columns": [{"type": "TEXT_NUMBER", "title":
-      "Full Name", "primary": true}, {"type": "TEXT_NUMBER", "title": "Email address"},
-      {"type": "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title":
-      "Number of children"}, {"type": "DATE", "title": "Birth date"}, {"type": "CHECKBOX",
-      "title": "Married"}]}'
+    body: '{"name": "[TEST] New Sheet", "columns": [{"title": "Full Name", "primary":
+      true, "type": "TEXT_NUMBER"}, {"title": "Email address", "type": "TEXT_NUMBER"},
+      {"title": "Company", "type": "TEXT_NUMBER"}, {"title": "Number of children",
+      "type": "TEXT_NUMBER"}, {"title": "Maintains", "type": "MULTI_PICKLIST", "options":
+      ["simple-smartsheet", "nornir", "napalm", "netmiko", "pydantic"]}, {"title":
+      "Birth date", "type": "DATE"}, {"title": "Married", "type": "CHECKBOX"}]}'
     headers:
       Accept:
       - application/json
@@ -13,7 +14,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '340'
+      - '467'
       Content-Type:
       - application/json
       User-Agent:
@@ -24,12 +25,12 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":972492182448004,"name":"[TEST]
-        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/5C8Vr98w9Qw49crvFPxFfcJqmCFcxxG7gvR4ch21","columns":[{"id":8450452187572100,"version":0,"index":0,"title":"Full
-        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":287677862963076,"version":0,"index":1,"title":"Email
-        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4791277490333572,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2539477676648324,"version":0,"index":3,"title":"Number
-        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":7043077304018820,"version":0,"index":4,"title":"Birth
-        date","type":"DATE","validation":false,"width":150},{"id":1413577769805700,"version":0,"index":5,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":309459290482564,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/Jc4JQff4hMWq5FW87vRQwJff6Fppprc27Hr5pMV1","columns":[{"id":4567022198646660,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":2315222384961412,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6818822012331908,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":1189322478118788,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":5692922105489284,"version":2,"index":4,"title":"Maintains","type":"MULTI_PICKLIST","options":["simple-smartsheet","nornir","napalm","netmiko","pydantic"],"validation":false,"width":150},{"id":3441122291804036,"version":0,"index":5,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":7944721919174532,"version":0,"index":6,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate
@@ -38,7 +39,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Wed, 15 Jan 2020 18:49:47 GMT
+      - Wed, 05 Feb 2020 04:01:47 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -48,7 +49,7 @@ interactions:
       Vary:
       - Accept-Encoding
       content-length:
-      - '939'
+      - '1132'
     status:
       code: 200
       message: OK

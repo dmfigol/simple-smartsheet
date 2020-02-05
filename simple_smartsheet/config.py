@@ -1,3 +1,3 @@
-from .utils import is_development
+from simple_smartsheet.utils import is_env_var
 
-IS_DEVELOPMENT = is_development()
+STRICT_VALIDATION = is_env_var("SIMPLE_SMARTSHEET_STRICT_VALIDATION")

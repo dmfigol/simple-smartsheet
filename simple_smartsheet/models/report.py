@@ -96,7 +96,7 @@ class Report(_SheetBase[ReportRow, ReportColumn]):
 
 class ReportCRUDMixin(CRUDAttrs):
     base_url = "/reports"
-    get_params = {"pageSize": "10000"}
+    get_params = {"pageSize": "10000", "level": "2", "include": "objectValue"}
 
 
 class ReportCRUD(ReportCRUDMixin, CRUDRead[Report]):
@@ -122,7 +122,7 @@ class ReportCRUD(ReportCRUDMixin, CRUDRead[Report]):
         return self._create_obj_from_data(full_data)
 
 
-class ReportAsyncCRUD(ReportCRUDMixin, AsyncCRUDRead[Report]):
+class AsyncReportCRUD(ReportCRUDMixin, AsyncCRUDRead[Report]):
     factory = Report
 
     async def _get_by_id(self, id: int) -> Report:
