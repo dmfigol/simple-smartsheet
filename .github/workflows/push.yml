@@ -1,8 +1,6 @@
-on: [push, release]
+on: push
 jobs:
   test:
-    # issue: https://github.community/t5/GitHub-Actions/Workflow-is-failing-if-no-job-can-be-ran-due-to-condition/td-p/38085
-    # if: github.event_name == 'release' || github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
     container:
       image: registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-buster
@@ -13,17 +11,4 @@ jobs:
     - name: Running tests
       run: |
         poetry install --no-interaction
-        make tests
-
-  publish:
-    if: github.event_name == 'release'
-    needs: test
-    runs-on: ubuntu-latest
-    container:
-      image: registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-buster
-    env:
-      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Publish to PyPi
-      run: poetry publish --build -u __token__ -p ${PYPI_TOKEN}
+        task tests
