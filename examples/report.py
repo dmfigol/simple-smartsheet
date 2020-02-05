@@ -3,7 +3,7 @@ from pprint import pprint
 
 from simple_smartsheet import Smartsheet
 
-TOKEN = os.environ["SMARTSHEET_API_TOKEN"]
+TOKEN = os.getenv("SMARTSHEET_API_TOKEN")
 
 
 def main() -> None:

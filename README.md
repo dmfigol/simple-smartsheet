@@ -253,7 +253,7 @@ INDEXES = [
     {"columns": ("Company", "Full Name"), "unique": True},
     {"columns": ("Email address",), "unique": True},
 ]
-sheet = smartsheet.sheets._get("[TEST] Index Sheet")
+sheet = smartsheet.sheets.get("[TEST] Index Sheet")
 sheet.build_index(INDEXES)
 
 print("\nRow where email address is 'charlie.brown@globex.com':")
@@ -287,3 +287,11 @@ with AsyncSmartsheet(token) as smartsheet:
 ```
 
 A complete asyncio example with different operations on sheets and reports can be found in `examples/async.py`
+
+### Pandas
+If pandas is installed (either separately or as extras `pip install simple-smartsheet[pandas]`), sheets and rows can be exported as `pandas.DataFrame` or `pandas.Series` respectively. Besides column titles and respective values from the sheet, they will also include row IDs and row numbers
+```
+sheet = smartsheets.sheets.get('my-sheet')
+df = sheet.as_dataframe()
+series = sheet.rows[0].as_series()
+```  

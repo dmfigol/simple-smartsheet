@@ -1,0 +1,56 @@
+interactions:
+- request:
+    body: '{"name": "[TEST] New Sheet", "columns": [{"type": "TEXT_NUMBER", "title":
+      "Full Name", "primary": true}, {"type": "TEXT_NUMBER", "title": "Email address"},
+      {"type": "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER", "title":
+      "Number of children"}, {"options": ["simple-smartsheet", "nornir", "napalm",
+      "netmiko", "pydantic"], "type": "MULTI_PICKLIST", "title": "Maintains"}, {"type":
+      "DATE", "title": "Birth date"}, {"type": "CHECKBOX", "title": "Married"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '467'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: POST
+    uri: https://api.smartsheet.com/2.0/sheets
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":4059416711456644,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/5rh4Qjr5p8RGm9XjMC4H9MP9gphHcj2WW7WHPXx1","columns":[{"id":1332328782948228,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":5835928410318724,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":3584128596633476,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":8087728224003972,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":769378829526916,"version":2,"index":4,"title":"Maintains","type":"MULTI_PICKLIST","options":["simple-smartsheet","nornir","napalm","netmiko","pydantic"],"validation":false,"width":150},{"id":5272978456897412,"version":0,"index":5,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":3021178643212164,"version":0,"index":6,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Wed, 05 Feb 2020 15:53:36 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '1132'
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -7,10 +7,11 @@ jobs:
     container:
       image: registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-buster
     env:
+      SIMPLE_SMARTSHEET_STRICT_VALIDATION: "1"
       SMARTSHEET_API_TOKEN: ${{ secrets.SMARTSHEET_API_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - name: Running tests
       run: |
-        poetry install --no-interaction
+        task install
         task tests-record

@@ -1,11 +1,11 @@
 interactions:
 - request:
-    body: '{"name": "[TEST] Read-only Sheet", "columns": [{"title": "Full Name", "primary":
-      true, "type": "TEXT_NUMBER"}, {"title": "Email address", "type": "TEXT_NUMBER"},
-      {"title": "Company", "type": "TEXT_NUMBER"}, {"title": "Number of children",
-      "type": "TEXT_NUMBER"}, {"title": "Maintains", "type": "MULTI_PICKLIST", "options":
-      ["simple-smartsheet", "nornir", "napalm", "netmiko", "pydantic"]}, {"title":
-      "Birth date", "type": "DATE"}, {"title": "Married", "type": "CHECKBOX"}]}'
+    body: '{"name": "[TEST] Read-only Sheet", "columns": [{"type": "TEXT_NUMBER",
+      "title": "Full Name", "primary": true}, {"type": "TEXT_NUMBER", "title": "Email
+      address"}, {"type": "TEXT_NUMBER", "title": "Company"}, {"type": "TEXT_NUMBER",
+      "title": "Number of children"}, {"options": ["simple-smartsheet", "nornir",
+      "napalm", "netmiko", "pydantic"], "type": "MULTI_PICKLIST", "title": "Maintains"},
+      {"type": "DATE", "title": "Birth date"}, {"type": "CHECKBOX", "title": "Married"}]}'
     headers:
       Accept:
       - application/json
@@ -25,12 +25,12 @@ interactions:
     uri: https://api.smartsheet.com/2.0/sheets
   response:
     body:
-      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":2357256747542404,"name":"[TEST]
-        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/rmv2prRmF8643qfVXVQXx5fwf3PFxx3JFX2QFq31","columns":[{"id":4238819051497348,"version":0,"index":0,"title":"Full
-        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":8742418678867844,"version":0,"index":1,"title":"Email
-        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":157431889192836,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":4661031516563332,"version":0,"index":3,"title":"Number
-        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2409231702878084,"version":2,"index":4,"title":"Maintains","type":"MULTI_PICKLIST","options":["simple-smartsheet","nornir","napalm","netmiko","pydantic"],"validation":false,"width":150},{"id":6912831330248580,"version":0,"index":5,"title":"Birth
-        date","type":"DATE","validation":false,"width":150},{"id":1283331796035460,"version":0,"index":6,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":7719639380715396,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/m2hW76M4464GVf2jqhpj28vq2jHvf5qWMfp6hGF1","columns":[{"id":71077813610372,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":4574677440980868,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2322877627295620,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":6826477254666116,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":1196977720452996,"version":2,"index":4,"title":"Maintains","type":"MULTI_PICKLIST","options":["simple-smartsheet","nornir","napalm","netmiko","pydantic"],"validation":false,"width":150},{"id":5700577347823492,"version":0,"index":5,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":3448777534138244,"version":0,"index":6,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate
@@ -39,7 +39,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Wed, 05 Feb 2020 04:00:47 GMT
+      - Wed, 05 Feb 2020 15:52:35 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -49,30 +49,30 @@ interactions:
       Vary:
       - Accept-Encoding
       content-length:
-      - '1138'
+      - '1137'
     status:
       code: 200
       message: OK
 - request:
-    body: '[{"toTop": true, "cells": [{"columnId": 4238819051497348, "value": "Bob
-      Lee", "strict": true}, {"columnId": 8742418678867844, "value": "bob.lee@acme.com",
-      "strict": true}, {"columnId": 157431889192836, "value": "ACME", "strict": true},
-      {"columnId": 4661031516563332, "value": 2, "strict": true}, {"columnId": 1283331796035460,
-      "value": true, "strict": true}, {"columnId": 2409231702878084, "objectValue":
-      {"values": ["simple-smartsheet", "nornir"], "objectType": "MULTI_PICKLIST"},
-      "strict": true}]}, {"toTop": true, "cells": [{"columnId": 4238819051497348,
-      "value": "Alice Smith", "strict": true}, {"columnId": 8742418678867844, "value":
-      "alice.smith@globex.com", "strict": true}, {"columnId": 157431889192836, "value":
-      "Globex", "strict": true}, {"columnId": 2409231702878084, "objectValue": {"values":
-      ["napalm", "nornir"], "objectType": "MULTI_PICKLIST"}, "strict": true}]}, {"toTop":
-      true, "cells": [{"columnId": 4238819051497348, "value": "Charlie Brown", "strict":
-      true}, {"columnId": 8742418678867844, "value": "charlie.brown@acme.com", "strict":
-      true}, {"columnId": 157431889192836, "value": "ACME", "strict": true}, {"columnId":
-      4661031516563332, "value": 1, "strict": true}, {"columnId": 6912831330248580,
-      "value": "1990-01-01", "strict": true}, {"columnId": 1283331796035460, "value":
-      false, "strict": true}, {"columnId": 2409231702878084, "objectValue": {"values":
-      ["napalm", "netmiko", "nornir"], "objectType": "MULTI_PICKLIST"}, "strict":
-      true}]}]'
+    body: '[{"cells": [{"value": "Bob Lee", "columnId": 71077813610372, "strict":
+      true}, {"value": "bob.lee@acme.com", "columnId": 4574677440980868, "strict":
+      true}, {"value": "ACME", "columnId": 2322877627295620, "strict": true}, {"value":
+      2, "columnId": 6826477254666116, "strict": true}, {"value": true, "columnId":
+      3448777534138244, "strict": true}, {"objectValue": {"objectType": "MULTI_PICKLIST",
+      "values": ["simple-smartsheet", "nornir"]}, "columnId": 1196977720452996, "strict":
+      true}], "toTop": true}, {"cells": [{"value": "Alice Smith", "columnId": 71077813610372,
+      "strict": true}, {"value": "alice.smith@globex.com", "columnId": 4574677440980868,
+      "strict": true}, {"value": "Globex", "columnId": 2322877627295620, "strict":
+      true}, {"objectValue": {"objectType": "MULTI_PICKLIST", "values": ["napalm",
+      "nornir"]}, "columnId": 1196977720452996, "strict": true}], "toTop": true},
+      {"cells": [{"value": "Charlie Brown", "columnId": 71077813610372, "strict":
+      true}, {"value": "charlie.brown@acme.com", "columnId": 4574677440980868, "strict":
+      true}, {"value": "ACME", "columnId": 2322877627295620, "strict": true}, {"value":
+      1, "columnId": 6826477254666116, "strict": true}, {"value": "1990-01-01", "columnId":
+      5700577347823492, "strict": true}, {"value": false, "columnId": 3448777534138244,
+      "strict": true}, {"objectValue": {"objectType": "MULTI_PICKLIST", "values":
+      ["napalm", "netmiko", "nornir"]}, "columnId": 1196977720452996, "strict": true}],
+      "toTop": true}]'
     headers:
       Accept:
       - application/json
@@ -81,7 +81,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1462'
+      - '1459'
       Content-Type:
       - application/json
       User-Agent:
@@ -89,16 +89,16 @@ interactions:
       authorization:
       - '[REDACTED]'
     method: POST
-    uri: https://api.smartsheet.com/2.0/sheets/2357256747542404/rows
+    uri: https://api.smartsheet.com/2.0/sheets/7719639380715396/rows
   response:
     body:
-      string: '{"message":"SUCCESS","resultCode":0,"result":[{"id":4505298673657732,"sheetId":2357256747542404,"rowNumber":1,"expanded":true,"createdAt":"2020-02-05T04:00:48Z","modifiedAt":"2020-02-05T04:00:48Z","cells":[{"columnId":4238819051497348,"value":"Bob
-        Lee","displayValue":"Bob Lee"},{"columnId":8742418678867844,"value":"bob.lee@acme.com","displayValue":"bob.lee@acme.com"},{"columnId":157431889192836,"value":"ACME","displayValue":"ACME"},{"columnId":4661031516563332,"value":2.0,"displayValue":"2"},{"columnId":2409231702878084,"displayValue":"simple-smartsheet,
-        nornir"},{"columnId":6912831330248580},{"columnId":1283331796035460,"value":true}]},{"id":2253498859972484,"sheetId":2357256747542404,"rowNumber":2,"siblingId":4505298673657732,"expanded":true,"createdAt":"2020-02-05T04:00:48Z","modifiedAt":"2020-02-05T04:00:48Z","cells":[{"columnId":4238819051497348,"value":"Alice
-        Smith","displayValue":"Alice Smith"},{"columnId":8742418678867844,"value":"alice.smith@globex.com","displayValue":"alice.smith@globex.com"},{"columnId":157431889192836,"value":"Globex","displayValue":"Globex"},{"columnId":4661031516563332},{"columnId":2409231702878084,"displayValue":"nornir,
-        napalm"},{"columnId":6912831330248580},{"columnId":1283331796035460}]},{"id":6757098487342980,"sheetId":2357256747542404,"rowNumber":3,"siblingId":2253498859972484,"expanded":true,"createdAt":"2020-02-05T04:00:48Z","modifiedAt":"2020-02-05T04:00:48Z","cells":[{"columnId":4238819051497348,"value":"Charlie
-        Brown","displayValue":"Charlie Brown"},{"columnId":8742418678867844,"value":"charlie.brown@acme.com","displayValue":"charlie.brown@acme.com"},{"columnId":157431889192836,"value":"ACME","displayValue":"ACME"},{"columnId":4661031516563332,"value":1.0,"displayValue":"1"},{"columnId":2409231702878084,"displayValue":"nornir,
-        napalm, netmiko"},{"columnId":6912831330248580,"value":"1990-01-01"},{"columnId":1283331796035460,"value":false}]}],"version":2}'
+      string: '{"message":"SUCCESS","resultCode":0,"result":[{"id":5210380100757380,"sheetId":7719639380715396,"rowNumber":1,"expanded":true,"createdAt":"2020-02-05T15:52:36Z","modifiedAt":"2020-02-05T15:52:36Z","cells":[{"columnId":71077813610372,"value":"Bob
+        Lee","displayValue":"Bob Lee"},{"columnId":4574677440980868,"value":"bob.lee@acme.com","displayValue":"bob.lee@acme.com"},{"columnId":2322877627295620,"value":"ACME","displayValue":"ACME"},{"columnId":6826477254666116,"value":2.0,"displayValue":"2"},{"columnId":1196977720452996,"displayValue":"simple-smartsheet,
+        nornir"},{"columnId":5700577347823492},{"columnId":3448777534138244,"value":true}]},{"id":2958580287072132,"sheetId":7719639380715396,"rowNumber":2,"siblingId":5210380100757380,"expanded":true,"createdAt":"2020-02-05T15:52:36Z","modifiedAt":"2020-02-05T15:52:36Z","cells":[{"columnId":71077813610372,"value":"Alice
+        Smith","displayValue":"Alice Smith"},{"columnId":4574677440980868,"value":"alice.smith@globex.com","displayValue":"alice.smith@globex.com"},{"columnId":2322877627295620,"value":"Globex","displayValue":"Globex"},{"columnId":6826477254666116},{"columnId":1196977720452996,"displayValue":"nornir,
+        napalm"},{"columnId":5700577347823492},{"columnId":3448777534138244}]},{"id":7462179914442628,"sheetId":7719639380715396,"rowNumber":3,"siblingId":2958580287072132,"expanded":true,"createdAt":"2020-02-05T15:52:36Z","modifiedAt":"2020-02-05T15:52:36Z","cells":[{"columnId":71077813610372,"value":"Charlie
+        Brown","displayValue":"Charlie Brown"},{"columnId":4574677440980868,"value":"charlie.brown@acme.com","displayValue":"charlie.brown@acme.com"},{"columnId":2322877627295620,"value":"ACME","displayValue":"ACME"},{"columnId":6826477254666116,"value":1.0,"displayValue":"1"},{"columnId":1196977720452996,"displayValue":"nornir,
+        napalm, netmiko"},{"columnId":5700577347823492,"value":"1990-01-01"},{"columnId":3448777534138244,"value":false}]}],"version":2}'
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate
@@ -107,7 +107,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Wed, 05 Feb 2020 04:00:47 GMT
+      - Wed, 05 Feb 2020 15:52:36 GMT
       Expires:
       - '0'
       Keep-Alive:
@@ -119,7 +119,7 @@ interactions:
       Vary:
       - Accept-Encoding
       content-length:
-      - '1927'
+      - '1924'
     status:
       code: 200
       message: OK

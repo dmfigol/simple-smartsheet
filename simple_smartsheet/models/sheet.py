@@ -14,6 +14,7 @@ from typing import (
     Any,
     Union,
     cast,
+    TYPE_CHECKING,
 )
 
 import attr
@@ -29,6 +30,12 @@ from simple_smartsheet.models.cell import Cell
 from simple_smartsheet.models.column import Column, ColumnSchema, ColumnType
 from simple_smartsheet.models.row import Row, RowSchema, _RowBase
 from simple_smartsheet.models.extra import Result
+
+if TYPE_CHECKING:
+    try:
+        import pandas as pd
+    except ImportError:
+        pass
 
 logger = logging.getLogger(__name__)
 
@@ -353,6 +360,18 @@ class Sheet(_SheetBase[Row, Column]):
     def as_list(self) -> List[Dict[str, Union[float, str, datetime, None]]]:
         """Returns a list of dictionaries with column titles and cell values"""
         return [row.as_dict() for row in self.rows]
+
+    def as_dataframe(self) -> "pd.DataFrame":
+        """Return the sheet as pandas DataFrame
+
+        Columns will includes row id, row number and all columns from the sheet
+        Pandas must be installed either separately or as extras:
+          `pip install simple-smartsheet[pandas]`
+        """
+        import pandas as pd
+
+        df = pd.DataFrame([row.as_series() for row in self.rows])
+        return df
 
 
 class SheetCRUDMixin(CRUDAttrs):
