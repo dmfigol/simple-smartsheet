@@ -1,6 +1,10 @@
 version: '2'
 
 tasks:
+  install:
+    cmds:
+      - poetry install -E pandas
+
   black:
     cmds:
       - poetry run black --check simple_smartsheet examples tests
