@@ -17,13 +17,13 @@ tasks:
     cmds:
       - poetry run pytest --record-mode=none --block-network
 
+  pytest-prod:
+    cmds:
+      - poetry run pytest tests/test_prod.py --prod
+
   pytest-record:
     cmds:
       - poetry run pytest --record-mode=all
-
-  pytest-record-prod:
-    cmds:
-      - poetry run pytest --record-mode=all --prod
 
   examples:
     cmds:
@@ -46,12 +46,4 @@ tasks:
       - task: flake8
       - task: mypy
       - task: pytest-record
-      - task: examples
-
-  tests-record-prod:
-    cmds:
-      - task: black
-      - task: flake8
-      - task: mypy
-      - task: pytest-record-prod
       - task: examples
