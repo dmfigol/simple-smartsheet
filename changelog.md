@@ -1,4 +1,16 @@
 ## Changelog
+#### 0.4.2 (2019-08-16)
+* Add a more specific constraint to marshmallow dependency (Fix #18)
+#### 0.4.1 (2019-08-16)
+* Fetch more than 100 rows in a report (Fix #19)
+#### 0.4.0 (2019-08-08)
+* Add exception `SmartsheetObjectNotFound`
+* Do not crash when an unknown field is encountered from API request
+* Add new summary attributes to sheet and report schema #17 introduced by this feature <https://help.smartsheet.com/learning-track/smartsheet-intermediate/sheet-summary>
+* Fix several bugs in some asyncio coroutines which were not awaited
+* Add a number of integration tests against Smartsheet Developer sandbox
+* [Deprecated] SheetCrud methods `add_row`, `add_rows`, `update_row`, `update_rows`, `delete_row`, `delete_rows` as well as their async counterparts now have `sheet_id: int` as a first argument instead of `sheet: Sheet` object. Deprecation warning is raised if you pass `Sheet` object as the first argument. `sort_rows` still uses `sheet` object as the first argument. 
+* [Backwards incompatible] [Result object](https://smartsheet-platform.github.io/api-docs/#result-object) now converts the received object data into an object itself. It is accessible via `result.obj` or property `result.result` which points to the same attribute. This is important in some cases, e.g. new sheet creation: `result = smartsheet.sheets.create(new_sheet_skeleton)`. `result.obj` will contain a new `Sheet`, while `result.obj.id` will have an ID of a new sheet.
 #### 0.3.0 (2019-06-26)
 * Add asyncio support, check readme and `examples/async.py` for more details
 * \[Deprecated\] All methods on Sheet object, which do API call, like `add_rows`, `update_rows`, `delete_rows`, `sort_rows`, they are now available under `smartsheet.sheets` and the first argument is sheet object
