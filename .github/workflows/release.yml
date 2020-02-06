@@ -12,7 +12,7 @@ jobs:
     - name: Running tests
       run: |
         task install
-        task tests-record
+        task tests-novcr
 
   publish:
     needs: test
