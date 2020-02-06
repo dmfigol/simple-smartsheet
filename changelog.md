@@ -1,4 +1,10 @@
 ## Changelog
+#### 0.5.0 (2020-02-06)
+* Export sheets and rows as pandas dataframe and series respectively. #22  
+  Install the package with pandas as extras: `pip install simple-smartsheet[pandas]`
+* Add multi picklist support #28
+* Do not crash when deleting many rows #25
+* All crud methods directly on the `Sheet` object were removed, use `SheetCrud` methods instead, e.g. `smartsheet.sheets.add_rows`
 #### 0.4.2 (2019-08-16)
 * Add a more specific constraint to marshmallow dependency (Fix #18)
 #### 0.4.1 (2019-08-16)
