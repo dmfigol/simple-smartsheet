@@ -7,6 +7,10 @@ tasks:
 
   black:
     cmds:
+      - poetry run black simple_smartsheet examples tests
+
+  black-check:
+    cmds:
       - poetry run black --check simple_smartsheet examples tests
 
   flake8:
@@ -17,17 +21,32 @@ tasks:
     cmds:
       - poetry run mypy simple_smartsheet
 
-  pytest:
+  test-precheck:
     cmds:
-      - poetry run pytest --record-mode=none --block-network
+      - task: black-check
+      - task: flake8
+      - task: mypy
 
   pytest-prod:
     cmds:
-      - poetry run pytest tests/test_prod.py --prod
+      - poetry run pytest tests/prod -rf
 
-  pytest-record:
+  pytest-local:
     cmds:
-      - poetry run pytest --record-mode=all
+      - poetry run pytest tests/sandbox --record-mode=none --block-network -rf
+
+# new_episodes does not work as expected and async tests just crash
+#  pytest-record-new:
+#    cmds:
+#      - poetry run pytest tests/sandbox --record-mode=new_episodes -rf
+
+  pytest-rerecord:
+    cmds:
+      - poetry run pytest tests/sandbox --record-mode=all --delete-cassettes -rf
+
+  pytest-novcr:
+    cmds:
+      - poetry run pytest tests/sandbox --disable-vcr -rf
 
   examples:
     cmds:
@@ -36,18 +55,19 @@ tasks:
       - poetry run python -Werror examples/custom_indexes.py > /dev/null
       - poetry run python -Werror examples/async.py > /dev/null
 
+  tests-local:
+    cmds:
+      - task: test-precheck
+      - task: pytest-local
+
   tests:
     cmds:
-      - task: black
-      - task: flake8
-      - task: mypy
-      - task: pytest
+      - task: test-precheck
+      - task: pytest-local
       - task: examples
 
-  tests-record:
+  tests-novcr:
     cmds:
-      - task: black
-      - task: flake8
-      - task: mypy
-      - task: pytest-record
+      - task: test-precheck
+      - task: pytest-novcr
       - task: examples

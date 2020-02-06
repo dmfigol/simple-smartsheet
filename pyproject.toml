@@ -47,7 +47,8 @@ bpython = "*"
 pdbpp = "*"
 vcrpy = "*"
 pytest-recording = "*"
-"ruamel.yaml" = "^0.16.0"
+"ruamel.yaml" = "*"
+pytest-pycharm = "*"
 
 [tool.poetry.extras]
 pandas = ["pandas"]

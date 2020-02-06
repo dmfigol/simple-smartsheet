@@ -1,0 +1,94 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: GET
+    uri: https://api.smartsheet.com/2.0/sheets?includeAll=true
+  response:
+    body:
+      string: '{"pageNumber":1,"totalPages":1,"totalCount":6,"data":[{"id":2746866115864452,"name":"[TEST]
+        Index Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/xfxHJvQHM4XwvpXr5JqV86HM43vvCmFjgM9JJvv1","createdAt":"2020-02-06T15:06:32Z","modifiedAt":"2020-02-06T15:06:32Z"},{"id":3450931514763140,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/rWwhH3xHpgr4Xx4RFJc7PM67M5wW9RC8f5w7qJW1","createdAt":"2020-02-06T15:11:55Z","modifiedAt":"2020-02-06T15:11:55Z"},{"id":1122887441639300,"name":"[TEST]
+        Read-only Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/H68r97jcVxh8MCChHXR85VmpXRQvPMMVWhV9w9v1","createdAt":"2020-02-06T15:05:09Z","modifiedAt":"2020-02-06T15:05:09Z"},{"id":2207309037365124,"name":"[TEST]
+        Report Sheet 1","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/9v7qHWw32PWFgwjjrv3PrMm44XWCfHRMrj9wX9J1","createdAt":"2019-08-06T17:40:20Z","modifiedAt":"2020-02-05T01:36:34Z"},{"id":6710908664735620,"name":"[TEST]
+        Report Sheet 2","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/FMjRXrFrqpW6HPw5FJHGVGGgCVvP7xm4hc77Mvp1","createdAt":"2019-08-06T17:40:22Z","modifiedAt":"2020-02-05T01:37:09Z"},{"id":496887368312708,"name":"[TEST]
+        Sheet To Delete","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/66qhrHF2ccHgXCW74q5gVf2J9cfQQFGRghR748Q1","createdAt":"2020-02-06T15:15:42Z","modifiedAt":"2020-02-06T15:15:42Z"}]}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 06 Feb 2020 15:23:10 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=30
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '1470'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - '[REDACTED]'
+    method: DELETE
+    uri: https://api.smartsheet.com/2.0/sheets/496887368312708
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0}'
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 06 Feb 2020 15:23:10 GMT
+      Expires:
+      - '0'
+      Keep-Alive:
+      - timeout=5, max=29
+      Pragma:
+      - no-cache
+      Vary:
+      - Accept-Encoding
+      content-length:
+      - '36'
+    status:
+      code: 200
+      message: OK
+version: 1

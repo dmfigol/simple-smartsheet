@@ -1,0 +1,57 @@
+interactions:
+- request:
+    body:
+      columns:
+      - primary: true
+        title: Full Name
+        type: TEXT_NUMBER
+      - title: Email address
+        type: TEXT_NUMBER
+      - title: Company
+        type: TEXT_NUMBER
+      - title: Number of children
+        type: TEXT_NUMBER
+      - options:
+        - simple-smartsheet
+        - nornir
+        - napalm
+        - netmiko
+        - pydantic
+        title: Maintains
+        type: MULTI_PICKLIST
+      - title: Birth date
+        type: DATE
+      - title: Married
+        type: CHECKBOX
+      name: '[TEST] New Sheet'
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      authorization:
+      - '[REDACTED]'
+    method: POST
+    uri: https://api.smartsheet.com/2.0/sheets
+  response:
+    body:
+      string: '{"message":"SUCCESS","resultCode":0,"result":{"id":3450931514763140,"name":"[TEST]
+        New Sheet","accessLevel":"OWNER","permalink":"https://app.smartsheet.com/sheets/rWwhH3xHpgr4Xx4RFJc7PM67M5wW9RC8f5w7qJW1","columns":[{"id":4173975245875076,"version":0,"index":0,"title":"Full
+        Name","type":"TEXT_NUMBER","primary":true,"validation":false,"width":150},{"id":8677574873245572,"version":0,"index":1,"title":"Email
+        address","type":"TEXT_NUMBER","validation":false,"width":150},{"id":514800548636548,"version":0,"index":2,"title":"Company","type":"TEXT_NUMBER","validation":false,"width":150},{"id":5018400176007044,"version":0,"index":3,"title":"Number
+        of children","type":"TEXT_NUMBER","validation":false,"width":150},{"id":2766600362321796,"version":2,"index":4,"title":"Maintains","type":"MULTI_PICKLIST","options":["simple-smartsheet","nornir","napalm","netmiko","pydantic"],"validation":false,"width":150},{"id":7270199989692292,"version":0,"index":5,"title":"Birth
+        date","type":"DATE","validation":false,"width":150},{"id":1640700455479172,"version":0,"index":6,"title":"Married","type":"CHECKBOX","validation":false,"width":150}]}}'
+    headers:
+      Cache-Control: no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '528'
+      Content-Type: application/json;charset=UTF-8
+      Date: Thu, 06 Feb 2020 15:11:55 GMT
+      Expires: '0'
+      Pragma: no-cache
+      Vary: Accept-Encoding
+    status:
+      code: 200
+      message: OK
+    url: https://api.smartsheet.com/2.0/sheets
+version: 1

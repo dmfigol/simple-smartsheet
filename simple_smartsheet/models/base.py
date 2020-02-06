@@ -7,7 +7,6 @@ from typing import (
     Any,
     Optional,
     Type,
-    TYPE_CHECKING,
     Union,
     ClassVar,
     Sequence,

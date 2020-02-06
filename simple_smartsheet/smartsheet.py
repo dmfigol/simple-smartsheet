@@ -8,8 +8,8 @@ from simple_smartsheet import constants
 from simple_smartsheet import exceptions
 from simple_smartsheet.types import JSONType
 from simple_smartsheet.models.extra import Result
-from simple_smartsheet.models.report import ReportCRUD, AsyncReportCRUD
-from simple_smartsheet.models.sheet import SheetCRUD, AsyncSheetCRUD
+from simple_smartsheet.crud.reports import ReportCRUD, AsyncReportCRUD
+from simple_smartsheet.crud.sheets import SheetCRUD, AsyncSheetCRUD
 
 
 class SmartsheetBase:
