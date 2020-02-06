@@ -1,6 +1,8 @@
 import warnings
 from typing import ClassVar, Union, Sequence, List, Dict, Any, cast
 
+from simple_smartsheet import constants
+from simple_smartsheet import utils
 from simple_smartsheet.crud.base import CRUDAttrs, CRUD, AsyncCRUD
 from simple_smartsheet.models import Sheet, Row
 from simple_smartsheet.models.extra import Result
@@ -231,8 +233,11 @@ class SheetCRUD(SheetCRUDMixin, CRUD[Sheet]):
             Result object
         """
         endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
-        params = self._delete_rows_params(row_ids)
-        result = self.smartsheet._delete(endpoint, params=params)
+        for row_ids_ in utils.grouper(row_ids, n=constants.MAX_ROWS_TO_DELETE):
+            params = self._delete_rows_params(row_ids_)
+            result = self.smartsheet._delete(endpoint, params=params)
+            if result.message != "SUCCESS":
+                raise ValueError(result.message)
         return result
 
     def delete_row(self, sheet_id: int, row_id: int) -> Result:
@@ -357,8 +362,11 @@ class AsyncSheetCRUD(SheetCRUDMixin, AsyncCRUD[Sheet]):
             Result object
         """
         endpoint = self._rows_endpoint.format(sheet_id=self._sheet_id(sheet_id))
-        params = self._delete_rows_params(row_ids)
-        result = await self.smartsheet._delete(endpoint, params=params)
+        for row_ids_ in utils.grouper(row_ids, n=constants.MAX_ROWS_TO_DELETE):
+            params = self._delete_rows_params(row_ids_)
+            result = await self.smartsheet._delete(endpoint, params=params)
+            if result.message != "SUCCESS":
+                raise ValueError(result.message)
         return result
 
     async def delete_row(self, sheet_id: int, row_id: int) -> Result:
