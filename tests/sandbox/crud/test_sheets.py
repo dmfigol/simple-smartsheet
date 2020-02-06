@@ -499,10 +499,7 @@ class TestUpdateSheet:
 
         result = smartsheet.sheets.add_rows(sheet.id, rows)
         assert result.message == "SUCCESS"
-        new_row_ids = [
-            row_data["id"]
-            for row_data in result.result
-        ]
+        new_row_ids = [row_data["id"] for row_data in result.result]
         result = smartsheet.sheets.delete_rows(sheet.id, new_row_ids)
         assert result.message == "SUCCESS"
 
@@ -516,13 +513,9 @@ class TestUpdateSheet:
         rows = self._gen_many_rows_to_delete(sheet)
         result = await async_smartsheet.sheets.add_rows(sheet.id, rows)
         assert result.message == "SUCCESS"
-        new_row_ids = [
-            row_data["id"]
-            for row_data in result.result
-        ]
+        new_row_ids = [row_data["id"] for row_data in result.result]
         result = await async_smartsheet.sheets.delete_rows(sheet.id, new_row_ids)
         assert result.message == "SUCCESS"
-
 
     @pytest.mark.vcr
     def test_sheet_sort_rows(
