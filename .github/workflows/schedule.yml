@@ -2,7 +2,7 @@ on:
   schedule:
     - cron: '0 0 * * *'
 jobs:
-  test:
+  test-on-schedule:
     runs-on: ubuntu-latest
     container:
       image: registry.gitlab.com/dmfigol/base-docker-images/python:3.6-slim-buster

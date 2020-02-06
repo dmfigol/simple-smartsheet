@@ -5,6 +5,10 @@ tasks:
     cmds:
       - poetry install -E pandas
 
+  publish:
+    cmds:
+      - poetry publish --build -u __token__ -p ${PYPI_TOKEN}
+
   black:
     cmds:
       - poetry run black simple_smartsheet examples tests
