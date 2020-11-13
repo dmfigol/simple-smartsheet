@@ -368,5 +368,4 @@ class Sheet(_SheetBase[Row, Column]):
 
         df = pd.DataFrame([row.as_series() for row in self.rows])
         df._row_num = df._row_num.astype("int64")
-        
         return df
