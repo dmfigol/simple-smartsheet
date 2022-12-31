@@ -26,9 +26,9 @@ from simple_smartsheet.types import IndexesType
 logger = logging.getLogger(__name__)
 
 converter = Converter()  # type: ignore
-converter.register_structure_hook(datetime, lambda ts, _: ts)
-converter.register_structure_hook(IndexesType, lambda x, _: x)
-converter.register_structure_hook(Union[float, str, datetime, None], lambda ts, _: ts)
+converter.register_structure_hook_func(datetime, lambda ts, _: ts)
+converter.register_structure_hook_func(IndexesType, lambda x, _: x)
+converter.register_structure_hook_func(Union[float, str, datetime, None], lambda ts, _: ts)
 
 
 class Schema(marshmallow.Schema):
